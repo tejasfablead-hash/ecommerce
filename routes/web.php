@@ -3,8 +3,10 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CheckOutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\WishlistsController;
 use App\Models\Category;
@@ -51,7 +53,6 @@ Route::get('/user/product', [HomeController::class, 'products'])->name('UserProd
 Route::get('/user/product/{id}', [HomeController::class, 'product'])->name('UserCategoryProductPage');
 Route::get('/user/category', [HomeController::class, 'category'])->name('UserCategoryPage');
 Route::get('/user/peoduct-details/{id}', [HomeController::class, 'detail'])->name('UserProductdetailsPage');
-Route::get('/user/checkout', [HomeController::class, 'checkout'])->name('UserCheckoutPage');
 
 Route::get('/user/confirm', [HomeController::class, 'confirm'])->name('UserConfirmPage');
 Route::get('/user/blog', [HomeController::class, 'blog'])->name('UserBlogPage');
@@ -66,5 +67,16 @@ Route::post('/user/wishlist-toggle', [WishlistsController::class, 'toggle'])->na
 Route::get('/user/cart', [CartController::class, 'cart'])->name('UserCartPage');
 Route::post('/user/add-to-cart', [CartController::class, 'addtoCart'])->name('UserAddCartPage');
 Route::get('/user/cart-delete/{id}', [CartController::class, 'delete'])->name('UserCartDeletePage');
+Route::post('/user/cart/update-qty', [CartController::class, 'update'])
+    ->name('UserCartUpdatePage');
+    Route::get('/continue-shopping', [CartController::class, 'continueShopping'])
+    ->name('UserContinueShopping');
 
 
+
+Route::get('/user/checkout', [CheckOutController::class, 'checkout'])->name('UserCheckoutPage');
+Route::post('/cart/store-grand-total', [CheckoutController::class, 'storeGrandTotal'])
+    ->name('UserCheckoutTotalPage');
+
+    
+Route::post('/user/checkout', [OrderController::class, 'order'])->name('UserOrderPage');

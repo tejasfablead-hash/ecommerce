@@ -1,7 +1,6 @@
 @extends('Ecommerce.Layout.index')
 @section('container')
-
-<!-- Start Banner Area -->
+    <!-- Start Banner Area -->
     <section class="banner-area organic-breadcrumb">
         <div class="container">
             <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
@@ -20,153 +19,197 @@
     <!--================Checkout Area =================-->
     <section class="checkout_area section_gap">
         <div class="container">
-            <div class="returning_customer">
-                <div class="check_title">
-                    <h2>Returning Customer? <a href="#">Click here to login</a></h2>
-                </div>
-                <p>If you have shopped with us before, please enter your details in the boxes below. If you are a new
-                    customer, please proceed to the Billing & Shipping section.</p>
-                <form class="row contact_form" action="#" method="post" novalidate="novalidate">
-                    <div class="col-md-6 form-group p_star">
-                        <input type="text" class="form-control" id="name" name="name">
-                        <span class="placeholder" data-placeholder="Username or Email"></span>
-                    </div>
-                    <div class="col-md-6 form-group p_star">
-                        <input type="password" class="form-control" id="password" name="password">
-                        <span class="placeholder" data-placeholder="Password"></span>
-                    </div>
-                    <div class="col-md-12 form-group">
-                        <button type="submit" value="submit" class="primary-btn">login</button>
-                        <div class="creat_account">
-                            <input type="checkbox" id="f-option" name="selector">
-                            <label for="f-option">Remember me</label>
-                        </div>
-                        <a class="lost_pass" href="#">Lost your password?</a>
-                    </div>
-                </form>
-            </div>
-            <div class="cupon_area">
-                <div class="check_title">
-                    <h2>Have a coupon? <a href="#">Click here to enter your code</a></h2>
-                </div>
-                <input type="text" placeholder="Enter coupon code">
-                <a class="tp_btn" href="#">Apply Coupon</a>
-            </div>
+
             <div class="billing_details">
                 <div class="row">
                     <div class="col-lg-8">
                         <h3>Billing Details</h3>
-                        <form class="row contact_form" action="#" method="post" novalidate="novalidate">
+                        <form class="row contact_form" id="orderform">
+                            @csrf
+                            <input type="hidden" class="form-control" id="id" name="userid"
+                                value="{{ Auth::user()->id }}">
+                            <small class="text-danger error" id="id_error"></small>
+
                             <div class="col-md-6 form-group p_star">
-                                <input type="text" class="form-control" id="first" name="name">
-                                <span class="placeholder" data-placeholder="First name"></span>
-                            </div>
-                            <div class="col-md-6 form-group p_star">
-                                <input type="text" class="form-control" id="last" name="name">
-                                <span class="placeholder" data-placeholder="Last name"></span>
-                            </div>
-                            <div class="col-md-12 form-group">
-                                <input type="text" class="form-control" id="company" name="company" placeholder="Company name">
-                            </div>
-                            <div class="col-md-6 form-group p_star">
-                                <input type="text" class="form-control" id="number" name="number">
-                                <span class="placeholder" data-placeholder="Phone number"></span>
+                                <input type="text" class="form-control" id="first" name="firstname"
+                                    placeholder="First name">
+                                <small class="text-danger error" id="firstname_error"></small>
                             </div>
                             <div class="col-md-6 form-group p_star">
-                                <input type="text" class="form-control" id="email" name="compemailany">
-                                <span class="placeholder" data-placeholder="Email Address"></span>
+                                <input type="text" class="form-control" id="last" name="lastname"
+                                    placeholder="Last name">
+                                <small class="text-danger error" id="lastname_error"></small>
+                            </div>
+                            <div class="col-md-6 form-group p_star">
+                                <input type="text" class="form-control" id="number" name="phone"
+                                    placeholder="Phone number">
+                                <small class="text-danger error" id="phone_error"></small>
+
+                            </div>
+                            <div class="col-md-6 form-group p_star">
+                                <input type="email" class="form-control" placeholder="Email Address" name="email">
+                                <small class="text-danger error" id="email_error"></small>
                             </div>
                             <div class="col-md-12 form-group p_star">
-                                <select class="country_select">
-                                    <option value="1">Country</option>
-                                    <option value="2">Country</option>
-                                    <option value="4">Country</option>
-                                </select>
-                            </div>
-                            <div class="col-md-12 form-group p_star">
-                                <input type="text" class="form-control" id="add1" name="add1">
-                                <span class="placeholder" data-placeholder="Address line 01"></span>
-                            </div>
-                            <div class="col-md-12 form-group p_star">
-                                <input type="text" class="form-control" id="add2" name="add2">
-                                <span class="placeholder" data-placeholder="Address line 02"></span>
-                            </div>
-                            <div class="col-md-12 form-group p_star">
-                                <input type="text" class="form-control" id="city" name="city">
-                                <span class="placeholder" data-placeholder="Town/City"></span>
-                            </div>
-                            <div class="col-md-12 form-group p_star">
-                                <select class="country_select">
-                                    <option value="1">District</option>
-                                    <option value="2">District</option>
-                                    <option value="4">District</option>
-                                </select>
+                                <input type="text" class="form-control" id="city" name="address"
+                                    placeholder="Address/Town/City">
+                                <small class="text-danger error" id="address_error"></small>
                             </div>
                             <div class="col-md-12 form-group">
-                                <input type="text" class="form-control" id="zip" name="zip" placeholder="Postcode/ZIP">
+                                <input type="text" class="form-control" id="zip" name="postcode"
+                                    placeholder="Postcode/ZIP">
+                                <small class="text-danger error" id="postcode_error"></small>
+
                             </div>
-                            <div class="col-md-12 form-group">
-                                <div class="creat_account">
-                                    <input type="checkbox" id="f-option2" name="selector">
-                                    <label for="f-option2">Create an account?</label>
-                                </div>
-                            </div>
-                            <div class="col-md-12 form-group">
-                                <div class="creat_account">
-                                    <h3>Shipping Details</h3>
-                                    <input type="checkbox" id="f-option3" name="selector">
-                                    <label for="f-option3">Ship to a different address?</label>
-                                </div>
-                                <textarea class="form-control" name="message" id="message" rows="1" placeholder="Order Notes"></textarea>
-                            </div>
-                        </form>
+                            <a class="gray_btn primary-btn  " href="{{ route('UserContinueShopping') }}"
+                                style="background:#7c8e93;color: white">Continue Shopping</a>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-4 text-capitalize">
                         <div class="order_box">
                             <h2>Your Order</h2>
-                            <ul class="list">
-                                <li><a href="#">Product <span>Total</span></a></li>
-                                <li><a href="#">Fresh Blackberry <span class="middle">x 02</span> <span class="last">$720.00</span></a></li>
-                                <li><a href="#">Fresh Tomatoes <span class="middle">x 02</span> <span class="last">$720.00</span></a></li>
-                                <li><a href="#">Fresh Brocoli <span class="middle">x 02</span> <span class="last">$720.00</span></a></li>
-                            </ul>
-                            <ul class="list list_2">
-                                <li><a href="#">Subtotal <span>$2160.00</span></a></li>
-                                <li><a href="#">Shipping <span>Flat rate: $50.00</span></a></li>
-                                <li><a href="#">Total <span>$2210.00</span></a></li>
-                            </ul>
-                            <div class="payment_item">
-                                <div class="radion_btn">
-                                    <input type="radio" id="f-option5" name="selector">
-                                    <label for="f-option5">Check payments</label>
-                                    <div class="check"></div>
-                                </div>
-                                <p>Please send a check to Store Name, Store Street, Store Town, Store State / County,
-                                    Store Postcode.</p>
-                            </div>
+                            <table class="table table-borderless">
+                                <thead>
+                                    <tr style="color:#3f3e3e;">
+                                        <th>Product</th>
+                                        <th class="text-center">Qty</th>
+                                        <th class="text-end">Total</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @forelse ($cart as $item)
+                                        <tr>
+                                            <td style="max-width:150px;">
+                                                {{ Str::limit($item->getproduct->name, 12) }}
+                                            </td>
+
+                                            <td class="text-center">
+                                                {{ $item->qty }}
+                                            </td>
+
+                                            <td class="text-end">
+                                                ₹{{ number_format($item->qty * $item->price, 2) }}
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="3" class="text-center py-3 text-muted">
+                                                🛒 Your cart is empty
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                            <hr>
+                            <table class="table table-borderless ">
+                                <tbody>
+                                    <tr>
+                                        <td>Sub Total</td>
+                                        <td></td>
+                                        <td class="text-end">₹{{ session('subtotal') ?? 0 }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>GST (18%)</td>
+                                        <td></td>
+                                        <td class="text-end">₹{{ session('gstvalue') ?? 0 }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Discount (%)</td>
+                                        <td></td>
+                                        <td class="text-end">{{ session('discountvalue') ?? 0 }}%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Discount Price</td>
+                                        <td></td>
+                                        <td class="text-end">₹{{ session('discountprice') ?? 0 }}</td>
+                                    </tr>
+                                    <tr class="fw-bold">
+                                        <td style="color:#050505;">Total</td>
+                                        <td></td>
+                                        <td style="color:#0c0c0c;" class="text-end">₹{{ session('grandtotal') ?? 0 }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+
                             <div class="payment_item active">
                                 <div class="radion_btn">
                                     <input type="radio" id="f-option6" name="selector">
                                     <label for="f-option6">Paypal </label>
-                                    <img src="{{asset('img/product/card.jpg')}}" alt="">
+                                    <img src="{{ asset('img/product/card.jpg') }}" alt="">
                                     <div class="check"></div>
                                 </div>
                                 <p>Pay via PayPal; you can pay with your credit card if you don’t have a PayPal
                                     account.</p>
+                                <p id="billingdetails" class="d-none mt-2 text-danger"></p>
                             </div>
                             <div class="creat_account">
                                 <input type="checkbox" id="f-option4" name="selector">
                                 <label for="f-option4">I’ve read and accept the </label>
-                                <a href="#">terms & conditions*</a>
+                                <p style="color: rgb(243, 81, 81)">terms & conditions</p>
                             </div>
-                            <a class="primary-btn" href="#">Proceed to Paypal</a>
+                            <div class="creat_account">
+                                <input type="submit" class="primary-btn w-100" style="border:none" name="submit"
+                                    value="Proceed to Paypal">
+                            </div>
                         </div>
+
+                        </form>
                     </div>
                 </div>
             </div>
-        </div>
     </section>
-    <!--================End Checkout Area =================-->
+    <script src="https://code.jquery.com/jquery-3.7.1.js" crossorigin="anonymous"></script>
+    <script src="{{ asset('ajax.js') }}"></script>
+    <script>
+        $(document).ready(function() {
 
+                    $('#orderform').submit(function(e) {
+                            e.preventDefault();
+                            var data = $('#orderform')[0];
+                            var formData = new FormData(data);
+                            $('.error').text('');
+                            var url = "{{ route('UserOrderPage') }}";
+                            reusableAjaxCall(url, 'POST', formData, function(response) {
+                                    console.log('response', response);
+                                    const Toast = Swal.mixin({
+                                        toast: true,
+                                        position: "top-end",
+                                        showConfirmButton: false,
+                                        timer: 3000,
+                                        timerProgressBar: true,
+                                        didOpen: (toast) => {
+                                            toast.onmouseenter = Swal.stopTimer;
+                                            toast.onmouseleave = Swal.resumeTimer;
+                                        }
+                                    });
+                                    if (response.status === true) {
+                                        Toast.fire({
+                                            icon: "success",
+                                            title: response.message || "Order Completed successfully"
+                                        });
+                                        setTimeout(function() {
+                                            window.location.href = "{{ route('UserCheckoutPage') }}";
+                                        }, 2000);
 
+                                    } else {
+                                        Toast.fire({
+                                            icon: "error",
+                                            title: response.message || "Something went wrong"
+                                        });
+                                        $('#orderform')[0].reset();
+                                    }
+                                },
+                                function(xhr) {
+                                    let res = xhr.responseJSON;
+                                    let html = '';
+                                    
+                                    $('#billingdetails')
+                                        .removeClass('d-none')
+                                        .html(res.message);
+                                });
+
+                            });
+                    });
+    </script>
 @endsection
