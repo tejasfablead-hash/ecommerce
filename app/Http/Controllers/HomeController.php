@@ -36,10 +36,7 @@ class HomeController extends Controller
         return view('Ecommerce.Pages.category', compact(['category']));
 
     }
-    public function checkout()
-    {
-        return view('Ecommerce.Pages.checkout');
-    }
+  
     
     public function confirm()
     {

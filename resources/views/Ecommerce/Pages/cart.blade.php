@@ -51,17 +51,19 @@
                                                 @endif
                                             </div>
                                             <div class="media-body">
-                                                <p>{{ $item->getproduct->name }}</p>
+                                                <h5 style="color: black">{{ $item->getproduct->name }}</h5>
                                             </div>
                                         </div>
                                     </td>
                                     <td>
-                                        <h5>{{ $item->getproduct->price }}</h5>
+                                        <h5>₹{{ $item->getproduct->price }}</h5>
                                     </td>
                                     <td>
                                         <div class="product_count">
-                                            <input type="number" class="input-text qty qty-input" value="1"
-                                                min="1" data-price="{{ $item->getproduct->price }}">
+                                            <input type="number" id="qtyInput" class="input-text qty qty-input"
+                                                value="{{ $item->qty }}" min="1"
+                                                data-cart-id="{{ $item->id }}"
+                                                data-price="{{ $item->getproduct->price }}">
                                         </div>
                                     </td>
 
@@ -99,49 +101,61 @@
 
                                 </td>
                                 <td>
-                                    <h5>SubTotal</h5>
+                                    <h5>SubTotal :</h5>
                                 </td>
                                 <td>
-                                    <h5 id="subtotal">$0.00</h5>
+                                    <h5 id="subtotal"></h5>
+                                    <input type="hidden" id="subtotalInput">
+
                                 </td>
+
                             </tr>
-                            <tr class="shipping_area">
-                                <td>
 
-                                </td>
-                                <td>
+                            <tr>
+                                <td colspan="5">
+                                    <div style="float:right; width:320px;">
+                                        <div class="d-flex align-items-center  mb-2 justify-content-between">
+                                            <h5 class="mb-0">GST (18%) :</h5>
 
-                                </td>
-                                <td>
+                                            <div class="confirm-switch">
+                                                <input type="checkbox" id="confirm-switch" checked>
+                                                <label for="confirm-switch"></label>
+                                            </div>
 
-                                </td>
-                                <td>
-                                    <h5>Shipping</h5>
-                                </td>
-                                <td>
-                                    <div class="shipping_box">
-                                        <ul class="list">
-                                            <li><a href="#">Flat Rate: $5.00</a></li>
-                                            <li><a href="#">Free Shipping</a></li>
-                                            <li><a href="#">Flat Rate: $10.00</a></li>
-                                            <li class="active"><a href="#">Local Delivery: $2.00</a></li>
-                                        </ul>
-                                        <h6>Calculate Shipping <i class="fa fa-caret-down" aria-hidden="true"></i></h6>
-                                        <select class="shipping_select">
-                                            <option value="1">Bangladesh</option>
-                                            <option value="2">India</option>
-                                            <option value="4">Pakistan</option>
-                                        </select>
-                                        <select class="shipping_select">
-                                            <option value="1">Select a State</option>
-                                            <option value="2">Select a State</option>
-                                            <option value="4">Select a State</option>
-                                        </select>
-                                        <input type="text" placeholder="Postcode/Zipcode">
-                                        <a class="gray_btn" href="#">Update Details</a>
+                                            <h5 class="mb-0 ms-auto" id="gst"></h5>
+                                            <input type="hidden" id="gstInput">
+
+                                        </div>
+
+                                        <hr>
+                                        <div class="d-flex justify-content-between">
+                                            <h5 class="mt-2">Discount (%) :</h5>
+                                            <input type="number" id="discount" value="" min="0"
+                                                class="form-control text-end" style="width:100px;">
+                                            <input type="hidden" id="discountInput">
+
+                                        </div>
+                                        <div class="d-flex justify-content-between mt-2 mb-2">
+                                            <h5>Discount Price :</h5>
+                                            <h5 id="discountprice"></h5>
+                                            <input type="hidden" id="discountpriceInput">
+                                        </div>
+
+
+
+                                        <hr>
+
+                                        <div class="d-flex justify-content-between">
+                                            <h5><strong>Grand Total :</strong></h5>
+                                            <h5 id="grand-total"><strong></strong></h5>
+                                            <input type="hidden" id="grandTotalInput">
+                                        </div>
+
                                     </div>
                                 </td>
                             </tr>
+
+
                             <tr class="out_button_area">
                                 <td>
 
@@ -157,8 +171,9 @@
                                 </td>
                                 <td>
                                     <div class="checkout_btn_inner d-flex align-items-center">
-                                        <a class="gray_btn" href="#">Continue Shopping</a>
-                                        <a class="primary-btn" href="#">Proceed to checkout</a>
+                                        <a class="gray_btn primary-btn  " href="{{ route('UserProductPage') }}"
+                                            style="background:#7c8e93;color: white">Continue Shopping</a>
+                                        <a class="primary-btn" id="checkoutBtn" href="#">Proceed to checkout</a>
                                     </div>
                                 </td>
                             </tr>
@@ -177,7 +192,7 @@
         $(document).ready(function() {
 
             $(document).on('click', '.remove-cart', function(e) {
-                 
+
                 e.preventDefault();
                 let id = $(this).data('id');
                 let row = $(this).closest('tr');
@@ -236,8 +251,8 @@
             function calculate() {
                 let subtotal = 0;
                 $('.qty-input').each(function() {
-                    let qty = parseInt($(this).val()) ||1;
-                    let price = parseFloat($(this).data('price'))||0;
+                    let qty = parseInt($(this).val()) || 1;
+                    let price = parseFloat($(this).data('price')) || 0;
 
                     let itemtotal = qty * price;
                     subtotal += itemtotal;
@@ -246,12 +261,92 @@
                         .text('₹' + itemtotal.toFixed(2));
                 });
                 $('#subtotal').text('₹' + subtotal.toFixed(2));
+
+                let discount = parseFloat($('#discount').val()) || 0;
+                let discountamount = (subtotal * discount) / 100;
+
+                $('#discountprice').text('₹' + discountamount.toFixed(2));
+
+                let afterdiscount = subtotal - discountamount;
+
+                let gst = 0;
+                if ($('#confirm-switch').is(':checked')) {
+                    gst = (afterdiscount * 18) / 100;
+                    $('#gst').text('₹' + gst.toFixed(2));
+                } else {
+                    $('#gst').text('₹0.00');
+                }
+
+                let grandTotal = afterdiscount + gst;
+                $('#grand-total').text('₹' + grandTotal.toFixed(2));
+                $('#grandTotalInput').val(grandTotal.toFixed(2));
+                $('#discountpriceInput').val(discountamount.toFixed(2));
+                $('#gstInput').val(gst.toFixed(2));
+                $('#discountInput').val(discount);
+                $('#subtotalInput').val(subtotal.toFixed(2));
+
+
             }
             calculate();
 
-            $(document).on('input', '.qty-input', function() {
+            $(document).on('change', '.qty-input', function(e) {
+                calculate();
+                e.preventDefault();
+                let qty = $(this).val();
+                let cartId = $(this).data('cart-id');
+                var formData = new FormData();
+                formData.append('qty', qty);
+                formData.append('cartId', cartId);
+                var url = "{{ route('UserCartUpdatePage') }}";
+                reusableAjaxCall(url, 'POST', formData, function(response) {
+                    if (response.status == true) {
+                        calculate();
+                    }
+                });
+
+
+            });
+            $(document).on('input', '#discount', function() {
                 calculate();
             });
+            $(document).on('change', '#confirm-switch', function() {
+                calculate();
+            });
+
+            $('#checkoutBtn').on('click', function(e) {
+                let cartItemCount = $('.qty-input').length;
+
+                if (cartItemCount === 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Cart is empty',
+                        text: 'Please add at least one product to proceed checkout.',
+                        confirmButtonColor: '#3085d6'
+                    });
+                    return false;
+                }
+                e.preventDefault();
+                let grandTotal = $('#grandTotalInput').val();
+                let discountprice = $('#discountpriceInput').val();
+                let gstvalue = $('#gstInput').val();
+                let discountvalue = $('#discountInput').val();
+                let subtotal = $('#subtotalInput').val();
+
+
+                var formData = new FormData();
+                formData.append('grandTotal', grandTotal);
+                formData.append('discountprice', discountprice);
+                formData.append('gstvalue', gstvalue);
+                formData.append('discountvalue', discountvalue);
+                formData.append('subtotal', subtotal);
+
+                var url = "{{ route('UserCheckoutTotalPage') }}";
+                reusableAjaxCall(url, 'POST', formData, function(response) {
+                    window.location.href = "{{ route('UserCheckoutPage') }}";
+                });
+
+            });
+
 
         });
     </script>
