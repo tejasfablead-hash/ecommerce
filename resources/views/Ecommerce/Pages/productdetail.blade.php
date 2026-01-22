@@ -1,6 +1,5 @@
 @extends('Ecommerce.Layout.index')
 @section('container')
-
     <style>
         .s_Product_carousel .single-prd-item {
             height: 420px;
@@ -10,6 +9,7 @@
             background: #f7f7f7;
             overflow: hidden;
         }
+
         .product-detail-img {
             width: 100%;
             height: 100%;
@@ -67,20 +67,26 @@
                         <ul class="list">
                             <li><a class="active" href="#"><span>Category</span> :
                                     {{ $product->getcategory->name }}</a></li>
-
-                            @if ($product->status == 'active')
-                                <li><a href="#"><span>Availibility</span> : In Stock</a></li>
+                            @if ($product->qty == 0)
+                                <li><a href="#"><span>Availibility</span> : No Stock ({{$product->qty}})</a></li>
                             @else
-                                <li><a href="#"><span>Availibility</span> : No Stock</a></li>
+                                <li><a href="#"><span>Availibility</span> : In Stock ({{$product->qty}}) </a></li>
                             @endif
                         </ul>
                         <p>{{ $product->description }}</p>
-                     
+
                         <div class="card_area d-flex align-items-center">
-                             <a href="javascript:void(0)" class=" primary-btn cart-info"
-                                            data-cart-id="{{ $product->id }}">Add to Cart</a>
+                            @if($product->qty>0)
+                                <a href="javascript:void(0)" class=" primary-btn cart-info"
+                                data-cart-id="{{ $product->id }}">Add to Cart</a>
+                            @else
+                                <a href="javascript:void(0)" class=" primary-btn cart-info disabled-cart"
+                                >Out of Stock</a>
+                            @endif
+                            
                             {{-- <a class="icon_btn" href="#"><i class="lnr lnr lnr-diamond"></i></a> --}}
-                            <a class="icon_btn  wishlist-btn" href="javascript:void(0)" data-product-id="{{ $product->id }}"><i class="lnr lnr lnr-heart"></i></a>
+                            <a class="icon_btn  wishlist-btn" href="javascript:void(0)"
+                                data-product-id="{{ $product->id }}"><i class="lnr lnr lnr-heart"></i></a>
                         </div>
                     </div>
                 </div>
@@ -595,39 +601,39 @@
         </div>
     </section>
     <!-- End related-product Area -->
-    
-    <script src="https://code.jquery.com/jquery-3.7.1.js" ></script>
-  <script src="{{ asset('ajax.js') }}"></script>
-    <script>
-        $(document).ready(function () {
-            
-        $('.wishlist-btn').click(function() {
-            let productId = $(this).data('product-id');
-            let url = "{{ route('WishlistStorePage') }}";
-            let formData = new FormData();
-            formData.append('product_id', productId);
 
-            reusableAjaxCall(url, 'POST', formData, function(response) {
-                if (response.status) {
-                    if (response.count > 0) {
-                        $('.wishlist-count').remove();
-                          Swal.fire({
-                            icon: 'success',
-                            title: 'Added to Wishlist',
-                            text: 'Check to wishlist...',
-                            timer: 3000,
-                            showConfirmButton: false
-                        });
-                        setTimeout(() => {
-                            window.location.href = "{{ route('WishlistPage') }}";
-                        }, 3000);
-                    } else {
-                        $('.wishlist-count').remove();
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="{{ asset('ajax.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+
+            $('.wishlist-btn').click(function() {
+                let productId = $(this).data('product-id');
+                let url = "{{ route('WishlistStorePage') }}";
+                let formData = new FormData();
+                formData.append('product_id', productId);
+
+                reusableAjaxCall(url, 'POST', formData, function(response) {
+                    if (response.status) {
+                        if (response.count > 0) {
+                            $('.wishlist-count').remove();
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Added to Wishlist',
+                                text: 'Check to wishlist...',
+                                timer: 3000,
+                                showConfirmButton: false
+                            });
+                            setTimeout(() => {
+                                window.location.href = "{{ route('WishlistPage') }}";
+                            }, 3000);
+                        } else {
+                            $('.wishlist-count').remove();
+                        }
                     }
-                }
+                });
             });
-        });
-               $('.cart-info').click(function() {
+            $('.cart-info').click(function() {
                 let cartId = $(this).data('cart-id');
                 let formData = new FormData();
                 formData.append('product_id', cartId);
@@ -635,16 +641,16 @@
 
                 reusableAjaxCall(url, 'POST', formData, function(response) {
                     if (response.status == true) {
-                             Swal.fire({
-                                icon: 'success',
-                                title: 'Added to Cart',
-                                text: 'Redirecting to your Cart...',
-                                timer: 3000,
-                                showConfirmButton: false
-                            });
-                               setTimeout(() => {
-                                window.location.href = "{{ route('UserCartPage') }}";
-                            }, 3000);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Added to Cart',
+                            text: 'Redirecting to your Cart...',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                        setTimeout(() => {
+                            window.location.href = "{{ route('UserCartPage') }}";
+                        }, 3000);
                     }
                 });
             });
