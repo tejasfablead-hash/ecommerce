@@ -36,7 +36,7 @@ class OrderController extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validate->errors(),
-                'message' => 'Please fill Billing Details'
+                'message' => '*Please fill Billing Details'
             ], 422);
         }
         $order = Order::create([
@@ -67,18 +67,12 @@ class OrderController extends Controller
                 'total'      => $item->qty * $item->price,
             ]);
         }
-        Cart::where('user_id', $user)->delete();
-        
-        session()->forget([
-            'subtotal',
-            'gstvalue',
-            'discountvalue',
-            'discountprice',
-            'grandtotal'
+        session(['order_id' => $order->id]);
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Order created, proceed to payment',
+            'order_id' => $order->id
         ]);
-         return response()->json([
-            'status'=>true,
-            'message'=>'Order placed successfully'
-         ]);
     }
 }

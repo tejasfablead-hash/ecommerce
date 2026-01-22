@@ -23,7 +23,21 @@
             <div class="billing_details">
                 <div class="row">
                     <div class="col-lg-8">
-                        <h3>Billing Details</h3>
+
+
+                        <div class="row align-items-center mb-3">
+                            <div class="col-md-8">
+                                <h2 class="mb-3" style="border-bottom-style: none;">Billing Details</h2>
+                            </div>
+                            <div class="col-md-4  text-end">
+                                <a href="javascript:void(0)" id="continueShopping" class="gray_btn primary-btn"
+                                    style="background:#7c8e93;color:white">
+                                    Continue Shopping
+                                </a>
+                            </div>
+                        </div>
+                        <hr>
+
                         <form class="row contact_form" id="orderform">
                             @csrf
                             <input type="hidden" class="form-control" id="id" name="userid"
@@ -61,8 +75,7 @@
                                 <small class="text-danger error" id="postcode_error"></small>
 
                             </div>
-                            <a class="gray_btn primary-btn  " href="{{ route('UserContinueShopping') }}"
-                                style="background:#7c8e93;color: white">Continue Shopping</a>
+
                     </div>
                     <div class="col-lg-4 text-capitalize">
                         <div class="order_box">
@@ -133,14 +146,6 @@
 
 
                             <div class="payment_item active">
-                                <div class="radion_btn">
-                                    <input type="radio" id="f-option6" name="selector">
-                                    <label for="f-option6">Paypal </label>
-                                    <img src="{{ asset('img/product/card.jpg') }}" alt="">
-                                    <div class="check"></div>
-                                </div>
-                                <p>Pay via PayPal; you can pay with your credit card if you don’t have a PayPal
-                                    account.</p>
                                 <p id="billingdetails" class="d-none mt-2 text-danger"></p>
                             </div>
                             <div class="creat_account">
@@ -149,67 +154,129 @@
                                 <p style="color: rgb(243, 81, 81)">terms & conditions</p>
                             </div>
                             <div class="creat_account">
-                                <input type="submit" class="primary-btn w-100" style="border:none" name="submit"
-                                    value="Proceed to Paypal">
+                                <input type="submit" class="primary-btn w-100" id="paypal-remove" style="border:none"
+                                    name="submit" value="Confirm Your Order">
+
+                                <div id="paypal-button-container" class="mt-2 d-none"></div>
                             </div>
                         </div>
-
                         </form>
                     </div>
                 </div>
             </div>
     </section>
     <script src="https://code.jquery.com/jquery-3.7.1.js" crossorigin="anonymous"></script>
+  <script src="https://www.paypal.com/sdk/js?client-id={{ config('services.paypal.client_id') }}&currency=USD"></script>
+
     <script src="{{ asset('ajax.js') }}"></script>
     <script>
         $(document).ready(function() {
+            let paypalRendered = false;
 
-                    $('#orderform').submit(function(e) {
-                            e.preventDefault();
-                            var data = $('#orderform')[0];
-                            var formData = new FormData(data);
-                            $('.error').text('');
-                            var url = "{{ route('UserOrderPage') }}";
-                            reusableAjaxCall(url, 'POST', formData, function(response) {
-                                    console.log('response', response);
-                                    const Toast = Swal.mixin({
-                                        toast: true,
-                                        position: "top-end",
-                                        showConfirmButton: false,
-                                        timer: 3000,
-                                        timerProgressBar: true,
-                                        didOpen: (toast) => {
-                                            toast.onmouseenter = Swal.stopTimer;
-                                            toast.onmouseleave = Swal.resumeTimer;
-                                        }
-                                    });
-                                    if (response.status === true) {
-                                        Toast.fire({
-                                            icon: "success",
-                                            title: response.message || "Order Completed successfully"
-                                        });
-                                        setTimeout(function() {
-                                            window.location.href = "{{ route('UserCheckoutPage') }}";
-                                        }, 2000);
-
-                                    } else {
-                                        Toast.fire({
-                                            icon: "error",
-                                            title: response.message || "Something went wrong"
-                                        });
-                                        $('#orderform')[0].reset();
-                                    }
-                                },
-                                function(xhr) {
-                                    let res = xhr.responseJSON;
-                                    let html = '';
-                                    
-                                    $('#billingdetails')
-                                        .removeClass('d-none')
-                                        .html(res.message);
-                                });
-
+            $('#orderform').submit(function(e) {
+                e.preventDefault();
+                var data = $('#orderform')[0];
+                var formData = new FormData(data);
+                $('.error').text('');
+                $('#billingdetails').addClass('d-none').text('');
+                var url = "{{ route('UserOrderPage') }}";
+                reusableAjaxCall(url, 'POST', formData, function(response) {
+                        console.log('response', response);
+                        if (response.status === true) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Order Confirmed',
+                                text: 'Please complete payment',
+                                timer: 2500,
+                                showConfirmButton: false
                             });
+                            $('#paypal-remove').hide();
+                            $('#paypal-button-container').removeClass('d-none');
+                            
+                        if (!paypalRendered) {
+                            renderPaypal();
+                            paypalRendered = true;
+                        }
+                        
+                        $('#orderform')[0].reset();
+                        }
+                    },
+                    function(xhr) {
+                        let res = xhr.responseJSON;
+                        if (res && res.message) {
+                            $('#billingdetails')
+                                .removeClass('d-none')
+                                .hide()
+                                .html(res.message)
+                                .fadeIn(300);
+                        }
+
                     });
+            });
+    function renderPaypal() {
+            paypal.Buttons({
+                createOrder: (data, actions) => {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                value: "{{ session('grandtotal') }}"
+                            }
+                        }]
+                    });
+                },
+
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+
+                        $.ajax({
+                            url: "{{ route('PaypalSuccessPage') }}",
+                            method: "POST",
+                            data: {
+                                _token: "{{ csrf_token() }}",
+                                paypal_order_id: data.orderID,
+                                payment_status: details.status,
+                                payment_method: 'paypal'
+                            },
+                            success: function(res) {
+                                if (res.status === true) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Payment Successfull',
+                                        text: 'Please checked the OrderDetails...',
+                                        timer: 3000,
+                                        showConfirmButton: false
+                                    });
+                                    setTimeout(() => {
+                                        window.location.href =
+                                            "{{ route('UserConfirmPage') }}";
+                                    }, 3000);
+                                }
+                            }
+                        });
+
+                    });
+                },
+
+                onCancel: () => {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Payment Cancelled',
+                        text: 'You can try again'
+                    });
+                },
+                onError: () => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Payment Failed',
+                        text: 'Please try again later'
+                    });
+                }
+
+            }).render('#paypal-button-container');
+        }
+            $('#continueShopping').on('click', function() {
+                window.location.href = "{{ route('UserContinueShopping') }}";
+            });
+        });
     </script>
 @endsection

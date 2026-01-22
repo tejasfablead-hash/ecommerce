@@ -7,6 +7,7 @@ use App\Http\Controllers\CheckOutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\WishlistsController;
 use App\Models\Category;
@@ -33,7 +34,7 @@ Route::get('/category-edit/{id}', [CategoryController::class, 'edit'])->name('Ca
 Route::post('/category-update', [CategoryController::class, 'Update'])->name('CategoryUpdatePage');
 Route::delete('/category-delete/{id}', [CategoryController::class, 'delete'])
     ->name('CategoryDeletePage');
-    
+
 
 
 
@@ -54,7 +55,6 @@ Route::get('/user/product/{id}', [HomeController::class, 'product'])->name('User
 Route::get('/user/category', [HomeController::class, 'category'])->name('UserCategoryPage');
 Route::get('/user/peoduct-details/{id}', [HomeController::class, 'detail'])->name('UserProductdetailsPage');
 
-Route::get('/user/confirm', [HomeController::class, 'confirm'])->name('UserConfirmPage');
 Route::get('/user/blog', [HomeController::class, 'blog'])->name('UserBlogPage');
 Route::get('/user/contact', [HomeController::class, 'contact'])->name('UserContactPage');
 Route::get('/user/profile', [HomeController::class, 'profile'])->name('UserProfilePage');
@@ -69,7 +69,7 @@ Route::post('/user/add-to-cart', [CartController::class, 'addtoCart'])->name('Us
 Route::get('/user/cart-delete/{id}', [CartController::class, 'delete'])->name('UserCartDeletePage');
 Route::post('/user/cart/update-qty', [CartController::class, 'update'])
     ->name('UserCartUpdatePage');
-    Route::get('/continue-shopping', [CartController::class, 'continueShopping'])
+Route::get('/continue-shopping', [CartController::class, 'continueShopping'])
     ->name('UserContinueShopping');
 
 
@@ -78,5 +78,10 @@ Route::get('/user/checkout', [CheckOutController::class, 'checkout'])->name('Use
 Route::post('/cart/store-grand-total', [CheckoutController::class, 'storeGrandTotal'])
     ->name('UserCheckoutTotalPage');
 
-    
 Route::post('/user/checkout', [OrderController::class, 'order'])->name('UserOrderPage');
+
+
+Route::post('/paypal/success', [PaypalController::class, 'success'])
+    ->name('PaypalSuccessPage');
+    
+Route::get('/user/confirm', [PaypalController::class, 'confirm'])->name('UserConfirmPage');

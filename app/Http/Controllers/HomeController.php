@@ -37,11 +37,7 @@ class HomeController extends Controller
 
     }
   
-    
-    public function confirm()
-    {
-        return view('Ecommerce.Pages.confirm');
-    }
+   
     public function blog()
     {
         return view('Ecommerce.Pages.blog');

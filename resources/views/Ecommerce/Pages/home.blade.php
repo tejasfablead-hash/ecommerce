@@ -31,6 +31,20 @@
             max-width: 100%;
             max-height: 100%;
         }
+
+        .out-of-stock {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #dc3545;
+            color: #fff;
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            z-index: 9;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
     </style>
     <!-- start banner Area -->
     <section class="banner-area">
@@ -224,6 +238,9 @@
                         <div class="col-lg-3 col-md-6">
                             <div class="single-product">
                                 <div class="product-img-wrapper">
+                                    @if ($item->qty == 0)
+                                        <span class="out-of-stock">Out of Stock</span>
+                                    @endif
                                     @php
                                         $images = json_decode($item->image, true);
                                     @endphp
@@ -244,10 +261,19 @@
                                         {{-- <h6 class="l-through">$210.00</h6> --}}
                                     </div>
                                     <div class="prd-bottom">
-                                        <a href="javascript:void(0)" class="social-info cart-info"  data-cart-id="{{ $item->id }}">
-                                            <span class="ti-bag"></span>
-                                            <p class="hover-text">add to bag</p>
-                                        </a>
+
+                                        @if ($item->qty > 0)
+                                            <a href="javascript:void(0)" class="social-info cart-info"
+                                                data-cart-id="{{ $item->id }}">
+                                                <span class="ti-bag"></span>
+                                                <p class="hover-text">add to bag</p>
+                                            </a>
+                                        @else
+                                            <a href="javascript:void(0)" class="social-info disabled-cart">
+                                                <span class="ti-bag"></span>
+                                                <p class="hover-text">out of stock</p>
+                                            </a>
+                                        @endif
                                         <a href="javascript:void(0)" class="social-info wishlist-btn"
                                             data-product-id="{{ $item->id }}">
                                             <span class="lnr lnr-heart"></span>
@@ -288,6 +314,9 @@
                         <div class="col-lg-3 col-md-6">
                             <div class="single-product">
                                 <div class="product-img-wrapper">
+                                    @if ($item->qty == 0)
+                                        <span class="out-of-stock">Out of Stock</span>
+                                    @endif
                                     @php
                                         $images = json_decode($item->image, true);
                                     @endphp
@@ -309,11 +338,18 @@
                                     </div>
                                     <div class="prd-bottom">
 
-                                        <a href="javascript:void(0)" class="social-info cart-info"
-                                            data-cart-id="{{ $item->id }}">
-                                            <span class="ti-bag"></span>
-                                            <p class="hover-text">add to bag</p>
-                                        </a>
+                                        @if ($item->qty > 0)
+                                            <a href="javascript:void(0)" class="social-info cart-info"
+                                                data-cart-id="{{ $item->id }}">
+                                                <span class="ti-bag"></span>
+                                                <p class="hover-text">add to bag</p>
+                                            </a>
+                                        @else
+                                            <a href="javascript:void(0)" class="social-info disabled-cart">
+                                                <span class="ti-bag"></span>
+                                                <p class="hover-text">out of stock</p>
+                                            </a>
+                                        @endif
                                         <a href="javascript:void(0)" class="social-info wishlist-btn"
                                             data-product-id="{{ $item->id }}">
                                             <span class="lnr lnr-heart"></span>
@@ -370,13 +406,14 @@
                             </div>
                         </div>
                     </div>
-                    <a href="" class="primary-btn">Shop Now</a>
+                    <a href="javascript:void(0)" class="primary-btn">Shop Now</a>
                 </div>
                 <div class="col-lg-6 no-padding exclusive-right">
                     <div class="active-exclusive-product-slider">
                         <!-- single exclusive carousel -->
                         @foreach ($saleProducts as $item)
                             <div class="single-exclusive-slider">
+
                                 @php
                                     $images = json_decode($item->image, true);
                                 @endphp
@@ -395,9 +432,19 @@
                                     </div>
                                     <h4>{{ $item->name }}</h4>
                                     <div class="add-bag d-flex align-items-center justify-content-center">
-                                       <a href="javascript:void(0)" class=" add-btn cart-info"
-                                            data-cart-id="{{ $item->id }}"> 	<span class="ti-bag"></span></a>
-									<span class="add-text text-uppercase">Add to Bag</span>
+                                        @if ($item->qty > 0)
+                                            <a href="javascript:void(0)" class="add-btn cart-info"
+                                                data-cart-id="{{ $item->id }}">
+                                                <span class="ti-bag"></span>
+                                            </a>
+                                            <span class="add-text text-uppercase">Add to Bag</span>
+                                        @else
+                                            <a href="javascript:void(0)" class="add-btn disabled-cart">
+                                                <span class="ti-bag"></span>
+                                            </a>
+                                            <span class="add-text text-uppercase text-danger">Out of Stock</span>
+                                        @endif
+
                                     </div>
                                 </div>
                             </div>
@@ -413,19 +460,19 @@
     <section class="brand-area section_gap">
         <div class="container">
             <div class="row">
-                <a class="col single-img" href="#">
+                <a class="col single-img" href="javascript:void(0)">
                     <img class="img-fluid d-block mx-auto" src="{{ asset('img/brand/1.png') }}" alt="">
                 </a>
-                <a class="col single-img" href="#">
+                <a class="col single-img" href="javascript:void(0)">
                     <img class="img-fluid d-block mx-auto" src="{{ asset('img/brand/2.png') }}" alt="">
                 </a>
-                <a class="col single-img" href="#">
+                <a class="col single-img" href="javascript:void(0)">
                     <img class="img-fluid d-block mx-auto" src="{{ asset('img/brand/3.png') }}" alt="">
                 </a>
-                <a class="col single-img" href="#">
+                <a class="col single-img" href="javascript:void(0)">
                     <img class="img-fluid d-block mx-auto" src="{{ asset('img/brand/4.png') }}" alt="">
                 </a>
-                <a class="col single-img" href="#">
+                <a class="col single-img" href="javascript:void(0)">
                     <img class="img-fluid d-block mx-auto" src="{{ asset('img/brand/5.png') }}" alt="">
                 </a>
             </div>
