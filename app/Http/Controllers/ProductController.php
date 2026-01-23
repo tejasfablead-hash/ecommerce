@@ -162,6 +162,23 @@ class ProductController extends Controller
         return view('Admin.Product.details', compact(['product']));
     }
 
-     
+       public function product($id)
+    {
+        $product = Product::where('category_id', $id)->get();
+        return view('Ecommerce.Pages.product', compact('product'));
+    }
+
+     public function productdetail($id)
+    {
+        $product = Product::findOrFail($id);
+        return view('Ecommerce.Pages.productdetail', compact('product'));
+    }
+       public function products()
+    {
+        $product = Product::where('status', 'active')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return view('Ecommerce.Pages.product', compact('product'));
+    }
   
 }

@@ -13,27 +13,23 @@
                      <label>Navigation</label>
                  </li>
                  <li class="nxl-item nxl-hasmenu">
-                     <a href="javascript:void(0);" class="nxl-link">
+                     <a href="{{ route('DashboardPage') }}" class="nxl-link">
                          <span class="nxl-micon"><i class="feather-airplay"></i></span>
                          <span class="nxl-mtext">Dashboards</span><span class="nxl-arrow"><i
                                  class="feather-chevron-right"></i></span>
                      </a>
-                     <ul class="nxl-submenu">
-                         {{-- <li class="nxl-item"><a class="nxl-link" href="index.html">CRM</a></li> --}}
-                         <li class="nxl-item"><a class="nxl-link" href="{{ route('DashboardPage') }}">Analytics</a></li>
-                     </ul>
+                  
                  </li>
-                 {{-- <li class="nxl-item nxl-hasmenu">
+                 <li class="nxl-item nxl-hasmenu">
                      <a href="javascript:void(0);" class="nxl-link">
                          <span class="nxl-micon"><i class="feather-users"></i> </span>
                          <span class="nxl-mtext">Customer</span><span class="nxl-arrow"><i
                                  class="feather-chevron-right"></i></span>
                      </a>
                      <ul class="nxl-submenu">
-                          <li class="nxl-item"><a class="nxl-link" href="index.html">CRM</a></li> 
-                         <li class="nxl-item"><a class="nxl-link" href="">Customer</a></li>
+                         <li class="nxl-item"><a class="nxl-link" href="{{route('CustomerPage')}}">All Customer</a></li>
                      </ul>
-                 </li> --}}
+                 </li>
 
                  {{-- <li class="nxl-item nxl-hasmenu">
                      <a href="javascript:void(0);" class="nxl-link">
@@ -90,26 +86,23 @@
                                  class="feather-chevron-right"></i></span>
                      </a>
                      <ul class="nxl-submenu">
-                         <li class="nxl-item"><a class="nxl-link" href="{{ route('CategoryViewPage') }}">Order</a></li>
-                         <li class="nxl-item"><a class="nxl-link" href="{{ route('CategoryViewPage') }}">Order View</a>
-                         </li>
+                         <li class="nxl-item"><a class="nxl-link" href="{{ route('OrderViewPage') }}">All Order</a></li>
+                          </li>
                      </ul>
                  </li>
 
                  <li class="nxl-item nxl-hasmenu">
                      <a href="javascript:void(0);" class="nxl-link">
-                         <span class="nxl-micon"><i class="feather-dollar-sign"></i></span>
-                         <span class="nxl-mtext">Payment</span><span class="nxl-arrow"><i
+                         <span class="nxl-micon"><i class="feather-heart"></i></span>
+                         <span class="nxl-mtext">Wishlist</span><span class="nxl-arrow"><i
                                  class="feather-chevron-right"></i></span>
                      </a>
                      <ul class="nxl-submenu">
-                         <li class="nxl-item"><a class="nxl-link" href="payment.html">Payment</a></li>
-                         <li class="nxl-item"><a class="nxl-link" href="invoice-create.html">Invoice Create</a></li>
-                         <li class="nxl-item"><a class="nxl-link" href="invoice-view.html">Invoice View</a></li>
+                         <li class="nxl-item"><a class="nxl-link" href="{{route('WishlistViewPage')}}">All Wishlist</a></li>
                      </ul>
                  </li>
 
-                 <li class="nxl-item nxl-hasmenu">
+                 {{-- <li class="nxl-item nxl-hasmenu">
                      <a href="javascript:void(0);" class="nxl-link">
                          <span class="nxl-micon"><i class="feather-cast"></i></span>
                          <span class="nxl-mtext">Invoice</span><span class="nxl-arrow"><i
@@ -123,7 +116,7 @@
                                  Report</a>
                          </li>
                      </ul>
-                 </li>
+                 </li> --}}
                  <li class="nxl-item nxl-hasmenu">
                      <a href="javascript:void(0);" class="nxl-link">
                          <span class="nxl-micon"><i class="feather-power"></i></span>
@@ -138,7 +131,7 @@
                              </a>
 
                          </li>
-                         <li class="nxl-item nxl-hasmenu">
+                         {{-- <li class="nxl-item nxl-hasmenu">
                              <a href="javascript:void(0);" class="nxl-link">
                                  <span class="nxl-mtext">Error-404</span><span class="nxl-arrow"><i
                                          class="feather-chevron-right"></i></span>
@@ -192,7 +185,7 @@
                                  <li class="nxl-item"><a class="nxl-link"
                                          href="./auth-maintenance-creative.html">Creative</a></li>
                              </ul>
-                         </li>
+                         </li> --}}
                      </ul>
                  </li>
                  {{-- <li class="nxl-item nxl-hasmenu">

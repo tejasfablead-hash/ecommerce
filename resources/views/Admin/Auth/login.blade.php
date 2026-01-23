@@ -72,13 +72,10 @@
                                     <i class="feather-facebook"></i>
                                 </a>
                                 <a href="javascript:void(0);" class="btn btn-light-brand flex-fill"
-                                    data-bs-toggle="tooltip" data-bs-trigger="hover" title="Login with Twitter">
-                                    <i class="feather-twitter"></i>
+                                    data-bs-toggle="tooltip" data-bs-trigger="hover" title="Login with Google">
+                                    <i class="fa-brands fa-google"></i>
                                 </a>
-                                <a href="javascript:void(0);" class="btn btn-light-brand flex-fill"
-                                    data-bs-toggle="tooltip" data-bs-trigger="hover" title="Login with Github">
-                                    <i class="feather-github text"></i>
-                                </a>
+                               
                             </div>
                         </div>
                      

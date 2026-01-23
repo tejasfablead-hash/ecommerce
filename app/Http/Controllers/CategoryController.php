@@ -132,5 +132,15 @@ class CategoryController extends Controller
          'message' => 'Record Deleted Successfully'
       ], 200);
    }
+   
+    public function category(Request $request)
+    {
+    
+        $category = Category::with('getproduct')->withCount('getproduct')->get();
+        // dd($category);
+        return view('Ecommerce.Pages.category', compact(['category']));
+
+    }
+
     
 }

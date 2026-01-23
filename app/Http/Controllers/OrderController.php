@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -41,7 +42,7 @@ class OrderController extends Controller
         }
         $order = Order::create([
             'user_id'           => $user,
-            'order_number'      => 'ORD-' . strtoupper(Str::random(10)),
+            'order_number'   => 'TMP-' . time(),
             'subtotal'          => session('subtotal'),
             'discount_percent'  => session('discountvalue'),
             'discount_amount'   => session('discountprice'),
@@ -74,5 +75,27 @@ class OrderController extends Controller
             'message' => 'Order created, proceed to payment',
             'order_id' => $order->id
         ]);
+    }
+
+    public function view()
+{
+    $order = Order::with([
+        'getcustomer',
+        'orderitem.product'
+    ])->latest()->get();
+
+    return view('Admin.Order.view', compact('order'));
+}
+  public function details($id)
+{
+    $order = Order::where('id',$id)->with([
+        'getcustomer',
+        'orderitem.product'
+    ])->latest()->first();
+    return view('Admin.Order.details', compact('order'));
+}
+ public function customer(){
+        $user=User::all();
+        return view('Admin.Order.customer',compact('user'));
     }
 }

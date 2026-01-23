@@ -24,6 +24,9 @@
   ============================================= -->
     <link rel="stylesheet" type="text/css"
         href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" />
+
     <link rel="stylesheet" href="{{ asset('css/linearicons.css') }}">
     <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/themify-icons.css') }}">
@@ -35,11 +38,32 @@
     <link rel="stylesheet" href="{{ asset('css/ion.rangeSlider.skinFlat.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+    <style>
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 1px solid #070707; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            transition: all 0.3s ease;
+            font-size: 16px;
+
+        }
+
+        .social-btn.facebook i {
+            color: #1877f2;
+        }
+
+        .social-btn.google i {
+            color: #db4437;
+        }
+    </style>
 </head>
 
 <body>
-
-
 
     <!--================Login Box Area =================-->
     <section class="login_box_area section_gap">
@@ -90,8 +114,24 @@
                             <div class="col-md-12 form-group">
                                 <input type="submit" class="primary-btn w-100" value="Login">
                             </div>
-                        </form>
 
+                        </form>
+                        <br>
+                        <div class="d-flex justify-content-center align-item-center gap-4">
+                            <!-- Facebook -->
+                            <a href="" class="social-btn facebook" title="Login with Facebook">
+                                <i class="fa-brands fa-facebook-f"></i>
+                            </a>
+                            &nbsp;
+                            &nbsp;
+                            &nbsp;
+                            &nbsp;
+                            &nbsp;
+                            <!-- Google -->
+                            <a href="{{route('GoggleLoginPage')}}" class="social-btn google" title="Login with Google">
+                                <i class="fa-brands fa-google"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -103,7 +143,6 @@
 
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
         crossorigin="anonymous"></script>
-    <script src="{{ asset('js/vendor/jquery-2.2.4.min.js') }}"></script>
     <script src="{{ asset('js/vendor/bootstrap.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('ajax.js') }}"></script>

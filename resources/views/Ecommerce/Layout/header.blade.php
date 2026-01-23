@@ -35,25 +35,10 @@
                                         href="{{ route('UserConfirmPage') }}">Confirmation</a></li>
                             </ul>
                         </li>
+                      
                         <li class="nav-item submenu dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
-                                aria-haspopup="true" aria-expanded="false">Blog</a>
-                            <ul class="dropdown-menu">
-                                <li class="nav-item"><a class="nav-link" href="{{ route('UserBlogPage') }}">Blog</a>
-                                </li>
-                                <li class="nav-item"><a class="nav-link" href="{{ route('UserCategoryPage') }}">Blog
-                                        Details</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item submenu dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+                            <a href="{{ route('UserContactPage') }}" class="nav-link dropdown-toggle" role="button"
                                 aria-haspopup="true" aria-expanded="false">Contact</a>
-                            <ul class="dropdown-menu">
-                                <li class="nav-item"><a class="nav-link"
-                                        href="{{ route('UserContactPage') }}">Contact</a></li>
-                                <li class="nav-item"><a class="nav-link"
-                                        href="{{ route('UserCategoryPage') }}">Tracking</a></li>
-                            </ul>
                         </li>
 
 
