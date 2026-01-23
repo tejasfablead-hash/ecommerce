@@ -13,12 +13,11 @@ class PaypalController extends Controller
     public function success(Request $request)
     {
         // dd($request->all());
-         $order = Order::where('user_id', Auth::id())
-            ->where('payment_status', 'pending')
-            ->with('orderitem.product')
-            ->latest()
-            ->first();
+        $orderId = session('order_id');
+
+        $order = Order::with('orderitem.product')->find($orderId);
         // dd($order);
+
 
         if (!$order) {
             return response()->json([
@@ -27,15 +26,14 @@ class PaypalController extends Controller
             ], 404);
         }
 
-
-        Order::where('user_id', Auth::id())->update([
+        $order->update([
             'order_number' => $request->paypal_order_id,
             'payment_method' => $request->payment_method,
             'payment_status' => 'paid',
             'order_status' => 'confirmed'
         ]);
 
-         foreach ($order->orderitem as $item) {
+        foreach ($order->orderitem as $item) {
 
             $product = $item->product;
 
@@ -46,8 +44,13 @@ class PaypalController extends Controller
                 ], 400);
             }
 
-            $product->qty = $product->qty - $item->qty;
-            $product->save();
+            $product->decrement('qty', $item->qty);
+
+            if ($product->qty - $item->qty <= 0) {
+                $product->update([
+                    'status' => 'inactive' 
+                ]);
+            }
         }
 
 
@@ -64,6 +67,7 @@ class PaypalController extends Controller
 
         return response()->json([
             'status' => true,
+            'order_number' =>  $request->paypal_order_id,
             'message' => 'Thank you. Your order has been received'
         ]);
     }
@@ -80,7 +84,7 @@ class PaypalController extends Controller
                 ->first();
         }
         // dd($order);
-    
+
         return view('Ecommerce.Pages.confirm', compact('order'));
     }
 }

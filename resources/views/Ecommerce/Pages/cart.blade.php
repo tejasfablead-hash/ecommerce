@@ -45,7 +45,7 @@
                                                     @php
                                                         $firstImage = $images[0];
                                                     @endphp
-                                                    <a href="{{ route('UserProductdetailsPage', $item->id) }}"><img
+                                                    <a href="{{ route('UserProductdetailsPage', $item->getproduct->id) }}"><img
                                                             src="{{ asset('/storage/' . $firstImage) }}" height="50px"
                                                             width="50px" alt="{{ $item->name }}" class=""></a>
                                                 @endif

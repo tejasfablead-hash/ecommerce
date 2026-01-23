@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'role',
         'email',
+        'google_id',
         'password',
         'phone',
         'image',
@@ -53,7 +54,7 @@ class User extends Authenticatable
 
     public function wishlists()
     {
-        return $this->hasMany(Wishlist::class);
+        return $this->hasMany(Wishlist::class,'user_id','id');
     }
 
     public function getorder()

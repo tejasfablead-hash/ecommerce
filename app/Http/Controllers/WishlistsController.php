@@ -52,4 +52,12 @@ class WishlistsController extends Controller
 
         return view('Ecommerce.Pages.wishlist', compact('wishlists'));
     }
+
+    public function view(){
+        $wishlist = Wishlist::with('product','customer')->get();
+        // dd($wishlist);
+        return view('Admin.Product.wishlist', compact('wishlist'));
+
+    }
+    
 }

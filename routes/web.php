@@ -9,6 +9,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SocialLoginController;
 use App\Http\Controllers\WishlistsController;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +29,7 @@ Route::get('/user/register', [AuthController::class, 'user_register'])->name('Us
 Route::post('/user/registration', [AuthController::class, 'registration'])->name('RegistrationPage');
 Route::post('/logout', [AuthController::class, 'logout'])->name('LogoutPage');
 
+
 Route::get('/category', [CategoryController::class, 'index'])->name('CategoryPage');
 Route::post('/category-add', [CategoryController::class, 'store'])->name('CategoryAddPage');
 Route::get('/category-view', [CategoryController::class, 'view'])->name('CategoryViewPage');
@@ -34,6 +37,7 @@ Route::get('/category-edit/{id}', [CategoryController::class, 'edit'])->name('Ca
 Route::post('/category-update', [CategoryController::class, 'Update'])->name('CategoryUpdatePage');
 Route::delete('/category-delete/{id}', [CategoryController::class, 'delete'])
     ->name('CategoryDeletePage');
+Route::get('/user/category', [CategoryController::class, 'category'])->name('UserCategoryPage');
 
 
 
@@ -45,22 +49,20 @@ Route::get('/product-edit/{id}', [ProductController::class, 'edit'])->name('Prod
 Route::get('/product-details/{id}', [ProductController::class, 'detail'])->name('ProductDetailsPage');
 Route::post('/product-update', [ProductController::class, 'Update'])->name('ProductUpdatePage');
 Route::delete('/product-delete/{id}', [ProductController::class, 'delete'])->name('ProductDeletePage');
+Route::get('/user/product/{id}', [ProductController::class, 'product'])->name('UserCategoryProductPage');
+Route::get('/user/peoduct-details/{id}', [ProductController::class, 'productdetail'])->name('UserProductdetailsPage');
+Route::get('/user/product', [ProductController::class, 'products'])->name('UserProductPage');
+
 
 
 
 Route::get('/user/index', [HomeController::class, 'index'])->name('IndexPage');
 Route::get('/user/home', [HomeController::class, 'home'])->name('HomePage');
-Route::get('/user/product', [HomeController::class, 'products'])->name('UserProductPage');
-Route::get('/user/product/{id}', [HomeController::class, 'product'])->name('UserCategoryProductPage');
-Route::get('/user/category', [HomeController::class, 'category'])->name('UserCategoryPage');
-Route::get('/user/peoduct-details/{id}', [HomeController::class, 'detail'])->name('UserProductdetailsPage');
-
-Route::get('/user/blog', [HomeController::class, 'blog'])->name('UserBlogPage');
 Route::get('/user/contact', [HomeController::class, 'contact'])->name('UserContactPage');
-Route::get('/user/profile', [HomeController::class, 'profile'])->name('UserProfilePage');
 
 
 Route::get('/user/wishlist', [WishlistsController::class, 'index'])->name('WishlistPage');
+Route::get('/admin/wishlist', [WishlistsController::class, 'view'])->name('WishlistViewPage');
 Route::post('/user/wishlist-toggle', [WishlistsController::class, 'toggle'])->name('WishlistStorePage');
 
 
@@ -73,15 +75,25 @@ Route::get('/continue-shopping', [CartController::class, 'continueShopping'])
     ->name('UserContinueShopping');
 
 
-
 Route::get('/user/checkout', [CheckOutController::class, 'checkout'])->name('UserCheckoutPage');
 Route::post('/cart/store-grand-total', [CheckoutController::class, 'storeGrandTotal'])
     ->name('UserCheckoutTotalPage');
 
 Route::post('/user/checkout', [OrderController::class, 'order'])->name('UserOrderPage');
+Route::get('/order-view', [OrderController::class, 'view'])->name('OrderViewPage');
+Route::get('/order-details/{id}', [OrderController::class, 'details'])->name('OrderDetailViewPage');
+Route::get('/admin/customer', [OrderController::class, 'customer'])->name('CustomerPage');
+
 
 
 Route::post('/paypal/success', [PaypalController::class, 'success'])
     ->name('PaypalSuccessPage');
-    
 Route::get('/user/confirm', [PaypalController::class, 'confirm'])->name('UserConfirmPage');
+
+
+Route::get('/user/profile', [ProfileController::class, 'profile'])->name('UserProfilePage');
+Route::post('/user/update-profile', [ProfileController::class, 'update'])->name('UserEditProfilePage');
+Route::post('/user/update-feedback', [ProfileController::class, 'feedback'])->name('UserFeedbackPage');
+
+Route::get('/auth/google', [SocialLoginController::class, 'redirect'])->name('GoggleLoginPage');
+Route::get('/auth/google/callback', [SocialLoginController::class, 'callback']);

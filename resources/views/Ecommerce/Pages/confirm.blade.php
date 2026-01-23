@@ -21,8 +21,12 @@
         <div class="container">
             {{-- <h3 class="title_confirmation">Thank you. Your order has been received.</h3> --}}
             @if (isset($order) && $order)
-                <h3 class="title_confirmation text-success">
-                    Thank you. Your payment was successful and order has been placed.
+                <h3 class="title_confirmation text-success d-none">
+                    @if ($order->order_status == 'confirmed')
+                        Thank you. Your payment was successful and order has been placed.
+                    @else
+                    @endif
+
                 </h3>
                 <h4>Order Info</h4>
                 <hr>
@@ -151,7 +155,7 @@
                         </table>
                     </div>
                 </div>
-				 @else
+            @else
                 <div class="text-center py-5">
                     <h2 class="text-danger"> Payment Not Confirmed</h2>
 
@@ -163,10 +167,10 @@
                     <a href="{{ route('UserCheckoutPage') }}" class=" primary-btn mt-3">
                         Try Payment Again
                     </a>
-					<a href="{{ route('HomePage') }}"  class=" primary-btn mt-3" style="background:#7c8e93;color:white">
+                    <a href="{{ route('HomePage') }}" class=" primary-btn mt-3" style="background:#7c8e93;color:white">
                         Go to Home
                     </a>
-                            
+
                 </div>
             @endif
         </div>
