@@ -329,6 +329,7 @@
                             }
                         });
                         if (response.status === true) {
+                             if (response.role === "admin") {
                             Toast.fire({
                                 icon: "success",
                                 title: response.message || "Login successfully"
@@ -336,7 +337,15 @@
                             setTimeout(function() {
                                 window.location.href = "{{ route('DashboardPage') }}";
                             }, 2000);
-
+                        }else {
+                                Toast.fire({
+                                    icon: "error",
+                                    title: "Unauthorized Access"
+                                });
+                                setTimeout(function() {
+                                    window.location.href = "{{ route('LoginPage') }}";
+                                }, 2000);
+                            }
                         } else {
                             Toast.fire({
                                 icon: "error",
@@ -346,7 +355,24 @@
                         }
                     },
                     function(error) {
-                        console.log('error', error);
+                        let message = "Something went wrong";
+
+                        if (error.responseJSON && error.responseJSON.message) {
+                            message = error.responseJSON.message;
+                        }
+
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                        });
+
+                        Toast.fire({
+                            icon: "error",
+                            title: message
+                        });
                     });
             
             });

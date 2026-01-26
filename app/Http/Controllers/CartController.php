@@ -41,6 +41,10 @@ class CartController extends Controller
 
         if ($cart) {
             $cart->increment('qty', $qty);
+            return response()->json([
+                'status' => true,
+                'message' => 'Cart is Updated.'
+            ]);
         } else {
             Cart::create([
                 'user_id' => Auth::id(),
@@ -55,40 +59,41 @@ class CartController extends Controller
         ]);
     }
 
-public function continueShopping()
-{
-    session()->forget([
-        'subtotal',
-        'gstvalue',
-        'discountvalue',
-        'discountprice',
-        'grandtotal',
-    ]);
+    public function continueShopping()
+    {
+        session()->forget([
+            'subtotal',
+            'gstvalue',
+            'discountvalue',
+            'discountprice',
+            'grandtotal',
+        ]);
 
-    return redirect()->route('UserCartPage');
-}
-
-
-
-    public function update(Request $request){
-      
-      $request->validate([
-        'cartId' => 'required|exists:carts,id',
-        'qty' => 'required|integer|min:1'
-    ]);
-    
-        $cart = Cart::where('id', $request->cartId)->where('user_id', Auth::id())
-        ->first();
-        if (!$cart) {
-        return response()->json(['status' => false]);
+        return redirect()->route('UserCartPage');
     }
-    $updateqty = $cart->update([
-        'qty'=>$request->qty
-    ]);
-      return response()->json([
-        'status' => true,
-        'qty' => $updateqty
-    ]);
+
+
+
+    public function update(Request $request)
+    {
+
+        $request->validate([
+            'cartId' => 'required|exists:carts,id',
+            'qty' => 'required|integer|min:1'
+        ]);
+
+        $cart = Cart::where('id', $request->cartId)->where('user_id', Auth::id())
+            ->first();
+        if (!$cart) {
+            return response()->json(['status' => false]);
+        }
+        $updateqty = $cart->update([
+            'qty' => $request->qty
+        ]);
+        return response()->json([
+            'status' => true,
+            'qty' => $updateqty
+        ]);
     }
 
     public function delete($id)

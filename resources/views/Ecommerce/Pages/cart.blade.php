@@ -299,8 +299,24 @@
                 formData.append('cartId', cartId);
                 var url = "{{ route('UserCartUpdatePage') }}";
                 reusableAjaxCall(url, 'POST', formData, function(response) {
+                       const Toast = Swal.mixin({
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            }
+                        });
                     if (response.status == true) {
-                        calculate();
+                          calculate();
+                          Toast.fire({
+                                    icon: "success",
+                                    title: response.message || "Cart Updated"
+                                });
+                      
                     }
                 });
 

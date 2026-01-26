@@ -78,24 +78,41 @@ class OrderController extends Controller
     }
 
     public function view()
-{
-    $order = Order::with([
-        'getcustomer',
-        'orderitem.product'
-    ])->latest()->get();
+    {
+        $order = Order::with([
+            'getcustomer',
+            'orderitem.product'
+        ])->latest()->get();
 
-    return view('Admin.Order.view', compact('order'));
-}
-  public function details($id)
-{
-    $order = Order::where('id',$id)->with([
-        'getcustomer',
-        'orderitem.product'
-    ])->latest()->first();
-    return view('Admin.Order.details', compact('order'));
-}
- public function customer(){
-        $user=User::all();
-        return view('Admin.Order.customer',compact('user'));
+        return view('Admin.Order.view', compact('order'));
+    }
+    public function details($id)
+    {
+        $order = Order::where('id', $id)->with([
+            'getcustomer',
+            'orderitem.product'
+        ])->latest()->first();
+        return view('Admin.Order.details', compact('order'));
+    }
+    public function customer()
+    {
+        $user = User::all();
+        return view('Admin.Order.customer', compact('user'));
+    }
+
+    public function getNotifications()
+    {
+        $orders = Order::where('order_status', 'confirmed')->with([
+            'getcustomer',
+            'orderitem.product'
+        ])->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+
+        $count = $orders->count();
+        return response()->json([
+            'count' => $count,
+            'orders' => $orders
+        ]);
     }
 }

@@ -161,7 +161,7 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-6 text-center">
                         <div class="section-title">
-                            <h1>Coming Products</h1>
+                            <h1>Coming Soon Products</h1>
                             <p>A well-designed product detail page is essential to your marketing strategy since it is the
                                 page that leads directly to a sale..</p>
                         </div>
@@ -229,7 +229,7 @@
                                     We’re working on adding new items.
                                     Please check back soon!
                                 </p>
-                                <a href="{{ route('UserCategoryPage') }}" class="primary-btn mt-4">
+                                <a href="{{ route('HomePage') }}" class="primary-btn mt-4">
                                     Continue Shopping
                                 </a>
                             </div>
