@@ -302,7 +302,7 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-6 text-center">
                         <div class="section-title">
-                            <h1>Coming Products</h1>
+                            <h1>Coming Soon Products</h1>
                             <p>A well-designed product detail page is essential to your marketing strategy since it is the
                                 page that leads directly to a sale..</p>
                         </div>
@@ -310,7 +310,12 @@
                 </div>
                 <div class="row">
                     <!-- single product -->
-                    @foreach ($comingProducts as $item)
+
+
+
+
+                    @forelse ($comingProducts as $item)
+
                         <div class="col-lg-3 col-md-6">
                             <div class="single-product">
                                 <div class="product-img-wrapper">
@@ -364,7 +369,16 @@
                                 </div>
                             </div>
                         </div>
-                    @endforeach
+                    @empty
+                        <div class="col-12 mt-5">
+                            <div class="text-center py-5">
+                                <h4 class="text-muted">No ComingSoon Products</h4>
+                                <p class="text-muted mb-0">
+                                    New products will be available soon. Stay tuned!
+                                </p>
+                            </div>
+                        </div>
+                    @endforelse
 
                 </div>
             </div>

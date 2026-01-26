@@ -1,4 +1,3 @@
-
 <header class="header_area sticky-header">
     <div class="main_menu">
         <nav class="navbar navbar-expand-lg navbar-light main_box">
@@ -15,27 +14,27 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                     <ul class="nav navbar-nav menu_nav ml-auto">
-                       <li class="nav-item"><a class="nav-link" href="{{ route('UserProductPage') }}">Product
-                                       </a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('UserProductPage') }}">Product
+                            </a></li>
                         {{-- <li class="nav-item active"><a class="nav-link" href="{{route('HomePage')}}">Home</a></li> --}}
                         <li class="nav-item submenu dropdown">
-                             
+
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
                                 aria-haspopup="true" aria-expanded="false">Shop</a>
                             <ul class="dropdown-menu">
                                 <li class="nav-item"><a class="nav-link" href="{{ route('UserCategoryPage') }}">Shop
                                         Category</a></li>
-                                          <li class="nav-item"><a class="nav-link" href="{{ route('WishlistPage') }}">
+                                <li class="nav-item"><a class="nav-link" href="{{ route('WishlistPage') }}">
                                         Wishlist</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="{{ route('UserCartPage') }}">Shopping
-                                                Cart</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ route('UserCartPage') }}">Shopping
+                                        Cart</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ route('UserCheckoutPage') }}">Product
                                         Checkout</a></li>
                                 <li class="nav-item"><a class="nav-link"
                                         href="{{ route('UserConfirmPage') }}">Confirmation</a></li>
                             </ul>
                         </li>
-                      
+
                         <li class="nav-item submenu dropdown">
                             <a href="{{ route('UserContactPage') }}" class="nav-link dropdown-toggle" role="button"
                                 aria-haspopup="true" aria-expanded="false">Contact</a>
@@ -48,7 +47,8 @@
                             <ul class="dropdown-menu">
                                 <li class="nav-item"><a class="nav-link"
                                         href="{{ route('UserProfilePage') }}">Profile</a></li>
-                                <li class="nav-item"><a class="nav-link" id="logout" href="javascript:void(0);">Sign
+                                <li class="nav-item"><a class="nav-link logout-btn"
+                                        data-redirect="{{ route('UserLoginPage') }}" href="javascript:void(0);">Sign
                                         Out </a></li>
                             </ul>
                         </li>
@@ -56,11 +56,14 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right prd-bottom">
 
+                            <li class="nav-item"><a href="" class="notification"><span
+                                    class="ti-bell"></span></a></li>
+
                         <li class="nav-item">
                             @auth
                                 <a href="{{ route('WishlistPage') }}" class="social-info wishlist-icon">
                                     <span class="lnr lnr-heart"></span>
-                                        <span class="wishlist-count"></span>
+                                    <span class="wishlist-count"></span>
                                 </a>
                             @endauth
 
@@ -70,7 +73,8 @@
                                 </a>
                             @endguest
                         </li>
-                        <li class="nav-item"><a href="{{ route('UserCartPage') }}" class="cart"><span class="ti-bag"></span></a></li>
+                        <li class="nav-item"><a href="{{ route('UserCartPage') }}" class="cart"><span
+                                    class="ti-bag"></span></a></li>
                         <li class="nav-item">
                             <button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
                         </li>
@@ -91,19 +95,36 @@
 </header>
 
 
-<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
-    crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script src="{{ asset('ajax.js') }}"></script>
 
 <script>
     $(document).ready(function() {
-        $('#logout').click(function(e) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $(document).on('click', '.logout-btn', function(e) {
             e.preventDefault();
+            let redirectUrl = $(this).data('redirect');
             var url = "{{ route('LogoutPage') }}"
             reusableAjaxCall(url, 'POST', null, function(response) {
                 console.log('response', response);
                 if (response.status == true) {
-                    window.location.href = "/user/login";
+                    Swal.fire({
+                        toast: true,
+                        position: "top-end",
+                        icon: "success",
+                        title: response.message,
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+                    setTimeout(() => {
+                        window.location.href = redirectUrl;
+                    }, 1500);
                 }
             });
         });

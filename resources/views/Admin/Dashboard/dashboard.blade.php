@@ -83,7 +83,7 @@
                                 <h6>Customers</h6>
                                 <h3>{{ $user }}</h3>
                             </div>
-                            <i class="feather-users fs-1 text-danger"></i>
+                            <i class="feather-users fs-1 text-info"></i>
                         </div>
                     </div>
                 </div>

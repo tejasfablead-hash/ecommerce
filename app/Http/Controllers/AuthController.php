@@ -14,7 +14,7 @@ class AuthController extends Controller
     {
         return view('Admin.Auth.login');
     }
-   
+
 
     public function loginmatch(Request $request)
     {
@@ -33,32 +33,67 @@ class AuthController extends Controller
         }
         $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
-            $request->session()->regenerate();
+        if (!Auth::attempt($credentials, $request->boolean('remember'))) {
             return response()->json([
-                'status' => true,
-                'message' => 'Login Successfully..'
-            ]);
+                'status' => false,
+                'message' => 'Invalid email or password',
+            ], 401);
         }
+
+        $request->session()->regenerate();
+        $role = Auth::user()->role;
+        if ($role === 'admin') {
+            $redirect = route('DashboardPage'); 
+        } elseif ($role === 'customer') {
+            $redirect = route('HomePage'); 
+        } else {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Unauthorized access',
+            ], 403);
+        }
+
         return response()->json([
-            'status' => false,
-            'message' => 'Invalid email or password..'
+            'status' => true,
+            'role' => $role,
+            'redirect' => $redirect,
+            'message' => 'Login successfully',
         ]);
     }
 
     public function logout(Request $request)
     {
+        if (!Auth::check()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Already logged out'
+            ], 401);
+        }
+
+        $role = Auth::user()->role;
         Auth::logout();
-        $request->session()->invalidate(); 
+        $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return response()->json([
-            'status' => true,
-            'message' => 'Logout Successfully'
-        ]);
+
+        if ($role === 'admin') {
+            return response()->json([
+                'status' => true,
+                'message' => 'Logout Successfully'
+            ]);
+        } elseif ($role === 'customer') {
+            return response()->json([
+                'status' => true,
+                'message' => 'Logout Successfully'
+            ]);
+        }
     }
 
-    
-      public function user_login()
+
+    public function user_login()
     {
         return view('Ecommerce.Auth.login');
     }
@@ -67,7 +102,7 @@ class AuthController extends Controller
         return view('Ecommerce.Auth.register');
     }
 
-      public function registration(Request $request)
+    public function registration(Request $request)
     {
         $validate = Validator::make($request->all(), [
             'username' => 'required|string|max:255',
@@ -93,6 +128,7 @@ class AuthController extends Controller
             }
 
             $user = User::create([
+                'role' => 'customer',
                 'name' => $request->username,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
@@ -114,6 +150,4 @@ class AuthController extends Controller
             ], 500);
         }
     }
-
-   
 }

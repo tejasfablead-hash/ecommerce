@@ -356,229 +356,7 @@
                              </span>
                          </div>
                          <div class="dropdown-divider mt-0"></div>
-                         <div class="search-items-wrapper">
-                             <div class="searching-for px-4 py-2">
-                                 <p class="fs-11 fw-medium text-muted">I'm searching for...</p>
-                                 <div class="d-flex flex-wrap gap-1">
-                                     <a href="javascript:void(0);"
-                                         class="flex-fill border rounded py-1 px-2 text-center fs-11 fw-semibold">Projects</a>
-                                     <a href="javascript:void(0);"
-                                         class="flex-fill border rounded py-1 px-2 text-center fs-11 fw-semibold">Leads</a>
-                                     <a href="javascript:void(0);"
-                                         class="flex-fill border rounded py-1 px-2 text-center fs-11 fw-semibold">Contacts</a>
-                                     <a href="javascript:void(0);"
-                                         class="flex-fill border rounded py-1 px-2 text-center fs-11 fw-semibold">Inbox</a>
-                                     <a href="javascript:void(0);"
-                                         class="flex-fill border rounded py-1 px-2 text-center fs-11 fw-semibold">Invoices</a>
-                                     <a href="javascript:void(0);"
-                                         class="flex-fill border rounded py-1 px-2 text-center fs-11 fw-semibold">Tasks</a>
-                                     <a href="javascript:void(0);"
-                                         class="flex-fill border rounded py-1 px-2 text-center fs-11 fw-semibold">Customers</a>
-                                     <a href="javascript:void(0);"
-                                         class="flex-fill border rounded py-1 px-2 text-center fs-11 fw-semibold">Notes</a>
-                                     <a href="javascript:void(0);"
-                                         class="flex-fill border rounded py-1 px-2 text-center fs-11 fw-semibold">Affiliate</a>
-                                     <a href="javascript:void(0);"
-                                         class="flex-fill border rounded py-1 px-2 text-center fs-11 fw-semibold">Storage</a>
-                                     <a href="javascript:void(0);"
-                                         class="flex-fill border rounded py-1 px-2 text-center fs-11 fw-semibold">Calendar</a>
-                                 </div>
-                             </div>
-                             <div class="dropdown-divider"></div>
-                             <div class="recent-result px-4 py-2">
-                                 <h4 class="fs-13 fw-normal text-gray-600 mb-3">Recnet <span
-                                         class="badge small bg-gray-200 rounded ms-1 text-dark">3</span></h4>
-                                 <div class="d-flex align-items-center justify-content-between mb-4">
-                                     <div class="d-flex align-items-center gap-3">
-                                         <div class="avatar-text rounded">
-                                             <i class="feather-airplay"></i>
-                                         </div>
-                                         <div>
-                                             <a href="javascript:void(0);" class="font-body fw-bold d-block mb-1">CRM
-                                                 dashboard redesign</a>
-                                             <p class="fs-11 text-muted mb-0">Home / project / crm</p>
-                                         </div>
-                                     </div>
-                                     <div>
-                                         <a href="javascript:void(0);" class="badge border rounded text-dark">/<i
-                                                 class="feather-command ms-1 fs-10"></i></a>
-                                     </div>
-                                 </div>
-                                 <div class="d-flex align-items-center justify-content-between mb-4">
-                                     <div class="d-flex align-items-center gap-3">
-                                         <div class="avatar-text rounded">
-                                             <i class="feather-file-plus"></i>
-                                         </div>
-                                         <div>
-                                             <a href="javascript:void(0);" class="font-body fw-bold d-block mb-1">Create
-                                                 new document</a>
-                                             <p class="fs-11 text-muted mb-0">Home / tasks / docs</p>
-                                         </div>
-                                     </div>
-                                     <div>
-                                         <a href="javascript:void(0);" class="badge border rounded text-dark">N /<i
-                                                 class="feather-command ms-1 fs-10"></i></a>
-                                     </div>
-                                 </div>
-                                 <div class="d-flex align-items-center justify-content-between">
-                                     <div class="d-flex align-items-center gap-3">
-                                         <div class="avatar-text rounded">
-                                             <i class="feather-user-plus"></i>
-                                         </div>
-                                         <div>
-                                             <a href="javascript:void(0);" class="font-body fw-bold d-block mb-1">Invite
-                                                 project colleagues</a>
-                                             <p class="fs-11 text-muted mb-0">Home / project / invite</p>
-                                         </div>
-                                     </div>
-                                     <div>
-                                         <a href="javascript:void(0);" class="badge border rounded text-dark">P /<i
-                                                 class="feather-command ms-1 fs-10"></i></a>
-                                     </div>
-                                 </div>
-                             </div>
-                             <div class="dropdown-divider my-3"></div>
-                             <div class="users-result px-4 py-2">
-                                 <h4 class="fs-13 fw-normal text-gray-600 mb-3">Users <span
-                                         class="badge small bg-gray-200 rounded ms-1 text-dark">5</span></h4>
-                                 <div class="d-flex align-items-center justify-content-between mb-4">
-                                     <div class="d-flex align-items-center gap-3">
-                                         <div class="avatar-image rounded">
-                                             <img src="assets/images/avatar/1.png" alt=""
-                                                 class="img-fluid" />
-                                         </div>
-                                         <div>
-                                             <a href="javascript:void(0);"
-                                                 class="font-body fw-bold d-block mb-1">Alexandra Della</a>
-                                             <p class="fs-11 text-muted mb-0">alex@example.com</p>
-                                         </div>
-                                     </div>
-                                     <a href="javascript:void(0);" class="avatar-text avatar-md">
-                                         <i class="feather-chevron-right"></i>
-                                     </a>
-                                 </div>
-                                 <div class="d-flex align-items-center justify-content-between mb-4">
-                                     <div class="d-flex align-items-center gap-3">
-                                         <div class="avatar-image rounded">
-                                             <img src="assets/images/avatar/2.png" alt=""
-                                                 class="img-fluid" />
-                                         </div>
-                                         <div>
-                                             <a href="javascript:void(0);"
-                                                 class="font-body fw-bold d-block mb-1">Green Cute</a>
-                                             <p class="fs-11 text-muted mb-0">green.cute@outlook.com</p>
-                                         </div>
-                                     </div>
-                                     <a href="javascript:void(0);" class="avatar-text avatar-md">
-                                         <i class="feather-chevron-right"></i>
-                                     </a>
-                                 </div>
-                                 <div class="d-flex align-items-center justify-content-between mb-4">
-                                     <div class="d-flex align-items-center gap-3">
-                                         <div class="avatar-image rounded">
-                                             <img src="assets/images/avatar/3.png" alt=""
-                                                 class="img-fluid" />
-                                         </div>
-                                         <div>
-                                             <a href="javascript:void(0);"
-                                                 class="font-body fw-bold d-block mb-1">Malanie Hanvey</a>
-                                             <p class="fs-11 text-muted mb-0">malanie.anvey@outlook.com</p>
-                                         </div>
-                                     </div>
-                                     <a href="javascript:void(0);" class="avatar-text avatar-md">
-                                         <i class="feather-chevron-right"></i>
-                                     </a>
-                                 </div>
-                                 <div class="d-flex align-items-center justify-content-between mb-4">
-                                     <div class="d-flex align-items-center gap-3">
-                                         <div class="avatar-image rounded">
-                                             <img src="assets/images/avatar/4.png" alt=""
-                                                 class="img-fluid" />
-                                         </div>
-                                         <div>
-                                             <a href="javascript:void(0);"
-                                                 class="font-body fw-bold d-block mb-1">Kenneth Hune</a>
-                                             <p class="fs-11 text-muted mb-0">kenth.hune@outlook.com</p>
-                                         </div>
-                                     </div>
-                                     <a href="javascript:void(0);" class="avatar-text avatar-md">
-                                         <i class="feather-chevron-right"></i>
-                                     </a>
-                                 </div>
-                                 <div class="d-flex align-items-center justify-content-between mb-0">
-                                     <div class="d-flex align-items-center gap-3">
-                                         <div class="avatar-image rounded">
-                                             <img src="assets/images/avatar/5.png" alt=""
-                                                 class="img-fluid" />
-                                         </div>
-                                         <div>
-                                             <a href="javascript:void(0);"
-                                                 class="font-body fw-bold d-block mb-1">Archie Cantones</a>
-                                             <p class="fs-11 text-muted mb-0">archie.cones@outlook.com</p>
-                                         </div>
-                                     </div>
-                                     <a href="javascript:void(0);" class="avatar-text avatar-md">
-                                         <i class="feather-chevron-right"></i>
-                                     </a>
-                                 </div>
-                             </div>
-                             <div class="dropdown-divider my-3"></div>
-                             <div class="file-result px-4 py-2">
-                                 <h4 class="fs-13 fw-normal text-gray-600 mb-3">Files <span
-                                         class="badge small bg-gray-200 rounded ms-1 text-dark">3</span></h4>
-                                 <div class="d-flex align-items-center justify-content-between mb-4">
-                                     <div class="d-flex align-items-center gap-3">
-                                         <div class="avatar-image bg-gray-200 rounded">
-                                             <img src="assets/images/file-icons/css.png" alt=""
-                                                 class="img-fluid" />
-                                         </div>
-                                         <div>
-                                             <a href="javascript:void(0);"
-                                                 class="font-body fw-bold d-block mb-1">Project Style CSS</a>
-                                             <p class="fs-11 text-muted mb-0">05.74 MB</p>
-                                         </div>
-                                     </div>
-                                     <a href="javascript:void(0);" class="avatar-text avatar-md">
-                                         <i class="feather-download"></i>
-                                     </a>
-                                 </div>
-                                 <div class="d-flex align-items-center justify-content-between mb-4">
-                                     <div class="d-flex align-items-center gap-3">
-                                         <div class="avatar-image bg-gray-200 rounded">
-                                             <img src="assets/images/file-icons/zip.png" alt=""
-                                                 class="img-fluid" />
-                                         </div>
-                                         <div>
-                                             <a href="javascript:void(0);"
-                                                 class="font-body fw-bold d-block mb-1">Dashboard Project Zip</a>
-                                             <p class="fs-11 text-muted mb-0">46.83 MB</p>
-                                         </div>
-                                     </div>
-                                     <a href="javascript:void(0);" class="avatar-text avatar-md">
-                                         <i class="feather-download"></i>
-                                     </a>
-                                 </div>
-                                 <div class="d-flex align-items-center justify-content-between mb-0">
-                                     <div class="d-flex align-items-center gap-3">
-                                         <div class="avatar-image bg-gray-200 rounded">
-                                             <img src="assets/images/file-icons/pdf.png" alt=""
-                                                 class="img-fluid" />
-                                         </div>
-                                         <div>
-                                             <a href="javascript:void(0);"
-                                                 class="font-body fw-bold d-block mb-1">Project Document PDF</a>
-                                             <p class="fs-11 text-muted mb-0">12.85 MB</p>
-                                         </div>
-                                     </div>
-                                     <a href="javascript:void(0);" class="avatar-text avatar-md">
-                                         <i class="feather-download"></i>
-                                     </a>
-                                 </div>
-                             </div>
-                             <div class="dropdown-divider mt-3 mb-0"></div>
-                             <a href="javascript:void(0);"
-                                 class="p-3 fs-10 fw-bold text-uppercase text-center d-block">Loar More</a>
-                         </div>
+
                      </div>
                  </div>
 
@@ -604,45 +382,24 @@
                      <a class="nxl-head-link me-3" data-bs-toggle="dropdown" href="#" role="button"
                          data-bs-auto-close="outside">
                          <i class="feather-bell"></i>
-                         <span class="badge bg-danger nxl-h-badge">3</span>
+                         <span class="badge bg-danger nxl-h-badge" id="order-count">0</span>
                      </a>
-                     <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-notifications-menu">
+                     <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-notifications-menu" id="order-list">
                          <div class="d-flex justify-content-between align-items-center notifications-head">
-                             <h6 class="fw-bold text-dark mb-0">Notifications</h6>
-                             <a href="javascript:void(0);" class="fs-11 text-success text-end ms-auto"
-                                 data-bs-toggle="tooltip" title="Make as Read">
-                                 <i class="feather-check"></i>
-                                 <span>Make as Read</span>
+                             <h6 class="fw-bold text-dark mb-0">New Orders</h6>
+                             <a href="javascript:void(0);" class="fs-11 text-success text-end ms-auto" id="mark-read">
+                                 <i class="feather-check"></i> Mark All as Read
                              </a>
                          </div>
-                         <div class="notifications-item">
-                             <img src="{{ asset('assets/images/avatar/2.png') }}" alt=""
-                                 class="rounded me-3 border" />
-                             <div class="notifications-desc">
-                                 <a href="javascript:void(0);" class="font-body text-truncate-2-line"> <span
-                                         class="fw-semibold text-dark">Malanie Hanvey</span> We should talk about that
-                                     at lunch!</a>
-                                 <div class="d-flex justify-content-between align-items-center">
-                                     <div class="notifications-date text-muted border-bottom border-bottom-dashed">2
-                                         minutes ago</div>
-                                     <div class="d-flex align-items-center float-end gap-2">
-                                         <a href="javascript:void(0);"
-                                             class="d-block wd-8 ht-8 rounded-circle bg-gray-300"
-                                             data-bs-toggle="tooltip" title="Make as Read"></a>
-                                         <a href="javascript:void(0);" class="text-danger" data-bs-toggle="tooltip"
-                                             title="Remove">
-                                             <i class="feather-x fs-12"></i>
-                                         </a>
-                                     </div>
-                                 </div>
-                             </div>
+                         <div class="notifications-body mt-2" id="notifications-body">
+                             <!-- Dynamic order notifications will appear here -->
                          </div>
-
-                         <div class="text-center notifications-footer">
-                             <a href="javascript:void(0);" class="fs-13 fw-semibold text-dark">Alls Notifications</a>
-                         </div>
+                         {{-- <div class="text-center notifications-footer mt-2">
+            <a href="" class="fs-13 fw-semibold text-dark">View All Orders</a>
+        </div> --}}
                      </div>
                  </div>
+
                  <div class="dropdown nxl-h-item">
                      <a href="javascript:void(0);" data-bs-toggle="dropdown" role="button"
                          data-bs-auto-close="outside">
@@ -667,7 +424,8 @@
 
                                  <div>
                                      <h6 class="text-dark mb-0 text-capitalize">{{ Auth::user()->name ?? 'Guest' }}
-                                         <span class="badge bg-soft-success text-success ms-1">PRO</span></h6>
+                                         <span class="badge bg-soft-success text-success ms-1">PRO</span>
+                                     </h6>
                                      <span class="fs-12 fw-medium text-muted">{{ Auth::user()->email ?? '' }}</span>
                                  </div>
                              </div>
@@ -728,7 +486,7 @@
                              </div> 
                          </div>
                          <div class="dropdown-divider"></div> --}}
-                         <a href="javascript:void(0);" class="dropdown-item">
+                         <a href="{{ route('ProfilesPage') }}" class="dropdown-item">
                              <i class="feather-user"></i>
                              <span>Profile Details</span>
                          </a>
@@ -737,7 +495,8 @@
                              <span>Account Settings</span>
                          </a> --}}
                          <div class="dropdown-divider"></div>
-                         <a id="logout" href="javascript:void(0);" class="dropdown-item">
+                         <a href="javascript:void(0);" data-redirect="{{ route('LoginPage') }}"
+                             class="dropdown-item logout-btn">
                              <i class="feather-log-out"></i>
                              <span>Logout</span>
                          </a>
@@ -750,20 +509,76 @@
  </header>
  <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
      crossorigin="anonymous"></script>
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
  <script src="{{ asset('ajax.js') }}"></script>
 
  <script>
      $(document).ready(function() {
+         $.ajaxSetup({
+             headers: {
+                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+             }
+         });
 
-         $('#logout').click(function(e) {
+         $(document).on('click', '.logout-btn', function(e) {
              e.preventDefault();
+             let redirectUrl = $(this).data('redirect');
              var url = "{{ route('LogoutPage') }}"
              reusableAjaxCall(url, 'POST', null, function(response) {
                  console.log('response', response);
                  if (response.status == true) {
-                     window.location.href = "/";
+                     Swal.fire({
+                         toast: true,
+                         position: "top-end",
+                         icon: "success",
+                         title: response.message,
+                         showConfirmButton: false,
+                         timer: 3000
+                     });
+                     setTimeout(() => {
+                         window.location.href = redirectUrl;
+                     }, 1500);
                  }
              });
          });
+
+         function loadOrderNotifications() {
+             $.ajax({
+                 url: "{{ route('OrdernotificationsPage') }}",
+                 type: 'GET',
+                 success: function(res) {
+                     $('#order-count').text(res.count);
+
+                     let html = '';
+                     if (res.orders.length > 0) {
+                         res.orders.forEach(order => {
+                             html += `
+                            <div class="notifications-item p-2 border-bottom">
+                                <div class="notifications-desc">
+                                    <a href="{{ url('/admin/order-details') }}/` + order.id + `" class="text-truncate text-capitalize">
+                                        <span class="fw-semibold text-dark text-capitalize"> #${order.order_number}</span> - ${order.getcustomer.name}
+                                    </a>
+                                    <div class="text-muted fs-12">${new Date(order.created_at).toLocaleString()}</div>
+                                </div>
+                            </div>
+                        `;
+                         });
+                     } else {
+                         html = '<div class="text-center p-2 text-muted">No new orders</div>';
+                     }
+                     $('#notifications-body').html(html);
+                 },
+                 error: function(err) {
+                     console.error(err);
+                 }
+             });
+         }
+
+         loadOrderNotifications();
+
+         setInterval(loadOrderNotifications, 30000);
+
+
      });
  </script>

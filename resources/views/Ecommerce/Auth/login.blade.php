@@ -43,7 +43,7 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            border: 1px solid #070707; 
+            border: 1px solid #070707;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -128,7 +128,8 @@
                             &nbsp;
                             &nbsp;
                             <!-- Google -->
-                            <a href="{{route('GoggleLoginPage')}}" class="social-btn google" title="Login with Google">
+                            <a href="{{ route('GoggleLoginPage') }}" class="social-btn google"
+                                title="Login with Google">
                                 <i class="fa-brands fa-google"></i>
                             </a>
                         </div>
@@ -139,10 +140,7 @@
     </section>
     <!--================End Login Box Area =================-->
 
-
-
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
-        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="{{ asset('js/vendor/bootstrap.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('ajax.js') }}"></script>
@@ -170,24 +168,53 @@
                             }
                         });
                         if (response.status === true) {
-                            Toast.fire({
-                                icon: "success",
-                                title: response.message || "Login successfully"
-                            });
-                            setTimeout(function() {
-                                window.location.href = "{{ route('HomePage') }}";
-                            }, 2000);
+                            if (response.role === "customer") {
+                                Toast.fire({
+                                    icon: "success",
+                                    title: response.message || "Login successfully"
+                                });
+                                setTimeout(function() {
+                                    window.location.href = "{{ route('HomePage') }}";
+                                }, 2000);
+
+                            } else {
+                                Toast.fire({
+                                    icon: "error",
+                                    title: "Unauthorized Access"
+                                });
+                                setTimeout(function() {
+                                    window.location.href = "{{ route('UserLoginPage') }}";
+                                }, 2000);
+                            }
 
                         } else {
                             Toast.fire({
                                 icon: "error",
                                 title: response.message || "Something went wrong"
                             });
-                            $('#Loginform')[0].reset();
+
                         }
+                        $('#Loginform')[0].reset();
                     },
                     function(error) {
-                        console.log('error', error);
+                        let message = "Something went wrong";
+
+                        if (error.responseJSON && error.responseJSON.message) {
+                            message = error.responseJSON.message;
+                        }
+
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                        });
+
+                        Toast.fire({
+                            icon: "error",
+                            title: message
+                        });
                     });
             });
 
