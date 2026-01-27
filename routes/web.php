@@ -56,19 +56,24 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/product-details/{id}', [ProductController::class, 'detail'])->name('ProductDetailsPage');
     Route::post('/product-update', [ProductController::class, 'Update'])->name('ProductUpdatePage');
     Route::delete('/product-delete/{id}', [ProductController::class, 'delete'])->name('ProductDeletePage');
-    Route::get('/admin/wishlist', [WishlistsController::class, 'view'])->name('WishlistViewPage');
+    Route::get('/wishlist', [WishlistsController::class, 'view'])->name('WishlistViewPage');
 
-    Route::get('/admin/customer', [OrderController::class, 'customer'])->name('CustomerPage');
+    Route::get('/customer', [OrderController::class, 'customer'])->name('CustomerPage');
     Route::get('/order-view', [OrderController::class, 'view'])->name('OrderViewPage');
 
-  Route::get('/admin/chat', [DashboardController::class, 'chat'])->name('AdminChatPage');
-   Route::get('/admin/chat/{chatId}', [DashboardController::class, 'show'])->name('AdminchatShow');
-    Route::post('/admin/chat/send', [DashboardController::class, 'send'])->name('AdminchatSend');
-    Route::get('/admin/chat/unread-count', [DashboardController::class, 'unreadCount']);
+    Route::get('/chat', [DashboardController::class, 'chat'])->name('AdminChatPage');
+    Route::get('/chat/{chatId}', [DashboardController::class, 'show'])->name('AdminchatShow');
+    Route::post('/chat/send', [DashboardController::class, 'send'])->name('AdminchatSend');
+    Route::get('/chat/unread-count', [DashboardController::class, 'unreadCount']);
+    Route::post('/chat/update', [DashboardController::class, 'updatechat'])
+        ->name('AdminchatUpdate');
+
+    Route::post('/chat/delete', [DashboardController::class, 'delete'])
+        ->name('AdminchatDelete');
+
 
     Route::get('/order-details/{id}', [OrderController::class, 'details'])->name('OrderDetailViewPage');
     Route::get('/orders/notifications', [OrderController::class, 'getNotifications'])->name('OrdernotificationsPage');
-
 });
 
 Route::middleware(['auth', 'user'])->group(function () {
@@ -105,5 +110,9 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::post('/user/update-profile', [ProfileController::class, 'update'])->name('UserEditProfilePage');
     Route::post('/user/update-feedback', [ProfileController::class, 'feedback'])->name('UserFeedbackPage');
 
-
+    Route::get('/user/chat', [UserChatController::class, 'index'])->name('ChatPage');;
+    Route::get('/user/chat/messages', [UserChatController::class, 'fetchMessages']);
+    Route::post('/user/chat/send', [UserChatController::class, 'sendMessage']);
+    Route::get('/user/chat/unread-count', [UserChatController::class, 'unreadCount'])->name('ChatUnreadPage');
+    Route::get('/user/chat/unread-messages', [UserChatController::class, 'unreadMessages'])->name('ChatUnreadMessages');
 });

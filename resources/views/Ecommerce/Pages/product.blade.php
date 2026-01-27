@@ -85,60 +85,75 @@
                 </div>
                 <div class="row">
                     <!-- single product -->
-                    @forelse  ($latestProducts as $item)
-                        <div class="col-lg-3 col-md-6">
-                            <div class="single-product ">
-                                <div class="product-img-wrapper">
-                                    @if ($item->qty == 0)
-                                        <span class="out-of-stock">Out of Stock</span>
-                                    @endif
-                                    @php
-                                        $images = json_decode($item->image, true);
-                                    @endphp
-                                    @if (is_array($images) && count($images) > 0)
-                                        @php
-                                            $firstImage = $images[0];
-                                        @endphp
-                                        <a href="{{ route('UserProductdetailsPage', $item->id) }}"><img
-                                                src="{{ asset('/storage/' . $firstImage) }}" alt="{{ $item->name }}"
-                                                class="img-fluid"></a>
-                                    @endif
-                                </div>
-
-                                <div class="product-details mt-2">
-                                    <h6>{{ $item->name }}</h6>
-                                    <div class="price">
-                                        <h6>${{ $item->price }}</h6>
-                                        {{-- <h6 class="l-through">$210.00</h6> --}}
-                                    </div>
-                                    <div class="prd-bottom">
-                                        @if ($item->qty > 0)
-                                            <a href="javascript:void(0)" class="social-info cart-info"
-                                                data-cart-id="{{ $item->id }}">
-                                                <span class="ti-bag"></span>
-                                                <p class="hover-text">add to bag</p>
-                                            </a>
-                                        @else
-                                            <a href="javascript:void(0)" class="social-info disabled-cart">
-                                                <span class="ti-bag"></span>
-                                                <p class="hover-text">out of stock</p>
-                                            </a>
+                    @if (isset($latestProducts))
+                        @forelse  ($latestProducts as $item)
+                            <div class="col-lg-3 col-md-6">
+                                <div class="single-product ">
+                                    <div class="product-img-wrapper">
+                                        @if ($item->qty == 0)
+                                            <span class="out-of-stock">Out of Stock</span>
                                         @endif
+                                        @php
+                                            $images = json_decode($item->image, true);
+                                        @endphp
+                                        @if (is_array($images) && count($images) > 0)
+                                            @php
+                                                $firstImage = $images[0];
+                                            @endphp
+                                            <a href="{{ route('UserProductdetailsPage', $item->id) }}"><img
+                                                    src="{{ asset('/storage/' . $firstImage) }}" alt="{{ $item->name }}"
+                                                    class="img-fluid"></a>
+                                        @endif
+                                    </div>
 
-                                        <a href="javascript:void(0)" class="social-info wishlist-btn"
-                                            data-product-id="{{ $item->id }}">
-                                            <span class="lnr lnr-heart"></span>
-                                            <p class="hover-text">Wishlist</p>
-                                        </a>
-                                        <a href="{{ route('UserProductdetailsPage', $item->id) }}" class="social-info">
-                                            <span class="lnr lnr-move"></span>
-                                            <p class="hover-text">view more</p>
-                                        </a>
+                                    <div class="product-details mt-2">
+                                        <h6>{{ $item->name }}</h6>
+                                        <div class="price">
+                                            <h6>${{ $item->price }}</h6>
+                                            {{-- <h6 class="l-through">$210.00</h6> --}}
+                                        </div>
+                                        <div class="prd-bottom">
+                                            @if ($item->qty > 0)
+                                                <a href="javascript:void(0)" class="social-info cart-info"
+                                                    data-cart-id="{{ $item->id }}">
+                                                    <span class="ti-bag"></span>
+                                                    <p class="hover-text">add to bag</p>
+                                                </a>
+                                            @else
+                                                <a href="javascript:void(0)" class="social-info disabled-cart">
+                                                    <span class="ti-bag"></span>
+                                                    <p class="hover-text">out of stock</p>
+                                                </a>
+                                            @endif
+
+                                            <a href="javascript:void(0)" class="social-info wishlist-btn"
+                                                data-product-id="{{ $item->id }}">
+                                                <span class="lnr lnr-heart"></span>
+                                                <p class="hover-text">Wishlist</p>
+                                            </a>
+                                            <a href="{{ route('UserProductdetailsPage', $item->id) }}" class="social-info">
+                                                <span class="lnr lnr-move"></span>
+                                                <p class="hover-text">view more</p>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    @empty
+                        @empty
+                            <div class="col-md-12">
+                                <div class="no-product-box text-center">
+                                    <h4>No Products Available</h4>
+                                    <p class="text-muted">
+                                        We’re working on adding new items.
+                                        Please check back soon!
+                                    </p>
+                                    <a href="{{ route('UserCategoryPage') }}" class="primary-btn mt-4">
+                                        Continue Shopping
+                                    </a>
+                                </div>
+                            </div>
+                        @endforelse
+                    @else
                         <div class="col-md-12">
                             <div class="no-product-box text-center">
                                 <h4>No Products Available</h4>
@@ -146,12 +161,9 @@
                                     We’re working on adding new items.
                                     Please check back soon!
                                 </p>
-                                <a href="{{ route('UserCategoryPage') }}" class="primary-btn mt-4">
-                                    Continue Shopping
-                                </a>
                             </div>
                         </div>
-                    @endforelse
+                    @endif
                 </div>
             </div>
         </div>
@@ -169,72 +181,84 @@
                 </div>
                 <div class="row">
                     <!-- single product -->
-                    @forelse  ($comingProducts as $item)
-                        <div class="col-lg-3 col-md-6">
-                            <div class="single-product ">
-                                <div class="product-img-wrapper">
-                                    @if ($item->qty == 0)
-                                        <span class="out-of-stock">Out of Stock</span>
-                                    @endif
-                                    @php
-                                        $images = json_decode($item->image, true);
-                                    @endphp
-                                    @if (is_array($images) && count($images) > 0)
-                                        @php
-                                            $firstImage = $images[0];
-                                        @endphp
-                                        <a href="{{ route('UserProductdetailsPage', $item->id) }}"><img
-                                                src="{{ asset('/storage/' . $firstImage) }}" alt="{{ $item->name }}"
-                                                class="img-fluid"></a>
-                                    @endif
-                                </div>
-                                <div class="product-details mt-2">
-                                    <h6>{{ $item->name }}</h6>
-                                    <div class="price">
-                                        <h6>${{ $item->price }}</h6>
-                                        {{-- <h6 class="l-through">$210.00</h6> --}}
-                                    </div>
-                                    <div class="prd-bottom">
-                                        @if ($item->qty > 0)
-                                            <a href="javascript:void(0)" class="social-info cart-info"
-                                                data-cart-id="{{ $item->id }}">
-                                                <span class="ti-bag"></span>
-                                                <p class="hover-text">add to bag</p>
-                                            </a>
-                                        @else
-                                            <a href="javascript:void(0)" class="social-info disabled-cart">
-                                                <span class="ti-bag"></span>
-                                                <p class="hover-text">out of stock</p>
-                                            </a>
+                    @if (isset($comingProducts))
+                        @forelse  ($comingProducts as $item)
+                            <div class="col-lg-3 col-md-6">
+                                <div class="single-product ">
+                                    <div class="product-img-wrapper">
+                                        @if ($item->qty == 0)
+                                            <span class="out-of-stock">Out of Stock</span>
                                         @endif
+                                        @php
+                                            $images = json_decode($item->image, true);
+                                        @endphp
+                                        @if (is_array($images) && count($images) > 0)
+                                            @php
+                                                $firstImage = $images[0];
+                                            @endphp
+                                            <a href="{{ route('UserProductdetailsPage', $item->id) }}"><img
+                                                    src="{{ asset('/storage/' . $firstImage) }}" alt="{{ $item->name }}"
+                                                    class="img-fluid"></a>
+                                        @endif
+                                    </div>
+                                    <div class="product-details mt-2">
+                                        <h6>{{ $item->name }}</h6>
+                                        <div class="price">
+                                            <h6>${{ $item->price }}</h6>
+                                            {{-- <h6 class="l-through">$210.00</h6> --}}
+                                        </div>
+                                        <div class="prd-bottom">
+                                            @if ($item->qty > 0)
+                                                <a href="javascript:void(0)" class="social-info cart-info"
+                                                    data-cart-id="{{ $item->id }}">
+                                                    <span class="ti-bag"></span>
+                                                    <p class="hover-text">add to bag</p>
+                                                </a>
+                                            @else
+                                                <a href="javascript:void(0)" class="social-info disabled-cart">
+                                                    <span class="ti-bag"></span>
+                                                    <p class="hover-text">out of stock</p>
+                                                </a>
+                                            @endif
 
-                                        <a href="javascript:void(0)" class="social-info wishlist-btn"
-                                            data-product-id="{{ $item->id }}">
-                                            <span class="lnr lnr-heart"></span>
-                                            <p class="hover-text">Wishlist</p>
-                                        </a>
-                                        <a href="{{ route('UserProductdetailsPage', $item->id) }}" class="social-info">
-                                            <span class="lnr lnr-move"></span>
-                                            <p class="hover-text">view more</p>
-                                        </a>
+                                            <a href="javascript:void(0)" class="social-info wishlist-btn"
+                                                data-product-id="{{ $item->id }}">
+                                                <span class="lnr lnr-heart"></span>
+                                                <p class="hover-text">Wishlist</p>
+                                            </a>
+                                            <a href="{{ route('UserProductdetailsPage', $item->id) }}" class="social-info">
+                                                <span class="lnr lnr-move"></span>
+                                                <p class="hover-text">view more</p>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    @empty
-                        <div class="col-12">
+                        @empty
+                            <div class="col-12">
+                                <div class="no-product-box text-center">
+                                    <h4>No Products Available</h4>
+                                    <p class="text-muted">
+                                        We’re working on adding new items.
+                                        Please check back soon!
+                                    </p>
+                                    <a href="{{ route('HomePage') }}" class="primary-btn mt-4">
+                                        Continue Shopping
+                                    </a>
+                                </div>
+                            </div>
+                        @endforelse
+                    @else
+                        <div class="col-md-12">
                             <div class="no-product-box text-center">
                                 <h4>No Products Available</h4>
                                 <p class="text-muted">
                                     We’re working on adding new items.
                                     Please check back soon!
                                 </p>
-                                <a href="{{ route('HomePage') }}" class="primary-btn mt-4">
-                                    Continue Shopping
-                                </a>
                             </div>
                         </div>
-                    @endforelse
+                    @endif
                 </div>
             </div>
         </div>
@@ -248,7 +272,6 @@
                 <div class="col-lg-6 no-padding exclusive-left">
                     <div class="row clock_sec clockdiv" id="clockdiv">
                         <div class="col-lg-12">
-
                             <h1>Exclusive Hot Deal Ends Soon!</h1>
                             <p>Who are in extremely love with eco friendly system.</p>
                         </div>
@@ -278,41 +301,83 @@
                 <div class="col-lg-6 no-padding exclusive-right">
                     <div class="active-exclusive-product-slider">
                         <!-- single exclusive carousel -->
-                        @foreach ($saleProducts as $item)
-                            <div class="single-exclusive-slider">
-                                @php
-                                    $images = json_decode($item->image, true);
-                                @endphp
-                                @if (is_array($images) && count($images) > 0)
+                        @if (isset($saleProducts) && $saleProducts->count())
+                            @forelse ($saleProducts as $item)
+                                <div class="single-exclusive-slider">
                                     @php
-                                        $firstImage = $images[0];
+                                        $images = json_decode($item->image, true);
                                     @endphp
-                                    <a href="{{ route('UserProductdetailsPage', $item->id) }}" class="exclusive-img-box">
-                                        <img src="{{ asset('storage/' . $firstImage) }}" alt="{{ $item->name }}">
-                                    </a>
-                                @endif
-                                <div class="product-details">
-                                    <div class="price">
-                                        <h6>${{ $item->price }}</h6>
-                                        {{-- <h6 class="l-through">$210.00</h6> --}}
+                                    @if (is_array($images) && count($images) > 0)
+                                        @php
+                                            $firstImage = $images[0];
+                                        @endphp
+                                        <a href="{{ route('UserProductdetailsPage', $item->id) }}"
+                                            class="exclusive-img-box">
+                                            <img src="{{ asset('storage/' . $firstImage) }}" alt="{{ $item->name }}">
+                                        </a>
+                                    @endif
+                                    <div class="product-details">
+                                        <div class="price">
+                                            <h6>${{ $item->price }}</h6>
+                                            {{-- <h6 class="l-through">$210.00</h6> --}}
+                                        </div>
+                                        <h4>{{ $item->name }}</h4>
+
+                                        <div class="add-bag d-flex align-items-center justify-content-center">
+                                            @if ($item->qty > 0)
+                                                <a class="add-btn" href=""><span class="ti-bag"></span></a>
+                                                <span class="add-text text-uppercase">Add to Bag</span>
+                                            @else
+                                                <a href="javascript:void(0)" class="add-btn disabled-cart">
+                                                    <span class="ti-bag"></span>
+                                                </a>
+                                                <span class="add-text text-uppercase text-danger">Out of Stock</span>
+                                            @endif
+
+                                        </div>
                                     </div>
-                                    <h4>{{ $item->name }}</h4>
+                                </div>
+                            @empty
+                                <div class="single-exclusive-slider">
+                                    <div class="product-details">
+                                        <div class="add-bag d-flex align-items-center justify-content-center">
 
-                                    <div class="add-bag d-flex align-items-center justify-content-center">
-                                        @if ($item->qty > 0)
-                                            <a class="add-btn" href=""><span class="ti-bag"></span></a>
-                                            <span class="add-text text-uppercase">Add to Bag</span>
-                                        @else
-                                            <a href="javascript:void(0)" class="add-btn disabled-cart">
-                                                <span class="ti-bag"></span>
+                                            <img src="{{ asset('img/logo.png') }}" style="max-width:200px"
+                                                class="mb-4">
+
+                                            <h4 class="text-danger">No Sale Products Available</h4>
+                                            <p class="text-muted">
+                                                Exclusive deals are coming soon.
+                                                Please check back later!
+                                            </p>
+
+                                            <a href="{{ route('UserCategoryPage') }}" class="primary-btn mt-3">
+                                                Browse Products
                                             </a>
-                                            <span class="add-text text-uppercase text-danger">Out of Stock</span>
-                                        @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforelse
+                        @else
+                            <div class="single-exclusive-slider">
+                                <div class="product-details">
+                                    <div class="add-bag d-flex align-items-center justify-content-center">
 
+                                        <img src="{{ asset('img/logo.png') }}" style="max-width:200px" class="mb-4">
+
+                                        <h4 class="text-danger">No Sale Products Available</h4>
+                                        <p class="text-muted">
+                                            Exclusive deals are coming soon.
+                                            Please check back later!
+                                        </p>
+
+                                        <a href="{{ route('UserCategoryPage') }}" class="primary-btn mt-3">
+                                            Browse Products
+                                        </a>
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
+                        @endif
                     </div>
                 </div>
             </div>

@@ -31,8 +31,9 @@ class ProfileController extends Controller
         $id = Auth::id();
         $updateuser = User::where('id', $id)->first();
         $newimage = $updateuser->image;
+
         $validate = Validator::make($request->all(), [
-            'username' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'email' => [
                 'required',
                 'email',

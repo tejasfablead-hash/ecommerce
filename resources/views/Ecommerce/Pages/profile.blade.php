@@ -49,30 +49,30 @@
                 <div class="modal fade" id="updateProfileModal" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-md">
                         <div class="modal-content border-0 rounded-4 overflow-hidden">
-                            <div class="modal-header border-0">
-                                <h5 class="modal-title fw-bold">Update Profile</h5> <button type="button"
-                                    class="btn-close border-0 bg-white" data-bs-dismiss="modal">X</button>
-                            </div>
-                            <!-- Top Header / Avatar -->
-                            <div class="bg-light text-center py-4">
-                                <img src="{{ asset('storage/user/' . Auth::user()->image) }}"
-                                    class="rounded-circle shadow-sm mb-2" width="110" height="110" alt="Profile">
-                            </div>
-
-                            <!-- Close Button -->
-                            <!-- Form -->
-                            <form id="updateprofile" enctype="multipart/form-data">
+                            <form id="updateprofileform" enctype="multipart/form-data">
                                 @csrf
+                                <div class="modal-header border-0">
+                                    <h5 class="modal-title fw-bold">Update Profile</h5> <button type="button"
+                                        class="btn-close border-0 bg-white" data-bs-dismiss="modal">X</button>
+                                </div>
+                                <!-- Top Header / Avatar -->
+                                <div class="bg-light text-center py-4">
+                                    <img src="{{ asset('storage/user/' . Auth::user()->image) }}"
+                                        class="rounded-circle shadow-sm mb-2" width="110" height="110" alt="Profile">
+                                </div>
+
+                                <!-- Close Button -->
+                                <!-- Form -->
+
                                 <div class="modal-body px-2 py-2">
                                     <input type="hidden" name="id" value="{{ Auth::user()->id }}">
-
                                     <div class="row g-3">
                                         <!-- Name -->
                                         <div class="col-md-6">
                                             <label class="form-label fw-semibold">Name</label>
-                                            <input type="text" name="username" class="form-control"
+                                            <input type="text" name="name" class="form-control"
                                                 value="{{ Auth::user()->name }}">
-                                            <small class="text-danger error" id="username_error"></small>
+                                            <small class="text-danger error" id="name_error"></small>
 
                                         </div>
 
@@ -110,8 +110,8 @@
                                         Cancel
                                     </button>
 
-                                    <input type="submit" value=" Save Changes" class="btn btn-primary rounded-pill px-4">
-
+                                    <input type="submit" name="submit" value="Save Changes"
+                                        class="btn btn-primary rounded-pill px-4">
 
                                 </div>
                             </form>
@@ -129,78 +129,84 @@
                     <div class="card shadow-sm border-0 rounded-4 mb-4">
                         <div class="card-body">
                             <h4 class="fw-bold mb-4">My Orders</h4>
-
-                            @if ($orders->count())
-                                <div class="table-responsive">
-                                    <table class="table align-middle">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th>Order ID</th>
-                                                <th>Products</th>
-                                                <th>Date</th>
-                                                <th>Total</th>
-                                                <th>Status</th>
-                                                <th class="text-end">Action</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-                                            @foreach ($orders as $order)
+                            @if (isset($orders))
+                                @if ($orders->count())
+                                    <div class="table-responsive">
+                                        <table class="table align-middle">
+                                            <thead class="table-light">
                                                 <tr>
-                                                    <!-- Order ID -->
-                                                    <td>
-                                                        <strong>#{{ $order->order_number }}</strong>
-                                                    </td>
+                                                    <th>Order ID</th>
+                                                    <th>Products</th>
+                                                    <th>Date</th>
+                                                    <th>Total</th>
+                                                    <th>Status</th>
+                                                    <th class="text-end">Action</th>
+                                                </tr>
+                                            </thead>
 
-                                                    <!-- Products -->
-                                                    <td>
-                                                        @foreach ($order->orderitem as $item)
-                                                            <div class="d-flex align-items-center ">
-                                                                <span class="text-capitalize">
-                                                                    {{ \Illuminate\Support\Str::limit($item->product->name, 6, '...') }}
-                                                                </span>
-                                                            </div>
-                                                        @endforeach
-                                                    </td>
+                                            <tbody>
+                                                @foreach ($orders as $order)
+                                                    <tr>
+                                                        <!-- Order ID -->
+                                                        <td>
+                                                            <strong>#{{ $order->order_number }}</strong>
+                                                        </td>
 
-                                                    <!-- Date -->
-                                                    <td>
-                                                        {{ $order->created_at->format('d M Y') }}
-                                                    </td>
+                                                        <!-- Products -->
+                                                        <td>
+                                                            @foreach ($order->orderitem as $item)
+                                                                <div class="d-flex align-items-center ">
+                                                                    <span class="text-capitalize">
+                                                                        {{ \Illuminate\Support\Str::limit($item->product->name, 6, '...') }}
+                                                                    </span>
+                                                                </div>
+                                                            @endforeach
+                                                        </td>
 
-                                                    <!-- Total -->
-                                                    <td>
-                                                        ₹{{ number_format($order->grand_total, 2) }}
-                                                    </td>
+                                                        <!-- Date -->
+                                                        <td>
+                                                            {{ $order->created_at->format('d M Y') }}
+                                                        </td>
 
-                                                    <!-- Status -->
-                                                    <td>
-                                                        <span
-                                                            class="
+                                                        <!-- Total -->
+                                                        <td>
+                                                            ₹{{ number_format($order->grand_total, 2) }}
+                                                        </td>
+
+                                                        <!-- Status -->
+                                                        <td>
+                                                            <span
+                                                                class="
                                         @if ($order->order_status == 'confirmed') @elseif ($order->order_status == 'delivered') 
                                         @elseif ($order->order_status == 'cancelled')
                                         @else @endif">
-                                                            {{ ucfirst($order->order_status) }}
-                                                        </span>
-                                                    </td>
+                                                                {{ ucfirst($order->order_status) }}
+                                                            </span>
+                                                        </td>
 
-                                                    <!-- Action -->
-                                                    <td class="text-end">
-                                                        <a href="{{ route('UserConfirmPage', $order->id) }}"
-                                                            class="btn btn-sm btn-primary">
-                                                            View
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
+                                                        <!-- Action -->
+                                                        <td class="text-end">
+                                                            <a href="{{ route('UserConfirmPage', $order->id) }}"
+                                                                class="btn btn-sm btn-primary">
+                                                                View
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @else
+                                    <div class="text-center py-5">
+                                        <p class="text-muted mb-0">You haven’t placed any orders yet.</p>
+                                    </div>
+                                @endif
                             @else
                                 <div class="text-center py-5">
                                     <p class="text-muted mb-0">You haven’t placed any orders yet.</p>
                                 </div>
                             @endif
+
                         </div>
                     </div>
                     <!-- Optional: Feedback Card -->
@@ -250,12 +256,13 @@
     <script src="{{ asset('ajax.js') }}"></script>
     <script>
         $(document).ready(function() {
-            $('#updateprofile').submit(function(e) {
+            $('#updateprofileform').submit(function(e) {
                 e.preventDefault();
-                var data = $('#updateprofile')[0];
+                var data = $('#updateprofileform')[0];
                 var formData = new FormData(data);
                 $('.error').text('');
                 let url = "{{ route('UserEditProfilePage') }}";
+
                 reusableAjaxCall(url, 'POST', formData, function(response) {
                         console.log('response', response);
                         const Toast = Swal.mixin({
@@ -269,26 +276,23 @@
                                 toast.onmouseleave = Swal.resumeTimer;
                             }
                         });
-                        if (response.status === true) {
+                        if (response.status == true) {
                             Toast.fire({
                                 icon: "success",
                                 title: response.message || "Profile Updated Successfully"
                             });
+                            $('#updateProfileModal').modal('hide');
                             setTimeout(function() {
                                 window.location.href = "{{ route('UserProfilePage') }}";
                             }, 2000);
 
-                        } else {
-                            Toast.fire({
-                                icon: "error",
-                                title: response.message || "Profile Not Updated"
-                            });
+                            $('#updateprofileform')[0].reset();
                         }
-                        $('#updateprofile')[0].reset();
                     },
                     function(error) {
-                        console.log('error', error);
-                    });
+                        console.log(error);
+                    }
+                );
             });
 
             $('#feedback').submit(function(e) {

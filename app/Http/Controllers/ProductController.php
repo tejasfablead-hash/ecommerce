@@ -156,29 +156,35 @@ class ProductController extends Controller
         ], 200);
     }
 
-     public function detail($id)
+    public function detail($id)
     {
         $product = Product::where('id', $id)->first();
         return view('Admin.Product.details', compact(['product']));
     }
 
-       public function product($id)
+    public function product($id)
     {
         $product = Product::where('category_id', $id)->get();
         return view('Ecommerce.Pages.product', compact('product'));
     }
 
-     public function productdetail($id)
+    public function productdetail($id = null)
     {
-        $product = Product::findOrFail($id);
+        if (empty($id)) {
+            return view('Ecommerce.Pages.productdetail', [
+                'product' => null
+            ]);
+        }
+
+        $product = Product::find($id);
+
         return view('Ecommerce.Pages.productdetail', compact('product'));
     }
-       public function products()
+    public function products()
     {
         $product = Product::where('status', 'active')
             ->orderBy('created_at', 'desc')
             ->get();
         return view('Ecommerce.Pages.product', compact('product'));
     }
-  
 }
