@@ -34,8 +34,12 @@
     </section>
     <!-- End Banner Area -->
 
+
+@if($product)
+
     @php
         $images = json_decode($product->image, true);
+        
     @endphp
 
 
@@ -93,6 +97,33 @@
             </div>
         </div>
     </div>
+  
+    @else
+
+    <div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+
+            <img src="{{ asset('img/logo.png') }}" 
+                 alt="No product" 
+                 style="max-width:220px" 
+                 class="mb-4">
+
+            <h3 class="text-danger">No Product Available</h3>
+
+            <p class="text-muted mb-4">
+                This product may have been removed or does not exist.
+            </p>
+
+            <a href="{{ route('HomePage') }}" class="primary-btn">
+                Continue Shopping
+            </a>
+
+        </div>
+    </div>
+</div>
+@endif
+
     <!--================End Single Product Area =================-->
 
     <!--================Product Description Area =================-->
@@ -604,6 +635,7 @@
 
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="{{ asset('ajax.js') }}"></script>
+    @if($product)
     <script>
         $(document).ready(function() {
 
@@ -656,4 +688,5 @@
             });
         });
     </script>
+    @endif
 @endsection

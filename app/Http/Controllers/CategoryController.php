@@ -135,7 +135,6 @@ class CategoryController extends Controller
    
     public function category(Request $request)
     {
-    
         $category = Category::with('getproduct')->withCount('getproduct')->get();
         // dd($category);
         return view('Ecommerce.Pages.category', compact(['category']));

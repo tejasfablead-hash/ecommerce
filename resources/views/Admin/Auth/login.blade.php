@@ -61,24 +61,24 @@
                             <div class="mt-3">
                                 <input type="submit" class="btn btn-lg btn-primary w-100" value="Login">
                             </div>
-                        
-                        <div class="w-100 mt-4 text-center mx-auto">
-                            <div class="mb-4 border-bottom position-relative"><span
-                                    class="small py-1 px-3 text-uppercase text-muted bg-white position-absolute translate-middle">or</span>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-center gap-2">
-                                <a href="javascript:void(0);" class="btn btn-light-brand flex-fill"
-                                    data-bs-toggle="tooltip" data-bs-trigger="hover" title="Login with Facebook">
-                                    <i class="feather-facebook"></i>
-                                </a>
-                                <a href="javascript:void(0);" class="btn btn-light-brand flex-fill"
-                                    data-bs-toggle="tooltip" data-bs-trigger="hover" title="Login with Google">
-                                    <i class="fa-brands fa-google"></i>
-                                </a>
-                               
-                            </div>
-                        </div>
-                     
+
+                            {{-- <div class="w-100 mt-4 text-center mx-auto">
+                                <div class="mb-4 border-bottom position-relative"><span
+                                        class="small py-1 px-3 text-uppercase text-muted bg-white position-absolute translate-middle">or</span>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-center gap-2">
+                                    <a href="javascript:void(0);" class="btn btn-light-brand flex-fill"
+                                        data-bs-toggle="tooltip" data-bs-trigger="hover" title="Login with Facebook">
+                                        <i class="feather-facebook"></i>
+                                    </a>
+                                    <a href="javascript:void(0);" class="btn btn-light-brand flex-fill"
+                                        data-bs-toggle="tooltip" data-bs-trigger="hover" title="Login with Google">
+                                        <i class="fa-brands fa-google"></i>
+                                    </a>
+
+                                </div>
+                            </div> --}}
+
                         </form>
                     </div>
                 </div>
@@ -304,7 +304,7 @@
     <script src="assets/vendors/js/lslstrength.min.js"></script>
     <script src="assets/js/common-init.min.js"></script>
     <script src="assets/js/theme-customizer-init.min.js"></script>
-    <script src="{{asset('ajax.js')  }}"></script>
+    <script src="{{ asset('ajax.js') }}"></script>
     <script>
         $(document).ready(function() {
 
@@ -315,7 +315,7 @@
                 var formData = new FormData(data);
                 $('.error').text('');
                 var url = "{{ route('LoginMatchPage') }}";
-                     reusableAjaxCall(url, 'POST', formData, function(response) {
+                reusableAjaxCall(url, 'POST', formData, function(response) {
                         console.log('response', response);
                         const Toast = Swal.mixin({
                             toast: true,
@@ -329,15 +329,15 @@
                             }
                         });
                         if (response.status === true) {
-                             if (response.role === "admin") {
-                            Toast.fire({
-                                icon: "success",
-                                title: response.message || "Login successfully"
-                            });
-                            setTimeout(function() {
-                                window.location.href = "{{ route('DashboardPage') }}";
-                            }, 2000);
-                        }else {
+                            if (response.role === "admin") {
+                                Toast.fire({
+                                    icon: "success",
+                                    title: response.message || "Login successfully"
+                                });
+                                setTimeout(function() {
+                                    window.location.href = response.redirect;
+                                }, 2000);
+                            } else {
                                 Toast.fire({
                                     icon: "error",
                                     title: "Unauthorized Access"
@@ -351,8 +351,8 @@
                                 icon: "error",
                                 title: response.message || "Something went wrong"
                             });
-                            $('#Loginform')[0].reset();
                         }
+                        $('#Loginform')[0].reset();
                     },
                     function(error) {
                         let message = "Something went wrong";
@@ -374,7 +374,7 @@
                             title: message
                         });
                     });
-            
+
             });
         });
     </script>

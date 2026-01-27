@@ -174,7 +174,7 @@
                                     title: response.message || "Login successfully"
                                 });
                                 setTimeout(function() {
-                                    window.location.href = "{{ route('HomePage') }}";
+                                    window.location.href = response.redirect;
                                 }, 2000);
 
                             } else {

@@ -65,29 +65,34 @@
                 <div class="sidebar-categories">
                     <div class="head">Browse Categories</div>
                     <ul class="main-categories" id="categoryMenu">
+                        @if ($category->count() && isset($category))
+                            @foreach ($category as $item)
+                                <li class="main-nav-list">
+                                    <a data-toggle="collapse" href="#category-{{ $item->id }}" aria-expanded="false"
+                                        aria-controls="category-{{ $item->id }}">
+                                        <span class="lnr lnr-arrow-right"></span>{{ $item->name }}
+                                        <span class="number">({{ $item->getproduct_count }})</span></a>
+                                    <ul class="collapse" id="category-{{ $item->id }}" data-parent="#categoryMenu">
 
-                        @foreach ($category as $item)
-                            <li class="main-nav-list">
-                                <a data-toggle="collapse" href="#category-{{ $item->id }}" aria-expanded="false"
-                                    aria-controls="category-{{ $item->id }}">
-                                    <span class="lnr lnr-arrow-right"></span>{{ $item->name }}
-                                    <span class="number">({{ $item->getproduct_count }})</span></a>
-                                <ul class="collapse" id="category-{{ $item->id }}" data-parent="#categoryMenu">
-
-                                    @forelse ($item->getproduct as $product)
-                                        <li class="main-nav-list child">
-                                            <a href="{{ route('UserProductdetailsPage', $product->id) }}">
-                                                {{ $product->name }}
-                                            </a>
-                                        </li>
-                                    @empty
-                                        <li class="main-nav-list child text-muted">
-                                            &nbsp;&nbsp;&nbsp; <span>No products</span>
-                                        </li>
-                                    @endforelse
-                                </ul>
+                                        @forelse ($item->getproduct as $product)
+                                            <li class="main-nav-list child">
+                                                <a href="{{ route('UserProductdetailsPage', $product->id) }}">
+                                                    {{ $product->name }}
+                                                </a>
+                                            </li>
+                                        @empty
+                                            <li class="main-nav-list child text-muted">
+                                                &nbsp;&nbsp;&nbsp; <span>No products</span>
+                                            </li>
+                                        @endforelse
+                                    </ul>
+                                </li>
+                            @endforeach
+                        @else
+                            <li class="main-nav-list text-center text-muted p-3">
+                                No categories found
                             </li>
-                        @endforeach
+                        @endif
                     </ul>
                 </div>
 
@@ -104,21 +109,35 @@
                 <!-- Start Best Seller -->
                 <section class="latest-product-area pb-40 category-list">
                     <div class="row">
-                        @foreach ($category as $item)
-                            <div class="col-lg-4 col-md-6 col-sm-6 ">
-                                <div class="single-product category-card" style="margin-bottom: 0px;">
-                                    <!-- Category Image -->
-                                    <a href="{{ route('UserCategoryProductPage', $item->id) }}" class="product-img-box ">
-                                        <img src="{{ asset('storage/category/' . $item->image) }}"
-                                            alt="{{ $item->name }}">
-                                    </a>
-                                    <!-- Category Name -->
-                                    <div class="product-details text-center">
-                                        <h6 class="category-title">{{ $item->name }}</h6>
+                        @if ($category->count() && isset($category))
+                            @foreach ($category as $item)
+                                <div class="col-lg-4 col-md-6 col-sm-6 ">
+                                    <div class="single-product category-card" style="margin-bottom: 0px;">
+                                        <!-- Category Image -->
+                                        <a href="{{ route('UserCategoryProductPage', $item->id) }}"
+                                            class="product-img-box ">
+                                            <img src="{{ asset('storage/category/' . $item->image) }}"
+                                                alt="{{ $item->name }}">
+                                        </a>
+                                        <!-- Category Name -->
+                                        <div class="product-details text-center">
+                                            <h6 class="category-title">{{ $item->name }}</h6>
+                                        </div>
                                     </div>
                                 </div>
+                            @endforeach
+                        @else
+                            <div class="col-12 text-center py-5">
+                                <img src="{{ asset('img/logo.png') }}" style="max-width:220px" class="mb-3">
+
+                                <h4 class="text-danger">No Categories Available</h4>
+                                <p class="text-muted">Please check back later.</p>
+
+                                <a href="{{ route('HomePage') }}" class="primary-btn">
+                                    Go to Home
+                                </a>
                             </div>
-                        @endforeach
+                        @endif
 
                     </div>
                 </section>
@@ -268,12 +287,4 @@
     <!-- End related-product Area -->
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="{{ asset('ajax.js') }}"></script>
-    <script>
-        $(document).ready(function() {
-
-
-
-
-        });
-    </script>
 @endsection

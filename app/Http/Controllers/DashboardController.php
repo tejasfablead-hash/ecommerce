@@ -94,9 +94,9 @@ class DashboardController extends Controller
     }
     public function update(Request $request)
     {
-        $user = Auth::user();
+        $id =Auth::user()->id;
+        $user = User::where('id',$id)->first();
         $newimage = $user->image;
-        $userid = Auth::user()->id;
 
         $validator = Validator::make($request->all(), [
             'name'    => 'required|string|max:255',
@@ -118,76 +118,111 @@ class DashboardController extends Controller
         }
 
         if ($request->hasFile('image')) {
-            Storage::disk('public')->delete('user/' . $user->image);
+            if ($user->image) {
+                Storage::disk('public')->delete('user/' . $user->image);
+            }
+
             $file = $request->file('image');
             $filename = time() . '.' . $file->getClientOriginalExtension();
             $file->storeAs('user', $filename, 'public');
             $newimage = $filename;
         }
-        $userid->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'image' => $newimage,
+
+        $user->update([
+            'name'    => $request->name,
+            'email'   => $request->email,
+            'phone'   => $request->phone,
+            'image'   => $newimage,
             'address' => $request->address,
         ]);
+
         return response()->json([
             'status' => true,
             'message' => 'Profile Updated Successfully',
-        ], 201);
+        ], 200);
     }
 
-   public function chat()
-{
-    $adminId = Auth::id();
+    public function chat()
+    {
+        $adminId = Auth::id();
 
-    // Get all users who chatted with admin
-    $userIds = ChatMessage::where('sender_id', $adminId)
-        ->orWhere('receiver_id', $adminId)
-        ->pluck('sender_id', 'receiver_id')
-        ->flatten()
-        ->unique()
-        ->filter(fn($id) => $id != $adminId);
+        $userIds = ChatMessage::where('sender_id', $adminId)
+            ->orWhere('receiver_id', $adminId)
+            ->get()
+            ->flatMap(function ($chat) use ($adminId) {
+                return [$chat->sender_id, $chat->receiver_id];
+            })
+            ->unique()
+            ->reject(fn($id) => $id == $adminId);
 
-    $chats = User::whereIn('id', $userIds)->get();
+        $chats = User::whereIn('id', $userIds)
+            ->with(['sentMessages' => function ($q) use ($adminId) {
+                $q->where('receiver_id', $adminId)->where('is_seen', 0);
+            }])
+            ->get();
 
-    return view('Admin.Dashboard.chat', compact('chats'));
-}
+        return view('Admin.Dashboard.chat', compact('chats'));
+    }
 
-public function show($userId)
-{
-    $adminId = Auth::id();
+    public function show($userId)
+    {
+        $adminId = Auth::id();
 
-    $messages = ChatMessage::where(function ($q) use ($userId, $adminId) {
-        $q->where('sender_id', $userId)->where('receiver_id', $adminId);
-    })->orWhere(function ($q) use ($userId, $adminId) {
-        $q->where('sender_id', $adminId)->where('receiver_id', $userId);
-    })->orderBy('id')->get();
-       ChatMessage::where('sender_id', $userId)
-        ->where('receiver_id', $adminId)
-        ->update(['is_seen' => 1]);
+        $messages = ChatMessage::where(function ($q) use ($userId, $adminId) {
+            $q->where('sender_id', $userId)->where('receiver_id', $adminId);
+        })->orWhere(function ($q) use ($userId, $adminId) {
+            $q->where('sender_id', $adminId)->where('receiver_id', $userId);
+        })->orderBy('id')->get();
+        ChatMessage::where('sender_id', $userId)
+            ->where('receiver_id', $adminId)
+            ->update(['is_seen' => 1]);
 
-    return response()->json($messages);
-}
+        return response()->json($messages);
+    }
 
-public function send(Request $request)
-{
-    ChatMessage::create([
-        'sender_id'   => Auth::id(),
-        'receiver_id' => $request->user_id,
-        'message'     => $request->message,
-        'is_seen'     => 0
-    ]);
+    public function send(Request $request)
+    {
+        ChatMessage::create([
+            'sender_id'   => Auth::id(),
+            'receiver_id' => $request->user_id,
+            'message'     => $request->message,
+            'is_seen'     => 0
+        ]);
 
-    return response()->json(['status' => true]);
-}
+        return response()->json(['status' => true]);
+    }
 
-public function unreadCount()
-{
-    $count = ChatMessage::where('receiver_id', Auth::id())
-        ->where('is_seen', 0)
-        ->count();
+    public function unreadCount()
+    {
+        $count = ChatMessage::where('receiver_id', Auth::id())
+            ->where('is_seen', 0)
+            ->count();
 
-    return response()->json(['count' => $count]);
-}
+        return response()->json(['count' => $count]);
+    }
+
+    public function updatechat(Request $request)
+    {
+        $adminId = Auth::id();
+
+        ChatMessage::where('id', $request->id)
+            ->where('sender_id', $adminId)
+            ->update(['message' => $request->message]);
+
+        return response()->json(['success' => true]);
+    }
+
+    public function delete(Request $request)
+    {
+        $adminId = Auth::id();
+
+        ChatMessage::where('id', $request->id)
+            ->where('sender_id', $adminId) 
+            ->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Message deleted successfully'
+        ]);
+    }
 }
