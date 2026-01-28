@@ -45,6 +45,7 @@ class PaypalController extends Controller
             }
 
             $product->decrement('qty', $item->qty);
+            $product->refresh();    
 
             if ($product->qty - $item->qty <= 0) {
                 $product->update([

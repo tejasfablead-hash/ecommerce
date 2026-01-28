@@ -9,7 +9,7 @@
                         <h5 class="m-b-10">Customer</h5>
                     </div>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
                         <li class="breadcrumb-item">Customer</li>
                     </ul>
                 </div>
@@ -89,58 +89,20 @@
         @include('Admin.Pages.footer')
         <!-- [ Footer ] end -->
     </main>
-     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ asset('assets/vendors/js/vendors.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="{{ asset('assets/vendors/js/dataTables.min.js') }}"></script>
-    <script src="{{ asset('assets/vendors/js/dataTables.bs5.min.js') }}"></script>
-    <script src="{{ asset('assets/vendors/js/select2.min.js') }}"></script>
-    <script src="{{ asset('assets/vendors/js/select2-active.min.js') }}"></script>
-    <script src="{{ asset('assets/js/common-init.min.js') }}"></script>
-    <script src="{{ asset('assets/js/leads-init.min.js') }}"></script>
-
-    <script>
-        // $(document).ready(function() {
-
-        //     $('#leadList').on('click', '.btn-del', function(e) {
-        //         e.preventDefault();
-
-        //         let id = $(this).data('id');
-        //         let row = $(this).closest('tr');
-        //         let url = '/category-delete/' + id;
-
-        //         Swal.fire({
-        //             title: 'Are you sure?',
-        //             text: "Once deleted, you will not be able to recover this record!",
-        //             icon: 'warning',
-        //             showCancelButton: true,
-        //             confirmButtonText: 'Yes, delete it!',
-        //             cancelButtonText: 'No, cancel!'
-        //         }).then((result) => {
-        //             console.log('result',result);
-        //             if (result.value == true) {
-        //                 $.ajax({
-        //                     url: url,
-        //                     type: 'DELETE',
-        //                     headers: {
-        //                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //                     },
-        //                     success: function(response) {
-        //                         row.remove();
-        //                         Swal.fire('Deleted!', response.message, 'success');
-        //                     },
-        //                     error: function(err) {
-        //                         Swal.fire('Error!', 'Something went wrong.', 'error');
-        //                         console.log(err);
-        //                     }
-        //                 });
-        //             } else if (result.dismiss === Swal.DismissReason.cancel) {
-        //                 Swal.fire('Cancelled', 'Your record is safe :)', 'info');
-        //             }
-        //         });
-
-        //     });
-
-        // });
-    </script>
-@endsection
+   @endsection
+@push('scripts')
+    <script src="{{ asset('ajax.js') }}"></script>
+<script>
+    $(document).ready(function () {
+        if ($.fn.DataTable) {
+            $('#leadList').DataTable({
+                pageLength: 10,
+                order: [[0, 'desc']]
+            });
+        } else {
+            console.error('DataTable not loaded');
+        }
+    });
+</script>
+   
+@endpush

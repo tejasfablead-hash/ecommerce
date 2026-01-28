@@ -213,9 +213,11 @@
     <!-- End category Area -->
 
     @php
-        $saleProducts = $product->take(2);
-        $latestProducts = $product->take(8);
-        $comingProducts = $product->skip(8);
+        $saleProducts = $product->where('status', 'active')->take(2);
+
+        $latestProducts = $product->where('status', 'active')->take(8);
+
+        $comingProducts = $product->where('status', 'active')->skip(8);
     @endphp
 
     <!-- start product Area -->
@@ -232,7 +234,7 @@
                         </div>
                     </div>
                 </div>
-                 <div class="row">
+                <div class="row">
                     <!-- single product -->
                     @if (isset($latestProducts))
                         @forelse  ($latestProducts as $item)
@@ -250,12 +252,13 @@
                                                 $firstImage = $images[0];
                                             @endphp
                                             <a href="{{ route('UserProductdetailsPage', $item->id) }}"><img
-                                                    src="{{ asset('/storage/' . $firstImage) }}" alt="{{ $item->name }}"
-                                                    class="img-fluid"></a>
+                                                    src="{{ asset('/storage/' . $firstImage) }}"
+                                                    alt="{{ $item->name }}" class="img-fluid"></a>
                                         @endif
                                     </div>
 
                                     <div class="product-details mt-2">
+
                                         <h6>{{ $item->name }}</h6>
                                         <div class="price">
                                             <h6>${{ $item->price }}</h6>
@@ -280,7 +283,8 @@
                                                 <span class="lnr lnr-heart"></span>
                                                 <p class="hover-text">Wishlist</p>
                                             </a>
-                                            <a href="{{ route('UserProductdetailsPage', $item->id) }}" class="social-info">
+                                            <a href="{{ route('UserProductdetailsPage', $item->id) }}"
+                                                class="social-info">
                                                 <span class="lnr lnr-move"></span>
                                                 <p class="hover-text">view more</p>
                                             </a>
@@ -328,7 +332,7 @@
                         </div>
                     </div>
                 </div>
-                 <div class="row">
+                <div class="row">
                     <!-- single product -->
                     @if (isset($comingProducts))
                         @forelse  ($comingProducts as $item)
@@ -346,8 +350,8 @@
                                                 $firstImage = $images[0];
                                             @endphp
                                             <a href="{{ route('UserProductdetailsPage', $item->id) }}"><img
-                                                    src="{{ asset('/storage/' . $firstImage) }}" alt="{{ $item->name }}"
-                                                    class="img-fluid"></a>
+                                                    src="{{ asset('/storage/' . $firstImage) }}"
+                                                    alt="{{ $item->name }}" class="img-fluid"></a>
                                         @endif
                                     </div>
                                     <div class="product-details mt-2">
@@ -375,7 +379,8 @@
                                                 <span class="lnr lnr-heart"></span>
                                                 <p class="hover-text">Wishlist</p>
                                             </a>
-                                            <a href="{{ route('UserProductdetailsPage', $item->id) }}" class="social-info">
+                                            <a href="{{ route('UserProductdetailsPage', $item->id) }}"
+                                                class="social-info">
                                                 <span class="lnr lnr-move"></span>
                                                 <p class="hover-text">view more</p>
                                             </a>
@@ -474,7 +479,8 @@
 
                                         <div class="add-bag d-flex align-items-center justify-content-center">
                                             @if ($item->qty > 0)
-                                                <a class="add-btn" href=""><span class="ti-bag"></span></a>
+                                                <a class="add-btn cart-info" href="javascript:void(0)"
+                                                    data-cart-id="{{ $item->id }}"><span class="ti-bag"></span></a>
                                                 <span class="add-text text-uppercase">Add to Bag</span>
                                             @else
                                                 <a href="javascript:void(0)" class="add-btn disabled-cart">
@@ -571,117 +577,42 @@
                     </div>
                 </div>
             </div>
+
+            @php
+                $allProducts = $product->take(9);
+            @endphp
             <div class="row">
                 <div class="col-lg-9">
                     <div class="row">
-                        <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-                            <div class="single-related-product d-flex">
-                                <a href="#"><img src="{{ asset('img/r1.jpg') }}" alt=""></a>
-                                <div class="desc">
-                                    <a href="#" class="title">Black lace Heels</a>
-                                    <div class="price">
-                                        <h6>$189.00</h6>
-                                        <h6 class="l-through">$210.00</h6>
+                        @forelse ($allProducts as $item)
+                            <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
+                                <div class="single-related-product d-flex">
+                                    @php
+                                        $images = json_decode($item->image, true);
+                                    @endphp
+                                    @if (is_array($images) && count($images) > 0)
+                                        @php
+                                            $firstImage = $images[0];
+                                        @endphp
+                                        <a href="{{ route('UserProductdetailsPage', $item->id) }}"><img
+                                                src="{{ asset('/storage/' . $firstImage) }}" height="60px"
+                                                width="75px" alt="{{ $item->name }}" class="img-fluid"></a>
+                                    @endif
+                                    <div class="desc">
+                                        <a href="{{ route('UserProductdetailsPage', $item->id) }}"
+                                            class="title">{{ Str::limit($item->name, 10) }}</a>
+                                        <div class="price">
+                                            <h6>${{ $item->price }}</h6>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-                            <div class="single-related-product d-flex">
-                                <a href="#"><img src="{{ asset('img/r2.jpg') }}" alt=""></a>
-                                <div class="desc">
-                                    <a href="#" class="title">Black lace Heels</a>
-                                    <div class="price">
-                                        <h6>$189.00</h6>
-                                        <h6 class="l-through">$210.00</h6>
-                                    </div>
-                                </div>
+                        @empty
+                            <div class="col-12 text-center text-muted py-4">
+                                No related products found
                             </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-                            <div class="single-related-product d-flex">
-                                <a href="#"><img src="{{ asset('img/r3.jpg') }}" alt=""></a>
-                                <div class="desc">
-                                    <a href="#" class="title">Black lace Heels</a>
-                                    <div class="price">
-                                        <h6>$189.00</h6>
-                                        <h6 class="l-through">$210.00</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-                            <div class="single-related-product d-flex">
-                                <a href="#"><img src="{{ asset('img/r5.jpg') }}" alt=""></a>
-                                <div class="desc">
-                                    <a href="#" class="title">Black lace Heels</a>
-                                    <div class="price">
-                                        <h6>$189.00</h6>
-                                        <h6 class="l-through">$210.00</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-                            <div class="single-related-product d-flex">
-                                <a href="#"><img src="{{ asset('img/r6.jpg') }}" alt=""></a>
-                                <div class="desc">
-                                    <a href="#" class="title">Black lace Heels</a>
-                                    <div class="price">
-                                        <h6>$189.00</h6>
-                                        <h6 class="l-through">$210.00</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-                            <div class="single-related-product d-flex">
-                                <a href="#"><img src="{{ asset('img/r7.jpg') }}" alt=""></a>
-                                <div class="desc">
-                                    <a href="#" class="title">Black lace Heels</a>
-                                    <div class="price">
-                                        <h6>$189.00</h6>
-                                        <h6 class="l-through">$210.00</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-6">
-                            <div class="single-related-product d-flex">
-                                <a href="#"><img src="{{ asset('img/r9.jpg') }}" alt=""></a>
-                                <div class="desc">
-                                    <a href="#" class="title">Black lace Heels</a>
-                                    <div class="price">
-                                        <h6>$189.00</h6>
-                                        <h6 class="l-through">$210.00</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-6">
-                            <div class="single-related-product d-flex">
-                                <a href="#"><img src="{{ asset('img/r10.jpg') }}" alt=""></a>
-                                <div class="desc">
-                                    <a href="#" class="title">Black lace Heels</a>
-                                    <div class="price">
-                                        <h6>$189.00</h6>
-                                        <h6 class="l-through">$210.00</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-6">
-                            <div class="single-related-product d-flex">
-                                <a href="#"><img src="{{ asset('img/r11.jpg') }}" alt=""></a>
-                                <div class="desc">
-                                    <a href="#" class="title">Black lace Heels</a>
-                                    <div class="price">
-                                        <h6>$189.00</h6>
-                                        <h6 class="l-through">$210.00</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        @endforelse
+
                     </div>
                 </div>
                 <div class="col-lg-3">
@@ -696,10 +627,66 @@
         </div>
     </section>
     <!-- End related-product Area -->
-    
 
-    <script src="https://code.jquery.com/jquery-3.7.1.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+        crossorigin="anonymous"></script>
     <script src="{{ asset('ajax.js') }}"></script>
-  
+    <script>
+        $(document).ready(function() {
+            $('.wishlist-btn').click(function() {
+                let productId = $(this).data('product-id');
+                let url = "{{ route('WishlistStorePage') }}";
+                let formData = new FormData();
+                formData.append('product_id', productId);
 
+                reusableAjaxCall(url, 'POST', formData, function(response) {
+                    if (response.status == true) {
+                        if (response.count > 0) {
+                            $('.wishlist-count').remove();
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Added to Wishlist',
+                                text: 'Redirecting to wishlist...',
+                                timer: 3000,
+                                showConfirmButton: false
+                            });
+                            setTimeout(() => {
+                                window.location.href = "{{ route('WishlistPage') }}";
+                            }, 3000);
+
+                        } else {
+                            $('.wishlist-count').remove();
+
+                        }
+                    }
+                });
+            });
+
+            $('.cart-info').click(function() {
+                let cartId = $(this).data('cart-id');
+                let formData = new FormData();
+                formData.append('product_id', cartId);
+                let url = "{{ route('UserAddCartPage') }}";
+
+                reusableAjaxCall(url, 'POST', formData, function(response) {
+                    if (response.status == true) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Added to Cart',
+                            text: 'Redirecting to your Cart...',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                        setTimeout(() => {
+                            window.location.href = "{{ route('UserCartPage') }}";
+                        }, 3000);
+
+
+                    }
+                });
+
+
+            });
+        });
+    </script>
 @endsection

@@ -9,7 +9,7 @@
                         <h5 class="m-b-10">Order</h5>
                     </div>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
                         <li class="breadcrumb-item">Order</li>
                     </ul>
                 </div>
@@ -22,7 +22,7 @@
                             </a>
                         </div>
                         <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
-                          <a href="{{ route('DashboardPage') }}" class="btn btn-primary ">
+                            <a href="{{ route('DashboardPage') }}" class="btn btn-primary ">
                                 <i class="feather-arrow-left me-2"></i>
                                 <span>Back</span>
                             </a>
@@ -73,7 +73,34 @@
 
                                                     <td>{{ $item->payment_method }}</td>
                                                     <td>{{ $item->payment_status }}</td>
-                                                    <td>{{ $item->order_status }}</td>
+                                                    <td>
+                                                        <select class="form-select form-select-sm order-status"
+                                                            data-id="{{ $item->id }}"
+                                                            data-current="{{ $item->order_status }}">
+
+                                                            <option value="pending"
+                                                                {{ $item->order_status == 'pending' ? 'selected' : '' }}>
+                                                                Pending
+                                                            </option>
+                                                            <option value="confirmed"
+                                                                {{ $item->order_status == 'confirmed' ? 'selected' : '' }}>
+                                                                Confirmed
+                                                            </option>
+                                                            <option value="shipped"
+                                                                {{ $item->order_status == 'shipped' ? 'selected' : '' }}>
+                                                                Shipped
+                                                            </option>
+                                                            <option value="delivered"
+                                                                {{ $item->order_status == 'delivered' ? 'selected' : '' }}>
+                                                                Delivered
+                                                            </option>
+                                                            <option value="cancelled"
+                                                                {{ $item->order_status == 'cancelled' ? 'selected' : '' }}>
+                                                                Cancelled
+                                                            </option>
+                                                        </select>
+                                                    </td>
+
                                                     <td>{{ $item->grand_total }}</td>
                                                     <td>
                                                         <div class="hstack gap-2">
@@ -81,17 +108,20 @@
                                                                 class="avatar-text avatar-md">
                                                                 <i class="feather feather-eye"></i>
                                                             </a>
-                                                            <a href="javascript:void(0)"
+                                                            {{-- <a href="javascript:void(0)"
                                                                 class="btn-del avatar-text avatar-md"
                                                                 data-id="{{ $item->id }}">
                                                                 <i class="feather feather-trash-2"></i>
-                                                            </a>
+                                                            </a> --}}
                                                         </div>
                                                     </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
+                                </div>
+                                <div class="mt-3 d-flex justify-content-end">
+                                    {{ $order->withQueryString()->links('pagination::bootstrap-5') }}
                                 </div>
                             </div>
                         </div>
@@ -104,18 +134,51 @@
         @include('Admin.Pages.footer')
         <!-- [ Footer ] end -->
     </main>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ asset('assets/vendors/js/vendors.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="{{ asset('assets/vendors/js/dataTables.min.js') }}"></script>
-    <script src="{{ asset('assets/vendors/js/dataTables.bs5.min.js') }}"></script>
-    <script src="{{ asset('assets/vendors/js/select2.min.js') }}"></script>
-    <script src="{{ asset('assets/vendors/js/select2-active.min.js') }}"></script>
-    <script src="{{ asset('assets/js/common-init.min.js') }}"></script>
-    <script src="{{ asset('assets/js/leads-init.min.js') }}"></script>
+@endsection
+@push('scripts')
+    <script src="{{ asset('ajax.js') }}"></script>
 
     <script>
         $(document).ready(function() {
+
+            if ($.fn.DataTable) {
+                $('#leadList').DataTable({
+                    paging: false, 
+                    info: false, 
+                    searching: true, 
+                    ordering: true,
+                    order: [
+                        [0, 'desc']
+                    ], 
+                    lengthChange: true, 
+                    pageLength: 10, 
+                    lengthMenu: [5, 10, 25, 50, 100],
+                });
+            }
+
+            $(document).on('change', '.order-status', function(e) {
+                e.preventDefault();
+
+                let orderId = $(this).data('id');
+                let status = $(this).val();
+                var formData = new FormData();
+                formData.append('order_id', orderId);
+                formData.append('order_status', status);
+
+                let url = "{{ route('OrderUpdateOrderPage') }}";
+                reusableAjaxCall(url, 'POST', formData, function(response) {
+                    if (response.status === true) {
+                        Swal.fire('Updated!', response.message, 'success');
+                    }
+                }, function(xhr) {
+                    let response = xhr.responseJSON;
+                    if (response && response.message) {
+                        Swal.fire('Failed!', response.message, 'error');
+                    }
+                });
+
+            });
+
 
             // $('#leadList').on('click', '.btn-del', function(e) {
             //     e.preventDefault();
@@ -157,4 +220,4 @@
 
         });
     </script>
-@endsection
+@endpush

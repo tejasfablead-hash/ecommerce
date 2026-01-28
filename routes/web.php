@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AIChatController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
@@ -60,6 +61,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
     Route::get('/customer', [OrderController::class, 'customer'])->name('CustomerPage');
     Route::get('/order-view', [OrderController::class, 'view'])->name('OrderViewPage');
+    Route::post('/order-status', [OrderController::class, 'updateorder'])->name('OrderUpdateOrderPage');
 
     Route::get('/chat', [DashboardController::class, 'chat'])->name('AdminChatPage');
     Route::get('/chat/{chatId}', [DashboardController::class, 'show'])->name('AdminchatShow');
@@ -111,8 +113,12 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::post('/user/update-feedback', [ProfileController::class, 'feedback'])->name('UserFeedbackPage');
 
     Route::get('/user/chat', [UserChatController::class, 'index'])->name('ChatPage');;
-    Route::get('/user/chat/messages', [UserChatController::class, 'fetchMessages']);
-    Route::post('/user/chat/send', [UserChatController::class, 'sendMessage']);
+    Route::get('/user/chat/messages', [UserChatController::class, 'fetchMessages'])->name('ChaFatchMessagePage');
+    Route::post('/user/chat/send', [UserChatController::class, 'sendMessage'])->name('ChaSendMessagePage');
     Route::get('/user/chat/unread-count', [UserChatController::class, 'unreadCount'])->name('ChatUnreadPage');
     Route::get('/user/chat/unread-messages', [UserChatController::class, 'unreadMessages'])->name('ChatUnreadMessages');
+
+ 
+Route::post('/ai-chat', [AIChatController::class, 'chat'])->name('AiChatPage');
+
 });

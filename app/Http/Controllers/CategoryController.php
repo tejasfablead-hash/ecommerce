@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\ParentCategory;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -137,7 +138,8 @@ class CategoryController extends Controller
     {
         $category = Category::with('getproduct')->withCount('getproduct')->get();
         // dd($category);
-        return view('Ecommerce.Pages.category', compact(['category']));
+        $products = Product::all();
+        return view('Ecommerce.Pages.category', compact(['category','products']));
 
     }
 

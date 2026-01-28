@@ -30,16 +30,20 @@
     @include('Admin.Pages.header')
     @yield('container')
     {{-- @include('Admin.Pages.customizer') --}}
-    <script src="https://code.jquery.com/jquery-3.7.1.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Vendors -->
     <script src="{{ asset('assets/vendors/js/vendors.min.js') }}"></script>
-    <script src="{{ asset('assets/vendors/js/daterangepicker.min.js') }}"></script>
-    <script src="{{ asset('assets/vendors/js/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('assets/vendors/js/circle-progress.min.js') }}"></script>
+
+    <script src="{{ asset('assets/vendors/js/dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/vendors/js/dataTables.bs5.min.js') }}"></script>
+
+    <!-- Common -->
     <script src="{{ asset('assets/js/common-init.min.js') }}"></script>
-    <script src="{{ asset('assets/js/dashboard-init.min.js') }}"></script>
     <script src="{{ asset('assets/js/theme-customizer-init.min.js') }}"></script>
-    <script src="assets/vendors/js/dataTables.min.js"></script>
-    <script src="assets/vendors/js/dataTables.bs5.min.js"></script>
+
+    @stack('scripts')
+
 </body>
 
 </html>

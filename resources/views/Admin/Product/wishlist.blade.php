@@ -9,7 +9,7 @@
                         <h5 class="m-b-10">Wishlist</h5>
                     </div>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
                         <li class="breadcrumb-item">Wishlist</li>
                     </ul>
                 </div>
@@ -70,17 +70,21 @@
         <!-- [ Footer ] start -->
         @include('Admin.Pages.footer')
         <!-- [ Footer ] end -->
-    </main>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ asset('assets/vendors/js/vendors.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="{{ asset('assets/vendors/js/dataTables.min.js') }}"></script>
-    <script src="{{ asset('assets/vendors/js/dataTables.bs5.min.js') }}"></script>
-    <script src="{{ asset('assets/vendors/js/select2.min.js') }}"></script>
-    <script src="{{ asset('assets/vendors/js/select2-active.min.js') }}"></script>
-    <script src="{{ asset('assets/js/common-init.min.js') }}"></script>
-    <script src="{{ asset('assets/js/leads-init.min.js') }}"></script>
-
+    </main>@endsection
+@push('scripts')
+    <script src="{{ asset('ajax.js') }}"></script>
+<script>
+    $(document).ready(function () {
+        if ($.fn.DataTable) {
+            $('#leadList').DataTable({
+                pageLength: 10,
+                order: [[0, 'desc']]
+            });
+        } else {
+            console.error('DataTable not loaded');
+        }
+    });
+</script>
     <script>
         // $(document).ready(function() {
 
@@ -124,4 +128,4 @@
 
         // });
     </script>
-@endsection
+@endpush

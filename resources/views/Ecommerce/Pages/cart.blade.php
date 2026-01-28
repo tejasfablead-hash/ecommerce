@@ -7,7 +7,7 @@
                 <div class="col-first">
                     <h1>Shopping Cart</h1>
                     <nav class="d-flex align-items-center">
-                        <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+                        <a href="javascript:void(0)">Home<span class="lnr lnr-arrow-right"></span></a>
                         <a href="category.html">Cart</a>
                     </nav>
                 </div>
@@ -33,53 +33,65 @@
                         </thead>
                         <tbody class="text-capitalize">
                             @php $grandTotal = 0; @endphp
-                            @forelse ($cartItems as $item)
-                                <tr>
-                                    <td>
-                                        <div class="media">
-                                            <div class="d-flex">
-                                                @php
-                                                    $images = json_decode($item->getproduct->image, true);
-                                                @endphp
-                                                @if (is_array($images) && count($images) > 0)
+                            @if (isset($cartItems) && $cartItems->count() > 0)
+                                @forelse ($cartItems as $item)
+                                    <tr>
+                                        <td>
+                                            <div class="media">
+                                                <div class="d-flex">
                                                     @php
-                                                        $firstImage = $images[0];
+                                                        $images = json_decode($item->getproduct->image, true);
                                                     @endphp
-                                                    <a href="{{ route('UserProductdetailsPage', $item->getproduct->id) }}"><img
-                                                            src="{{ asset('/storage/' . $firstImage) }}" height="50px"
-                                                            width="50px" alt="{{ $item->name }}" class=""></a>
-                                                @endif
+                                                    @if (is_array($images) && count($images) > 0)
+                                                        @php
+                                                            $firstImage = $images[0];
+                                                        @endphp
+                                                        <a
+                                                            href="{{ route('UserProductdetailsPage', $item->getproduct->id) }}"><img
+                                                                src="{{ asset('/storage/' . $firstImage) }}" height="50px"
+                                                                width="50px" alt="{{ $item->name }}" class=""></a>
+                                                    @endif
+                                                </div>
+                                                <div class="media-body">
+                                                    <h5 style="color: black">{{ $item->getproduct->name }}</h5>
+                                                </div>
                                             </div>
-                                            <div class="media-body">
-                                                <h5 style="color: black">{{ $item->getproduct->name }}</h5>
+                                        </td>
+                                        <td>
+                                            <h5>₹{{ $item->getproduct->price }}</h5>
+                                        </td>
+                                        <td>
+                                            <div class="product_count">
+                                                <input type="number" id="qtyInput" class="input-text qty qty-input"
+                                                    value="{{ $item->qty }}" min="1"
+                                                    data-cart-id="{{ $item->id }}"
+                                                    data-price="{{ $item->getproduct->price }}">
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <h5>₹{{ $item->getproduct->price }}</h5>
-                                    </td>
-                                    <td>
-                                        <div class="product_count">
-                                            <input type="number" id="qtyInput" class="input-text qty qty-input"
-                                                value="{{ $item->qty }}" min="1"
-                                                data-cart-id="{{ $item->id }}"
-                                                data-price="{{ $item->getproduct->price }}">
-                                        </div>
-                                    </td>
+                                        </td>
 
-                                    <td>
-                                        <h5 class="item-total">
-                                            ₹{{ number_format($item->getproduct->price, 2) }}
-                                        </h5>
-                                    </td>
-                                    <td>
-                                        <a href="" class="remove-cart remove-cart-item"
-                                            data-id="{{ $item->id }}">
-                                            <i class="fa fa-trash-o" style="font-size:20px;color:red"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            @empty
+                                        <td>
+                                            <h5 class="item-total">
+                                                ₹{{ number_format($item->getproduct->price, 2) }}
+                                            </h5>
+                                        </td>
+                                        <td>
+                                            <a href="" class="remove-cart remove-cart-item"
+                                                data-id="{{ $item->id }}">
+                                                <i class="fa fa-trash-o" style="font-size:20px;color:red"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center py-5">
+                                            <h4>Your cart is empty 🛒</h4>
+                                            <a href="{{ route('UserProductPage') }}" class="primary-btn mt-3">
+                                                Continue Shopping
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            @else
                                 <tr>
                                     <td colspan="5" class="text-center py-5">
                                         <h4>Your cart is empty 🛒</h4>
@@ -88,7 +100,7 @@
                                         </a>
                                     </td>
                                 </tr>
-                            @endforelse
+                            @endif
 
                             <tr class="bottom_button">
                                 <td>
@@ -299,24 +311,24 @@
                 formData.append('cartId', cartId);
                 var url = "{{ route('UserCartUpdatePage') }}";
                 reusableAjaxCall(url, 'POST', formData, function(response) {
-                       const Toast = Swal.mixin({
-                            toast: true,
-                            position: "top-end",
-                            showConfirmButton: false,
-                            timer: 3000,
-                            timerProgressBar: true,
-                            didOpen: (toast) => {
-                                toast.onmouseenter = Swal.stopTimer;
-                                toast.onmouseleave = Swal.resumeTimer;
-                            }
-                        });
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        }
+                    });
                     if (response.status == true) {
-                          calculate();
-                          Toast.fire({
-                                    icon: "success",
-                                    title: response.message || "Cart Updated"
-                                });
-                      
+                        calculate();
+                        Toast.fire({
+                            icon: "success",
+                            title: response.message || "Cart Updated"
+                        });
+
                     }
                 });
 

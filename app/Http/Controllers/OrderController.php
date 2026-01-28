@@ -82,7 +82,7 @@ class OrderController extends Controller
         $order = Order::with([
             'getcustomer',
             'orderitem.product'
-        ])->latest()->get();
+        ])->latest()->paginate(10);
 
         return view('Admin.Order.view', compact('order'));
     }
@@ -114,5 +114,33 @@ class OrderController extends Controller
             'count' => $count,
             'orders' => $orders
         ]);
+    }
+
+    public function updateorder(Request $request)
+    {
+        $order = Order::find($request->order_id);
+        $validator = Validator::make($request->all(), [
+            'order_id' => 'required|exists:orders,id',
+            'order_status' => 'required|in:pending,confirmed,shipped,delivered,cancelled'
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+       if (in_array($order->order_status, ['delivered', 'cancelled'])) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Delivered order cannot be changed'
+            ], 403);
+        }
+        $order->update([
+            'order_status' => $request->order_status
+        ]);
+        return response()->json([
+            'status' => true,
+            'message' => 'Order status updated successfully'
+        ],200);
     }
 }
