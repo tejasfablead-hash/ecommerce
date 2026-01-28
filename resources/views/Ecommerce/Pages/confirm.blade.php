@@ -30,8 +30,8 @@
                 </h3>
                 <h4>Order Info</h4>
                 <hr>
+                
                 <div class="row order_d_inner">
-
                     <div class="col-lg-4">
                         <div class="details_item ">
                             <ul class="list text-capitalize">

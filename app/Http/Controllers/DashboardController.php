@@ -73,7 +73,7 @@ class DashboardController extends Controller
         ====================== */
         $latestOrders = Order::with('getcustomer')
             ->latest()
-            ->take(5)
+            ->take(6)
             ->get();
 
 

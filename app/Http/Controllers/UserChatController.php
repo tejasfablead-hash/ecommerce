@@ -10,7 +10,7 @@ class UserChatController extends Controller
 {
       private function adminId()
     {
-        return 1; // change if needed
+        return 1;
     }
     public function index(){
         return view('Ecommerce.Pages.chat');
@@ -31,7 +31,6 @@ class UserChatController extends Controller
         ->orderBy('id')
         ->get();
 
-        // mark admin messages as seen
         ChatMessage::where('sender_id', $adminId)
             ->where('receiver_id', $userId)
             ->update(['is_seen' => 1]);
@@ -62,7 +61,7 @@ class UserChatController extends Controller
         return response()->json(['count' => 0]);
     }
 
-    $adminId = 1; // your admin id
+    $adminId = 1;
 
     $count = ChatMessage::where('sender_id', $adminId)
         ->where('receiver_id', $id)

@@ -1,47 +1,47 @@
 @extends('Ecommerce.Layout.index')
 @section('container')
-<style>
-    /* Wishlist Card */
-.single-product.card {
-    border: 0.5px solid #eee;
-    border:none;
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
+    <style>
+        /* Wishlist Card */
+        .single-product.card {
+            border: 0.5px solid #eee;
+            border: none;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
 
-.single-product.card:hover {
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-}
+        .single-product.card:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
 
-/* Fixed Image Box */
-.product-img {
-    width: 100%;
-    height: 220px;
-    background: #f8f8f8;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
+        /* Fixed Image Box */
+        .product-img {
+            width: 100%;
+            height: 220px;
+            background: #f8f8f8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
 
-/* Image Fit */
-.product-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;   /* 👈 keeps full image */
-    padding: 10px;
-    
-}
+        /* Image Fit */
+        .product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            /* 👈 keeps full image */
+            padding: 10px;
 
-/* Card Footer */
-.card-footer {
-    padding: 12px;
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-}
+        }
 
-</style>
+        /* Card Footer */
+        .card-footer {
+            padding: 12px;
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+    </style>
     <section class="banner-area organic-breadcrumb">
         <div class="container">
             <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
@@ -64,47 +64,45 @@
                 <p>Your favourite products saved here </p>
             </div>
 
-            @if ($wishlists->count() > 0)
+            @if (isset($wishlists) && $wishlists->count() > 0)
                 <div class="row text-capitalize">
                     @foreach ($wishlists as $item)
-                    <div class="col-lg-3 col-md-4 col-sm-6 mb-3 wishlist-card"
-     id="wishlist-card-{{ $item->product->id }}">
+                        <div class="col-lg-3 col-md-4 col-sm-6 mb-3 wishlist-card"
+                            id="wishlist-card-{{ $item->product->id }}">
 
-    <div class="single-product card h-100">
+                            <div class="single-product card h-100">
 
-        <div class="product-img">
-            @php
-                $images = json_decode($item->product->image, true);
-            @endphp
-            @if (is_array($images) && count($images))
-                <a href="{{ route('UserProductdetailsPage', $item->product->id) }}">
-                    <img src="{{ asset('storage/' . $images[0]) }}"
-                         alt="{{ $item->product->name }}">
-                </a>
-            @endif
-        </div>
+                                <div class="product-img">
+                                    @php
+                                        $images = json_decode($item->product->image, true);
+                                    @endphp
+                                    @if (is_array($images) && count($images))
+                                        <a href="{{ route('UserProductdetailsPage', $item->product->id) }}">
+                                            <img src="{{ asset('storage/' . $images[0]) }}"
+                                                alt="{{ $item->product->name }}">
+                                        </a>
+                                    @endif
+                                </div>
 
-        <div class=" text-center">
-            <h6 class="card-title">{{ $item->product->name }}</h6>
-            <div class="price">
-                <h6>₹{{ $item->product->price }}</h6>
-            </div>
-        </div>
+                                <div class=" text-center">
+                                    <h6 class="card-title">{{ $item->product->name }}</h6>
+                                    <div class="price">
+                                        <h6>₹{{ $item->product->price }}</h6>
+                                    </div>
+                                </div>
 
-        <div class="card-footer bg-white border-0">
-            <a href="{{ route('UserProductdetailsPage', $item->product->id) }}"
-               class="genric-btn primary">
-                View
-            </a>
+                                <div class="card-footer bg-white border-0">
+                                    <a href="{{ route('UserProductdetailsPage', $item->product->id) }}"
+                                        class="genric-btn primary">
+                                        View
+                                    </a>
 
-            <button class="genric-btn danger remove-wishlist"
-                    data-id="{{ $item->product->id }}">
-                Remove
-            </button>
-        </div>
-    </div>
-</div>
-
+                                    <button class="genric-btn danger remove-wishlist" data-id="{{ $item->product->id }}">
+                                        Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     @endforeach
 
                 </div>

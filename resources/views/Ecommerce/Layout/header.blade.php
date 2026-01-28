@@ -52,7 +52,7 @@
     .notification-dropdown .dropdown-header {
         font-weight: 600;
         padding: 10px;
-        background-color:  #f8ba10;
+        background-color: #f8ba10;
     }
 
     .chat-notification-item {
@@ -63,7 +63,7 @@
 
     .chat-notification-item:hover {
         background: #fafaf8;
-       
+
     }
 </style>
 <header class="header_area sticky-header">
@@ -123,28 +123,28 @@
 
                     </ul>
                     <ul class="nav navbar-nav navbar-right prd-bottom">
+                        <li class="nav-item "><a href="{{ route('ChatPage') }}" class="chat mt-1"><span
+                                    class="ti-comment"></span></a></li>
                         <li class="nav-item dropdown">
-    <a href="{{ route('ChatPage') }}"
-       class="notification-bell"
-       id="chatBell">
+                            <a href="" class="notification-bell" id="chatBell">
 
-        <i class="ti-bell"></i>
+                                <i class="ti-bell"></i>
 
-        <!-- Badge -->
-        <span id="chatNotify" class="bell-badge">0</span>
-    </a>
+                                <!-- Badge -->
+                                <span id="chatNotify" class="bell-badge">0</span>
+                            </a>
 
-    <!-- Dropdown -->
-    <div class="dropdown-menu dropdown-menu-right notification-dropdown">
-        <div class="dropdown-header text-center text-white">
-            Messages
-        </div>
+                            <!-- Dropdown -->
+                            <div class="dropdown-menu dropdown-menu-right notification-dropdown">
+                                <div class="dropdown-header text-center text-white">
+                                    Messages
+                                </div>
 
-        <div id="chatNotificationList">
-            <p class="text-center text-muted m-2">No new messages</p>
-        </div>
-    </div>
-</li>
+                                <div id="chatNotificationList">
+                                    <p class="text-center text-muted m-2">No new messages</p>
+                                </div>
+                            </div>
+                        </li>
 
 
                         <li class="nav-item pr-2">
@@ -157,7 +157,7 @@
 
                             @guest
                                 <a href="{{ route('UserLoginPage') }}" class="social-info wishlist-icon">
-                                   <i class="ti-heart" style="color: black"></i>
+                                    <i class="ti-heart" style="color: black"></i>
                                 </a>
                             @endguest
                         </li>
@@ -187,84 +187,89 @@
 <script src="{{ asset('ajax.js') }}"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
-    $(document).ready(function () {
-          $.ajaxSetup({
-             headers: {
-                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-             }
-         });
-
-         $(document).on('click', '.logout-btn', function(e) {
-             e.preventDefault();
-             let redirectUrl = $(this).data('redirect');
-             var url = "{{ route('LogoutPage') }}"
-             reusableAjaxCall(url, 'POST', null, function(response) {
-                 console.log('response', response);
-                 if (response.status == true) {
-                     Swal.fire({
-                         toast: true,
-                         position: "top-end",
-                         icon: "success",
-                         title: response.message,
-                         showConfirmButton: false,
-                         timer: 3000
-                     });
-                     setTimeout(() => {
-                         window.location.href = redirectUrl;
-                     }, 1500);
-                 }
-             });
-         });
-
-    const AUTH_ID = {{ auth()->check() ? auth()->id() : 'null' }};
-
-    function loadChatNotification() {
-        if (!AUTH_ID) return;
-
-        $.get("{{ route('ChatUnreadPage') }}", function(res) {
-            if (res.count > 0) {
-                $('#chatNotify').text(res.count).css('display', 'flex');
-
-                loadChatMessagesList();
-            } else {
-                $('#chatNotify').hide();
-                $('#chatNotificationList').html(
-                    '<p class="text-center text-muted m-2">No new messages</p>'
-                );
-            }
-        });
-    }
-
-    function loadChatMessagesList() {
-        $.get("{{ route('ChatUnreadMessages') }}", function(data) {
-            let html = '';
-
-            if (data.length === 0) {
-                html = '<p class="text-center text-muted m-2">No new messages</p>';
-            } else {
-                data.forEach(msg => {
-                    html += `
-                    <div class="chat-notification-item" data-id="${msg.id}">
-                        <small>${msg.message}</small>
-                    </div>
-                `;
-                });
-            }
-
-            $('#chatNotificationList').html(html);
-        });
-    }
-
-    $(document).on('click', '.chat-notification-item', function() {
-        if (typeof toggleChat === "function") {
-            toggleChat();
-        }
-        $('#chatNotify').hide();
-    });
-
     $(document).ready(function() {
-        loadChatNotification();
-        setInterval(loadChatNotification, 5000);
-    });
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
         });
+
+        $(document).on('click', '.logout-btn', function(e) {
+            e.preventDefault();
+            let redirectUrl = $(this).data('redirect');
+            var url = "{{ route('LogoutPage') }}"
+            reusableAjaxCall(url, 'POST', null, function(response) {
+                console.log('response', response);
+                if (response.status == true) {
+                    Swal.fire({
+                        toast: true,
+                        position: "top-end",
+                        icon: "success",
+                        title: response.message,
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+                    setTimeout(() => {
+                        window.location.href = redirectUrl;
+                    }, 1500);
+                }
+            });
+        });
+
+        const AUTH_ID = {{ auth()->check() ? auth()->id() : 'null' }};
+
+        function loadChatNotification() {
+            if (!AUTH_ID) return;
+            var url = "{{ route('ChatUnreadPage') }}"
+            reusableAjaxCall(url, 'GET', null, function(response) {
+                if (response.count > 0) {
+                    $('#chatNotify').text(response.count).css('display', 'flex');
+
+                    loadChatMessagesList();
+                } else {
+                    $('#chatNotify').hide();
+                    $('#chatNotificationList').html(
+                        '<p class="text-center text-muted m-2">No new messages</p>'
+                    );
+                }
+            });
+        }
+
+        function loadChatMessagesList() {
+
+            var url = "{{ route('ChatUnreadMessages') }}"
+
+            reusableAjaxCall(url, 'GET', null, function(data) {
+                let html = '';
+
+                if (data.length === 0) {
+                    html = '<p class="text-center text-muted m-2">No new messages</p>';
+                } else {
+                    data.forEach(msg => {
+                        html += `
+                     
+                    <a href="{{ route('ChatPage') }}" style="text-decoration:none;color:black;"><div class="chat-notification-item " data-id="${msg.id}">
+                        <small>${msg.message}</small>
+                    </div></a>
+                `;
+                    });
+                }
+
+                $('#chatNotificationList').html(html);
+
+            });
+        }
+
+        $(document).on('click', '.chat-notification-item', function() {
+            if (typeof toggleChat === "function") {
+                toggleChat();
+            }
+            $('#chatNotify').hide();
+        });
+
+        $(document).ready(function() {
+            loadChatNotification();
+            setInterval(loadChatNotification, 5000);
+        });
+    });
 </script>

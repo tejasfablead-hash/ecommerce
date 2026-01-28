@@ -17,7 +17,6 @@ class ProductController extends Controller
     }
     public function store(Request $request)
     {
-
         $validate = Validator::make($request->all(), [
             'category' => 'required',
             'product' => 'required',
@@ -40,13 +39,15 @@ class ProductController extends Controller
                     $path[] = $file->store('product', 'public');
                 }
             }
+            $status = $request->qty > 0 ? 'active' : 'inactive';
 
-            $category = Product::create([
+            Product::create([
                 'category_id' => $request->category,
                 'name' => $request->product,
                 'price' => $request->price,
                 'qty' => $request->qty,
                 'description' => $request->description,
+                'status'      => $status,
                 'image' => json_encode($path),
             ]);
 
@@ -79,6 +80,7 @@ class ProductController extends Controller
     public function update(Request $request)
     {
         $update = Product::where('id', $request->id)->first();
+        $status = $request->qty > 0 ? 'active' : 'inactive';
 
         $validate = Validator::make($request->all(), [
             'category' => 'required',
@@ -114,6 +116,7 @@ class ProductController extends Controller
                 'price' => $request->price,
                 'qty' => $request->qty,
                 'description' => $request->description,
+                'status'      => $status,
                 'image' => json_encode($path),
             ]);
 
@@ -182,8 +185,7 @@ class ProductController extends Controller
     }
     public function products()
     {
-        $product = Product::where('status', 'active')
-            ->orderBy('created_at', 'desc')
+        $product = Product::orderBy('created_at', 'desc')
             ->get();
         return view('Ecommerce.Pages.product', compact('product'));
     }

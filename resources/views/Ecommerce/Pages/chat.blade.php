@@ -5,7 +5,6 @@
             background: #eef2f7;
         }
 
-        /* ================== CHAT LAYOUT ================== */
         .chat-container {
             height: 70vh;
             max-height: 70vh;
@@ -16,7 +15,6 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        /* Chat header */
         .chat-header {
             background: #f18a03;
             color: #fff;
@@ -41,7 +39,6 @@
             font-weight: bold;
         }
 
-        /* Chat body */
         #chat-box {
             flex-grow: 1;
             padding: 16px;
@@ -79,7 +76,6 @@
             border-bottom-left-radius: 6px;
         }
 
-        /* Chat footer */
         .chat-footer {
             display: flex;
             padding: 12px 16px;
@@ -115,7 +111,6 @@
             background: #e07f05;
         }
 
-        /* Scrollbar styling */
         #chat-box::-webkit-scrollbar {
             width: 6px;
         }
@@ -125,7 +120,6 @@
             border-radius: 3px;
         }
 
-        /* Mobile adjustments */
         @media(max-width: 576px) {
             .chat-container {
                 height: 60vh;
@@ -152,7 +146,6 @@
         <div class="container d-flex justify-content-center">
             <div class="chat-container w-100 w-md-75">
 
-                <!-- Chat Header -->
                 <div class="chat-header">
                     <div class="avatar">A</div>
                     <div>
@@ -161,12 +154,9 @@
                     </div>
                 </div>
 
-                <!-- Chat Messages -->
                 <div id="chat-box">
-                    <!-- Messages will appear here -->
                 </div>
 
-                <!-- Chat Input -->
                 <div class="chat-footer">
                     <input type="text" id="chat-message" placeholder="Type a message...">
                     <button id="send-chat" title="Send">
@@ -178,15 +168,16 @@
         </div>
     </section>
 
-    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+    <script src="{{ asset('ajax.js') }}"></script>
 
     <script>
         let chatBox = $('#chat-box');
         let userId = {{ auth()->id() }};
+        let url = "{{ route('ChaFatchMessagePage') }}";
 
         function loadMessages() {
-            $.get("{{ url('/user/chat/messages') }}", function(data) {
+            reusableAjaxCall(url, 'GET', {}, function(data) {
                 chatBox.html('');
                 data.forEach(msg => {
                     let isMe = msg.sender_id === userId;
@@ -199,26 +190,24 @@
                 });
                 chatBox.scrollTop(chatBox[0].scrollHeight);
             });
+
         }
 
-        // Send message
         $('#send-chat').on('click', function() {
             let msg = $('#chat-message').val().trim();
             if (!msg) return;
 
-            $.post("{{ url('/user/chat/send') }}", {
-                _token: "{{ csrf_token() }}",
-                message: msg
-            }, function() {
+            let formData = new FormData();
+            formData.append('message', msg);
+            var url = "{{ route('ChaSendMessagePage') }}";
+            reusableAjaxCall(url, 'POST', formData, function() {
                 $('#chat-message').val('');
                 loadMessages();
             });
         });
 
-        // Load messages every 3 seconds
         setInterval(loadMessages, 3000);
 
-        // Initial load
         loadMessages();
     </script>
 @endsection

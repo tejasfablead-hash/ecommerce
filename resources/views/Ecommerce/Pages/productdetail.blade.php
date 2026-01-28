@@ -24,7 +24,7 @@
                 <div class="col-first">
                     <h1>Product Details </h1>
                     <nav class="d-flex align-items-center">
-                        <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+                        <a href="javascript:void(0)">Home<span class="lnr lnr-arrow-right"></span></a>
                         <a href="#">Shop<span class="lnr lnr-arrow-right"></span></a>
                         <a href="single-product.html">product-details</a>
                     </nav>
@@ -34,95 +34,89 @@
     </section>
     <!-- End Banner Area -->
 
+    @if ($product)
+        @php
+            $images = json_decode($product->image, true);
 
-@if($product)
+        @endphp
 
-    @php
-        $images = json_decode($product->image, true);
-        
-    @endphp
-
-
-    <!--================Single Product Area =================-->
-    <div class="product_image_area">
-        <div class="container">
-            <div class="row s_product_inner">
-                <div class="col-lg-6">
-                    <div class="s_Product_carousel">
-                        @if (is_array($images) && count($images) > 0)
-                            @foreach ($images as $img)
+        <!--================Single Product Area =================-->
+        <div class="product_image_area">
+            <div class="container">
+                <div class="row s_product_inner">
+                    <div class="col-lg-6">
+                        <div class="s_Product_carousel">
+                            @if (is_array($images) && count($images) > 0)
+                                @foreach ($images as $img)
+                                    <div class="single-prd-item">
+                                        <img class="img-fluid product-detail-img" src="{{ asset('storage/' . $img) }}"
+                                            alt="{{ $product->name }}">
+                                    </div>
+                                @endforeach
+                            @else
                                 <div class="single-prd-item">
-                                    <img class="img-fluid product-detail-img" src="{{ asset('storage/' . $img) }}"
-                                        alt="{{ $product->name }}">
+                                    <img class="img-fluid" src="{{ asset('img/no-image.png') }}" alt="No Image">
                                 </div>
-                            @endforeach
-                        @else
-                            <div class="single-prd-item">
-                                <img class="img-fluid" src="{{ asset('img/no-image.png') }}" alt="No Image">
-                            </div>
-                        @endif
+                            @endif
+                        </div>
+
                     </div>
+                    <div class="col-lg-5 offset-lg-1">
+                        <div class="s_product_text text-capitalize">
+                            <h3>{{ $product->name }}</h3>
+                            <h2>${{ $product->price }}</h2>
+                            <ul class="list">
+                                <li><a class="active" href="#"><span>Category</span> :
+                                        {{ $product->getcategory->name }}</a></li>
+                                @if ($product->qty == 0)
+                                    <li><a href="#"><span>Availibility</span> : No Stock ({{ $product->qty }})</a>
+                                    </li>
+                                @else
+                                    <li><a href="#"><span>Availibility</span> : In Stock ({{ $product->qty }}) </a>
+                                    </li>
+                                @endif
+                            </ul>
+                            <p>{{ $product->description }}</p>
 
-                </div>
-                <div class="col-lg-5 offset-lg-1">
-                    <div class="s_product_text text-capitalize">
-                        <h3>{{ $product->name }}</h3>
-                        <h2>${{ $product->price }}</h2>
-                        <ul class="list">
-                            <li><a class="active" href="#"><span>Category</span> :
-                                    {{ $product->getcategory->name }}</a></li>
-                            @if ($product->qty == 0)
-                                <li><a href="#"><span>Availibility</span> : No Stock ({{$product->qty}})</a></li>
-                            @else
-                                <li><a href="#"><span>Availibility</span> : In Stock ({{$product->qty}}) </a></li>
-                            @endif
-                        </ul>
-                        <p>{{ $product->description }}</p>
+                            <div class="card_area d-flex align-items-center">
+                                @if ($product->qty > 0)
+                                    <a href="javascript:void(0)" class=" primary-btn cart-info"
+                                        data-cart-id="{{ $product->id }}">Add to Cart</a>
+                                @else
+                                    <a href="javascript:void(0)" class=" primary-btn cart-info disabled-cart">Out of
+                                        Stock</a>
+                                @endif
 
-                        <div class="card_area d-flex align-items-center">
-                            @if($product->qty>0)
-                                <a href="javascript:void(0)" class=" primary-btn cart-info"
-                                data-cart-id="{{ $product->id }}">Add to Cart</a>
-                            @else
-                                <a href="javascript:void(0)" class=" primary-btn cart-info disabled-cart"
-                                >Out of Stock</a>
-                            @endif
-                            
-                            {{-- <a class="icon_btn" href="#"><i class="lnr lnr lnr-diamond"></i></a> --}}
-                            <a class="icon_btn  wishlist-btn" href="javascript:void(0)"
-                                data-product-id="{{ $product->id }}"><i class="lnr lnr lnr-heart"></i></a>
+                                {{-- <a class="icon_btn" href="#"><i class="lnr lnr lnr-diamond"></i></a> --}}
+                                <a class="icon_btn  wishlist-btn" href="javascript:void(0)"
+                                    data-product-id="{{ $product->id }}"><i class="lnr lnr lnr-heart"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-  
     @else
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8 text-center">
 
-    <div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8 text-center">
+                    <img src="{{ asset('img/logo.png') }}" alt="No product" style="max-width:220px" class="mb-4">
 
-            <img src="{{ asset('img/logo.png') }}" 
-                 alt="No product" 
-                 style="max-width:220px" 
-                 class="mb-4">
+                    <h3 class="text-danger">No Product Available</h3>
 
-            <h3 class="text-danger">No Product Available</h3>
+                    <p class="text-muted mb-4">
+                        This product may have been removed or does not exist.
+                    </p>
 
-            <p class="text-muted mb-4">
-                This product may have been removed or does not exist.
-            </p>
+                    <a href="{{ route('HomePage') }}" class="primary-btn">
+                        Continue Shopping
+                    </a>
 
-            <a href="{{ route('HomePage') }}" class="primary-btn">
-                Continue Shopping
-            </a>
-
+                </div>
+            </div>
         </div>
-    </div>
-</div>
-@endif
+    @endif
 
     <!--================End Single Product Area =================-->
 
@@ -134,10 +128,7 @@
                     <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
                         aria-selected="true">Description</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
-                        aria-controls="profile" aria-selected="false">Specification</a>
-                </li>
+               
                 <li class="nav-item">
                     <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab"
                         aria-controls="contact" aria-selected="false">Comments</a>
@@ -149,35 +140,7 @@
             </ul>
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
-                    <p>Beryl Cook is one of Britain’s most talented and amusing artists .Beryl’s pictures feature women of
-                        all shapes
-                        and sizes enjoying themselves .Born between the two world wars, Beryl Cook eventually left Kendrick
-                        School in
-                        Reading at the age of 15, where she went to secretarial school and then into an insurance office.
-                        After moving to
-                        London and then Hampton, she eventually married her next door neighbour from Reading, John Cook. He
-                        was an
-                        officer in the Merchant Navy and after he left the sea in 1956, they bought a pub for a year before
-                        John took a
-                        job in Southern Rhodesia with a motor company. Beryl bought their young son a box of watercolours,
-                        and when
-                        showing him how to use it, she decided that she herself quite enjoyed painting. John subsequently
-                        bought her a
-                        child’s painting set for her birthday and it was with this that she produced her first significant
-                        work, a
-                        half-length portrait of a dark-skinned lady with a vacant expression and large drooping breasts. It
-                        was aptly
-                        named ‘Hangover’ by Beryl’s husband and</p>
-                    <p>It is often frustrating to attempt to plan meals that are designed for one. Despite this fact, we are
-                        seeing
-                        more and more recipe books and Internet websites that are dedicated to the act of cooking for one.
-                        Divorce and
-                        the death of spouses or grown children leaving for college are all reasons that someone accustomed
-                        to cooking for
-                        more than one would suddenly need to learn how to adjust all the cooking practices utilized before
-                        into a
-                        streamlined plan of cooking that is more efficient for one person creating less</p>
-                </div>
+                    <p>{{ $product->description }}</p>  </div>
                 <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                     <div class="table-responsive">
                         <table class="table">
@@ -494,199 +457,62 @@
     </section>
     <!--================End Product Description Area =================-->
 
-    <!-- Start related-product Area -->
-    <section class="related-product-area section_gap_bottom">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-6 text-center">
-                    <div class="section-title">
-                        <h1>Deals of the Week</h1>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
-                            labore et dolore
-                            magna aliqua.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-9">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-                            <div class="single-related-product d-flex">
-                                <a href="#"><img src="{{ asset('img/r1.jpg') }}" alt=""></a>
-                                <div class="desc">
-                                    <a href="#" class="title">Black lace Heels</a>
-                                    <div class="price">
-                                        <h6>$189.00</h6>
-                                        <h6 class="l-through">$210.00</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-                            <div class="single-related-product d-flex">
-                                <a href="#"><img src="{{ asset('img/r2.jpg') }}" alt=""></a>
-                                <div class="desc">
-                                    <a href="#" class="title">Black lace Heels</a>
-                                    <div class="price">
-                                        <h6>$189.00</h6>
-                                        <h6 class="l-through">$210.00</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-                            <div class="single-related-product d-flex">
-                                <a href="#"><img src="{{ asset('img/r3.jpg') }}" alt=""></a>
-                                <div class="desc">
-                                    <a href="#" class="title">Black lace Heels</a>
-                                    <div class="price">
-                                        <h6>$189.00</h6>
-                                        <h6 class="l-through">$210.00</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-                            <div class="single-related-product d-flex">
-                                <a href="#"><img src="{{ asset('img/r5.jpg') }}" alt=""></a>
-                                <div class="desc">
-                                    <a href="#" class="title">Black lace Heels</a>
-                                    <div class="price">
-                                        <h6>$189.00</h6>
-                                        <h6 class="l-through">$210.00</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-                            <div class="single-related-product d-flex">
-                                <a href="#"><img src="{{ asset('img/r6.jpg') }}" alt=""></a>
-                                <div class="desc">
-                                    <a href="#" class="title">Black lace Heels</a>
-                                    <div class="price">
-                                        <h6>$189.00</h6>
-                                        <h6 class="l-through">$210.00</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-                            <div class="single-related-product d-flex">
-                                <a href="#"><img src="{{ asset('img/r7.jpg') }}" alt=""></a>
-                                <div class="desc">
-                                    <a href="#" class="title">Black lace Heels</a>
-                                    <div class="price">
-                                        <h6>$189.00</h6>
-                                        <h6 class="l-through">$210.00</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-6">
-                            <div class="single-related-product d-flex">
-                                <a href="#"><img src="{{ asset('img/r9.jpg') }}" alt=""></a>
-                                <div class="desc">
-                                    <a href="#" class="title">Black lace Heels</a>
-                                    <div class="price">
-                                        <h6>$189.00</h6>
-                                        <h6 class="l-through">$210.00</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-6">
-                            <div class="single-related-product d-flex">
-                                <a href="#"><img src="{{ asset('img/r10.jpg') }}" alt=""></a>
-                                <div class="desc">
-                                    <a href="#" class="title">Black lace Heels</a>
-                                    <div class="price">
-                                        <h6>$189.00</h6>
-                                        <h6 class="l-through">$210.00</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-6">
-                            <div class="single-related-product d-flex">
-                                <a href="#"><img src="{{ asset('img/r11.jpg') }}" alt=""></a>
-                                <div class="desc">
-                                    <a href="#" class="title">Black lace Heels</a>
-                                    <div class="price">
-                                        <h6>$189.00</h6>
-                                        <h6 class="l-through">$210.00</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="ctg-right">
-                        <a href="#" target="_blank">
-                            <img class="img-fluid d-block mx-auto" src="{{ asset('img/category/c5.jpg') }}"
-                                alt="">
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- End related-product Area -->
+
 
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="{{ asset('ajax.js') }}"></script>
-    @if($product)
-    <script>
-        $(document).ready(function() {
+    @if ($product)
+        <script>
+            $(document).ready(function() {
 
-            $('.wishlist-btn').click(function() {
-                let productId = $(this).data('product-id');
-                let url = "{{ route('WishlistStorePage') }}";
-                let formData = new FormData();
-                formData.append('product_id', productId);
+                $('.wishlist-btn').click(function() {
+                    let productId = $(this).data('product-id');
+                    let url = "{{ route('WishlistStorePage') }}";
+                    let formData = new FormData();
+                    formData.append('product_id', productId);
 
-                reusableAjaxCall(url, 'POST', formData, function(response) {
-                    if (response.status) {
-                        if (response.count > 0) {
-                            $('.wishlist-count').remove();
+                    reusableAjaxCall(url, 'POST', formData, function(response) {
+                        if (response.status) {
+                            if (response.count > 0) {
+                                $('.wishlist-count').remove();
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Added to Wishlist',
+                                    text: 'Check to wishlist...',
+                                    timer: 3000,
+                                    showConfirmButton: false
+                                });
+                                setTimeout(() => {
+                                    window.location.href = "{{ route('WishlistPage') }}";
+                                }, 3000);
+                            } else {
+                                $('.wishlist-count').remove();
+                            }
+                        }
+                    });
+                });
+                $('.cart-info').click(function() {
+                    let cartId = $(this).data('cart-id');
+                    let formData = new FormData();
+                    formData.append('product_id', cartId);
+                    let url = "{{ route('UserAddCartPage') }}";
+
+                    reusableAjaxCall(url, 'POST', formData, function(response) {
+                        if (response.status == true) {
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Added to Wishlist',
-                                text: 'Check to wishlist...',
+                                title: 'Added to Cart',
+                                text: 'Redirecting to your Cart...',
                                 timer: 3000,
                                 showConfirmButton: false
                             });
                             setTimeout(() => {
-                                window.location.href = "{{ route('WishlistPage') }}";
+                                window.location.href = "{{ route('UserCartPage') }}";
                             }, 3000);
-                        } else {
-                            $('.wishlist-count').remove();
                         }
-                    }
+                    });
                 });
             });
-            $('.cart-info').click(function() {
-                let cartId = $(this).data('cart-id');
-                let formData = new FormData();
-                formData.append('product_id', cartId);
-                let url = "{{ route('UserAddCartPage') }}";
-
-                reusableAjaxCall(url, 'POST', formData, function(response) {
-                    if (response.status == true) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Added to Cart',
-                            text: 'Redirecting to your Cart...',
-                            timer: 3000,
-                            showConfirmButton: false
-                        });
-                        setTimeout(() => {
-                            window.location.href = "{{ route('UserCartPage') }}";
-                        }, 3000);
-                    }
-                });
-            });
-        });
-    </script>
+        </script>
     @endif
 @endsection

@@ -53,7 +53,7 @@
                 <div class="col-first">
                     <h1>Shop Product </h1>
                     <nav class="d-flex align-items-center">
-                        <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+                        <a href="javascript:void(0)">Home<span class="lnr lnr-arrow-right"></span></a>
                         <a href="#">Shop<span class="lnr lnr-arrow-right"></span></a>
                         <a href="category.html">Fashion Product</a>
                     </nav>
@@ -64,10 +64,11 @@
     <!-- End banner Area -->
 
     @php
-        $saleProducts = $product->take(2);
-        $latestProducts = $product->take(8);
-        $comingProducts = $product->skip(8);
+        $saleProducts = $product->where('status', 'active')->take(2);
+        $latestProducts = $product->where('status', 'active')->take(8);
+        $comingProducts = $product->where('status', 'inactive')->skip(8);
     @endphp
+
 
     <!-- start product Area -->
     <section class="owl-carousel active-product-area section_gap">
@@ -325,7 +326,8 @@
 
                                         <div class="add-bag d-flex align-items-center justify-content-center">
                                             @if ($item->qty > 0)
-                                                <a class="add-btn" href=""><span class="ti-bag"></span></a>
+                                                <a class="add-btn cart-info" href="javascript:void(0)"
+                                                    data-cart-id="{{ $item->id }}"><span class="ti-bag"></span></a>
                                                 <span class="add-text text-uppercase">Add to Bag</span>
                                             @else
                                                 <a href="javascript:void(0)" class="add-btn disabled-cart">
@@ -408,6 +410,67 @@
         </div>
     </section>
     <!-- End brand Area -->
+    <section class="related-product-area section_gap_bottom">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 text-center">
+                    <div class="section-title">
+                        <h1>Deals of the Week</h1>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                            labore et dolore
+                            magna aliqua.</p>
+                    </div>
+                </div>
+            </div>
+
+            @php
+                $allProducts = $product->take(9);
+            @endphp
+            <div class="row">
+                <div class="col-lg-9">
+                    <div class="row">
+                        @forelse ($allProducts as $item)
+                            <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
+                                <div class="single-related-product d-flex">
+                                    @php
+                                        $images = json_decode($item->image, true);
+                                    @endphp
+                                    @if (is_array($images) && count($images) > 0)
+                                        @php
+                                            $firstImage = $images[0];
+                                        @endphp
+                                        <a href="{{ route('UserProductdetailsPage', $item->id) }}"><img
+                                                src="{{ asset('/storage/' . $firstImage) }}" height="60px"
+                                                width="75px" alt="{{ $item->name }}" class="img-fluid"></a>
+                                    @endif
+                                    <div class="desc">
+                                        <a href="{{ route('UserProductdetailsPage', $item->id) }}"
+                                            class="title">{{ Str::limit($item->name, 10) }}</a>
+                                        <div class="price">
+                                            <h6>${{ $item->price }}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="col-12 text-center text-muted py-4">
+                                No related products found
+                            </div>
+                        @endforelse
+
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="ctg-right">
+                        <a href="#" target="_blank">
+                            <img class="img-fluid d-block mx-auto" src="{{ asset('img/category/c5.jpg') }}"
+                                alt="">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
 
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="

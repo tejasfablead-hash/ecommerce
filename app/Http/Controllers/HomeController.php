@@ -15,16 +15,13 @@ class HomeController extends Controller
 
     public function home()
     {
-        $product = Product::where('status', 'active')
-            ->orderBy('created_at', 'desc')
+        $product = Product::orderBy('created_at', 'desc')
             ->get();
         return view('Ecommerce.Pages.home', compact('product'));
     }
- 
+
     public function contact()
     {
         return view('Ecommerce.Pages.contact');
     }
-   
-  
 }
