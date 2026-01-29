@@ -22,7 +22,7 @@
             {{-- <h3 class="title_confirmation">Thank you. Your order has been received.</h3> --}}
             @if (isset($order) && $order)
                 <h3 class="title_confirmation text-success d-none">
-                    @if ($order->order_status == 'confirmed')
+                    @if ($order->order_status === 'confirmed')
                         Thank you. Your payment was successful and order has been placed.
                     @else
                     @endif

@@ -127,26 +127,28 @@
     <!-- Start Header Area -->
     @include('Ecommerce.Layout.header')
     <!-- End Header Area -->
+    
 
     @yield('container')
     <!-- start footer Area -->
 
-    <!-- ================= AI CHAT WIDGET ================= -->
     <div id="ai-chat-widget">
         <button id="ai-chat-toggle">🤖</button>
+
         <div id="ai-chat-box">
             <div class="ai-header">
                 AI Assistant
-                <span id="ai-close">×</span>
+                <span id="ai-close" style="cursor:pointer;">×</span>
             </div>
+
             <div id="ai-reply"></div>
+
             <div class="ai-footer">
-                <input type="text" id="ai-msg" class="form-control" placeholder="Ask me anything...">
-                <button id="send-ai" title="Send"><i class="bi bi-send-fill"></i></button>
+                <input type="text" id="msg" placeholder="Ask me anything...">
+                <button id="send-ai"><i class="bi bi-send-fill"></i></button>
             </div>
         </div>
     </div>
-
     <!-- ================= END AI CHAT ================= -->
 
 
@@ -174,84 +176,70 @@
     <script src="{{ asset('js/main.js') }}"></script>
     <script src="{{ asset('ajax.js') }}"></script>
 
-<script>
-$(document).ready(function() {
-    let isProcessing = false;
+    <script>
+        const toggleBtn = document.getElementById('ai-chat-toggle');
+        const chatBox = document.getElementById('ai-chat-box');
+        const closeBtn = document.getElementById('ai-close');
+        const sendBtn = document.getElementById('send-ai');
+        const msgInput = document.getElementById('msg');
+        const replyBox = document.getElementById('ai-reply');
 
-    /* ===== Open/Close AI Widget ===== */
-    $('#ai-chat-toggle').click(function() {
-        $('#ai-chat-box').fadeToggle(200);
-        $('#ai-msg').focus();
-    });
+        toggleBtn.onclick = () => {
+            chatBox.style.display = 'block';
+            msgInput.focus();
+        };
 
-    $('#ai-close').click(function() {
-        $('#ai-chat-box').fadeOut(200);
-    });
+        closeBtn.onclick = () => {
+            chatBox.style.display = 'none';
+        };
 
-    /* ===== Helper Functions ===== */
-    function disableAI() {
-        isProcessing = true;
-        $('#send-ai').prop('disabled', true);
-        $('#ai-msg').prop('disabled', true);
-    }
-
-    function enableAI() {
-        isProcessing = false;
-        $('#send-ai').prop('disabled', false);
-        $('#ai-msg').prop('disabled', false);
-    }
-
-    function scrollChat() {
-        $('#ai-reply').scrollTop($('#ai-reply')[0].scrollHeight);
-    }
-
-    /* ===== Send AI Message ===== */
-    function sendAIMessage() {
-        if (isProcessing) return;
-
-        let msg = $('#ai-msg').val().trim();
-        if (!msg) return;
-
-        disableAI();
-
-        // Show user message
-        $('#ai-reply').append(`<div><b>You:</b> ${msg}</div>`);
-        $('#ai-msg').val('');
-
-        // Show typing indicator
-        $('#ai-reply').append(`<div id="ai-typing"><i>AI is typing...</i></div>`);
-        scrollChat();
-
-        // AJAX request
-        $.ajax({
-            url: "{{ route('AiChatPage') }}",
-            type: "POST",
-            data: {
-                _token: $('meta[name="csrf-token"]').attr('content'),
-                message: msg
-            },
-            success: function(res) {
-                $('#ai-typing').remove();
-                $('#ai-reply').append(`<div><b>AI:</b> ${res.reply}</div>`);
-                scrollChat();
-                enableAI();
-            },
-            error: function(xhr) {
-                $('#ai-typing').remove();
-                $('#ai-reply').append(`<div style="color:red"><b>AI:</b> Something went wrong 😕</div>`);
-                scrollChat();
-                enableAI();
+        msgInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
             }
         });
-    }
 
-    $('#send-ai').click(sendAIMessage);
+        sendBtn.onclick = sendMessage;
 
-    $('#ai-msg').keypress(function(e) {
-        if (e.which === 13) sendAIMessage();
-    });
-});
-</script>
+        function appendMessage(sender, text) {
+            replyBox.innerHTML += `<div><b>${sender}:</b> ${text}</div>`;
+            replyBox.scrollTop = replyBox.scrollHeight;
+        }
+
+        function sendMessage() {
+            const msg = msgInput.value.trim();
+            if (!msg) return;
+
+            appendMessage('You', msg);
+            msgInput.value = '';
+
+            const loadingId = 'load-' + Date.now();
+            replyBox.innerHTML += `<div id="${loadingId}"><i>AI is typing...</i></div>`;
+            replyBox.scrollTop = replyBox.scrollHeight;
+
+            fetch("{{ url('/ai/chat') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        message: msg
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById(loadingId)?.remove();
+                    appendMessage('AI', data.reply || 'No response');
+                })
+                .catch(() => {
+                    document.getElementById(loadingId)?.remove();
+                    appendMessage('AI', 'Server error. Try again.');
+                });
+
+        }
+    </script>
+
 
 </body>
 

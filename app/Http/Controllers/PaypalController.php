@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Services\SMSService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PaypalController extends Controller
 {
-    public function success(Request $request)
+    public function success(Request $request, SMSService $sms)
     {
         // dd($request->all());
         $orderId = session('order_id');
@@ -32,6 +33,7 @@ class PaypalController extends Controller
             'payment_status' => 'paid',
             'order_status' => 'confirmed'
         ]);
+        session(['latest_paid_order_id' => $order->id]);
 
         foreach ($order->orderitem as $item) {
 
@@ -45,11 +47,11 @@ class PaypalController extends Controller
             }
 
             $product->decrement('qty', $item->qty);
-            $product->refresh();    
+            $product->refresh();
 
             if ($product->qty - $item->qty <= 0) {
                 $product->update([
-                    'status' => 'inactive' 
+                    'status' => 'inactive'
                 ]);
             }
         }
@@ -65,6 +67,19 @@ class PaypalController extends Controller
             'grandtotal',
             'order_id'
         ]);
+        $phone = $order->phone;
+        if (!str_starts_with($phone, '+')) {
+            $phone = '+91' . $phone;
+        }
+
+        $sms->send(
+            $phone,
+            "✅ Payment Successful!
+Order No: {$order->order_number}
+Amount Paid: ₹{$order->grand_total}
+Thank you for shopping with us."
+        );
+
 
         return response()->json([
             'status' => true,
@@ -77,12 +92,10 @@ class PaypalController extends Controller
     public function confirm()
     {
         $user = Auth::id();
-        if ($user == true) {
-            $order = Order::where('user_id', $user)
-                ->where('payment_status', 'paid')
-                ->latest()
-                ->with(['orderitem.product'])
-                ->first();
+        $order = null;
+        if ($user && session('latest_paid_order_id')) {
+            $order = Order::with('orderitem.product')
+                ->find(session('latest_paid_order_id'));
         }
         // dd($order);
 

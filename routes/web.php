@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AIChatController;
+use App\Http\Controllers\ApiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
@@ -118,7 +119,7 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::get('/user/chat/unread-count', [UserChatController::class, 'unreadCount'])->name('ChatUnreadPage');
     Route::get('/user/chat/unread-messages', [UserChatController::class, 'unreadMessages'])->name('ChatUnreadMessages');
 
- 
-Route::post('/ai-chat', [AIChatController::class, 'chat'])->name('AiChatPage');
+    Route::post('/ai/chat', [AIChatController::class, 'ask']);
+    Route::get('/weather', [ApiController::class, 'weather']);
 
 });

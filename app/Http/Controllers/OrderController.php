@@ -10,10 +10,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use App\Services\SMSService;
+
 
 class OrderController extends Controller
 {
-    public function order(Request $request)
+    public function order(Request $request, SMSService $sms)
     {
         // dd($request->all());
         $user = Auth::id();
@@ -68,6 +70,19 @@ class OrderController extends Controller
                 'total'      => $item->qty * $item->price,
             ]);
         }
+         $phone = $request->phone;
+        if (!str_starts_with($phone, '+')) {
+            $phone = '+91' . $phone; // Add country code
+        }
+
+        $sms->send(
+            $phone,
+            "✅ Order Confirmed Successfully!
+            Order No: {$order->order_number}
+            Amount: ₹{$order->grand_total}
+            Thank you for shopping with us. "
+        );
+
         session(['order_id' => $order->id]);
 
         return response()->json([
@@ -116,7 +131,7 @@ class OrderController extends Controller
         ]);
     }
 
-    public function updateorder(Request $request)
+    public function updateorder(Request $request, SMSService $sms)
     {
         $order = Order::find($request->order_id);
         $validator = Validator::make($request->all(), [
@@ -129,7 +144,7 @@ class OrderController extends Controller
                 'errors' => $validator->errors()
             ], 422);
         }
-       if (in_array($order->order_status, ['delivered', 'cancelled'])) {
+        if (in_array($order->order_status, ['delivered', 'cancelled'])) {
             return response()->json([
                 'status' => false,
                 'message' => 'Delivered order cannot be changed'
@@ -138,9 +153,27 @@ class OrderController extends Controller
         $order->update([
             'order_status' => $request->order_status
         ]);
+
+             $phone = $order->phone;
+        if (!str_starts_with($phone, '+')) {
+            $phone = '+91' . $phone; 
+        }
+
+
+        $statusMessage = match ($request->order_status) {
+            'confirmed' => "✅ Your order {$order->order_number} is CONFIRMED.",
+            'shipped'   => "🚚 Your order {$order->order_number} has been SHIPPED.",
+            'delivered' => "📦 Your order {$order->order_number} DELIVERED. Thank you!",
+            'cancelled' => "❌ Your order {$order->order_number} is CANCELLED.",
+            default     => null
+        };
+
+        if ($statusMessage) {
+            $sms->send($phone, $statusMessage);
+        }
         return response()->json([
             'status' => true,
             'message' => 'Order status updated successfully'
-        ],200);
+        ], 200);
     }
 }
