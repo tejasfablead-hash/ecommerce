@@ -44,11 +44,19 @@ return [
         'client_id'     => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect'      => env('GOOGLE_REDIRECT'),
+        'maps_key' => env('GOOGLE_MAPS_API_KEY'),
     ],
     'openai' => [
-    'key' => env('OPENAI_API_KEY'),
+        'key' => env('OPENAI_API_KEY'),
+    ],
+ 'weather' => [
+    'key' => env('WEATHER_API_KEY'),
 ],
-
+'twilio' => [
+    'sid'   => env('TWILIO_SID'),
+    'token' => env('TWILIO_TOKEN'),
+    'from'  => env('TWILIO_FROM'),
+],
 
 
 ];

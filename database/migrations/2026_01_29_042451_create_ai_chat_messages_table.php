@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_notifications', function (Blueprint $table) {
+        Schema::create('ai_chat_messages', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->string('title');
+            $table->foreignId('user_id')->nullable();
             $table->text('message');
-            $table->string('type')->nullable(); 
-            $table->boolean('is_read')->default(0);
+            $table->text('reply');
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_notifications');
+        Schema::dropIfExists('ai_chat_messages');
     }
 };
