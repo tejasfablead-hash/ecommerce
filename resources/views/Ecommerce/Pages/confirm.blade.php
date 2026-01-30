@@ -30,15 +30,16 @@
                 </h3>
                 <h4>Order Info</h4>
                 <hr>
-                
+
                 <div class="row order_d_inner">
                     <div class="col-lg-4">
                         <div class="details_item ">
                             <ul class="list text-capitalize">
+                                <li><a href="#"><span>Transaction Id</span> : {{ $order->transactionId }}</a></li>
                                 <li><a href="#"><span>Order number</span> : {{ $order->order_number }}</a></li>
                                 <li><a href="#"><span>Date</span> : {{ $order->updated_at->format('d M Y') }}</a></li>
                                 <li><a href="#"><span>Total</span> : ₹{{ $order->grand_total }}</a></li>
-                                <li><a href="#"><span>Payment method</span> : {{ $order->payment_method }}</a></li>
+
                             </ul>
                         </div>
                     </div>
@@ -58,6 +59,7 @@
                     <div class="col-lg-4">
                         <div class="details_item">
                             <ul class="list text-capitalize">
+                                <li><a href="#"><span>Payment method</span> : {{ $order->payment_method }}</a></li>
                                 <li><a href="#"><span>Order Status</span> : {{ $order->order_status }}</a></li>
                                 <li><a href="#"><span>Postcode </span> : {{ $order->pincode }}</a></li>
                             </ul>
@@ -150,22 +152,21 @@
                                         <p>₹{{ $order->grand_total }}</p>
                                     </td>
                                 </tr>
-
                             </tbody>
                         </table>
                     </div>
                 </div>
             @else
                 <div class="text-center py-5">
-                    <h2 class="text-danger"> Payment Not Confirmed</h2>
+                    <h2 class="text-danger"> Order Not Confirmed</h2>
 
                     <p class="mt-3">
                         We could not find any confirmed order.<br>
                         This may happen if payment was cancelled or failed.
                     </p>
 
-                    <a href="{{ route('UserCheckoutPage') }}" class=" primary-btn mt-3">
-                        Try Payment Again
+                    <a href="{{ route('UserProductPage') }}" class=" primary-btn mt-3">
+                        Try  Order Again
                     </a>
                     <a href="{{ route('HomePage') }}" class=" primary-btn mt-3" style="background:#7c8e93;color:white">
                         Go to Home

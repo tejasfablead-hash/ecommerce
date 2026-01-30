@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminPasswordController;
 use App\Http\Controllers\AIChatController;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\AuthController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\CheckOutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -36,6 +38,21 @@ Route::get('/user/index', [HomeController::class, 'index'])->name('IndexPage');
 
 Route::get('/auth/google', [SocialLoginController::class, 'redirect'])->name('GoggleLoginPage');
 Route::get('/auth/google/callback', [SocialLoginController::class, 'callback']);
+
+
+Route::get('admin/forgot-password', [AdminPasswordController::class, 'index'])->name('AdminForgotPage');
+Route::post('admin/forgot-password', [AdminPasswordController::class, 'forgotPassword'])->name('AdminForgotPasswordPage');
+
+Route::get('admin/reset-password/{token}', [AdminPasswordController::class, 'showResetForm'])->name('AdminResetPasswordPage');
+Route::post('admin/reset-password', [AdminPasswordController::class, 'resetPassword'])->name('AdminResetPasswordPostPage');
+
+
+Route::get('forgot-password', [PasswordController::class, 'showForgotForm'])->name('ForgotPage');
+Route::post('forgot-password', [PasswordController::class, 'sendResetLink'])->name('ForgotPasswordPage');
+
+Route::get('reset-password/{token}', [PasswordController::class, 'showResetForm'])->name('ResetPasswordPage');
+Route::post('reset-password', [PasswordController::class, 'resetPassword'])->name('ResetPasswordPostPage');
+
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 

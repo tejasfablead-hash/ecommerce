@@ -22,7 +22,7 @@ class DashboardController extends Controller
         $order    = Order::count();
         $user     = User::where('role', 'customer')->count();
 
-        /* ====== REVENUE ====== */
+
         $totalRevenue = Order::where('payment_status', 'paid')
             ->sum('grand_total');
 
@@ -41,9 +41,7 @@ class DashboardController extends Controller
             'Dec'
         ]);
 
-        /* ======================
-            MONTHLY ORDERS
-        ====================== */
+        
         $ordersRaw = Order::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
             ->groupBy('month')
             ->pluck('total', 'month');
@@ -54,9 +52,6 @@ class DashboardController extends Controller
             ];
         });
 
-        /* ======================
-            MONTHLY REVENUE
-        ====================== */
         $revenueRaw = Order::selectRaw('MONTH(created_at) as month, SUM(grand_total) as total')
             ->where('payment_status', 'paid')
             ->groupBy('month')
@@ -68,9 +63,7 @@ class DashboardController extends Controller
             ];
         });
 
-        /* ======================
-            LATEST ORDERS
-        ====================== */
+     
         $latestOrders = Order::with('getcustomer')
             ->latest()
             ->take(6)

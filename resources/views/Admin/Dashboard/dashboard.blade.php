@@ -133,6 +133,7 @@
                                     <thead >
                                         <tr>
                                             <th scope="col">Customer</th>
+                                            <th scope="col">OrderId</th>
                                             <th scope="col">Payment</th>
                                             <th scope="col">Date</th>
                                             <th scope="col">Payment Status</th>
@@ -156,7 +157,11 @@
                                                         </div>
                                                     </div>
                                                 </td>
-
+ <td>
+                                                    <span>
+                                                        {{ ucfirst($order->order_number) }}
+                                                    </span>
+                                                </td>
                                                 <td>
                                                     <span>
                                                         {{ ucfirst($order->payment_method) }}
