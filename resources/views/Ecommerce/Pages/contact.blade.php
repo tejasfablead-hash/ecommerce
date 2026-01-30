@@ -137,90 +137,123 @@
     </section>
     <!--================Contact Area =================-->
     <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_key') }}&callback=initMap">
+        src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_key') }}&libraries=places&callback=initMap">
     </script>
 
- <script>
-let map, marker, infoWindow;
 
-function initMap() {
+    <script>
+        let map, marker, infoWindow, geocoder;
 
-    const defaultLocation = { lat: 21.1909, lng: 72.7953 };
+        function initMap() {
 
-    map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 15,
-        center: defaultLocation,
-    });
+            const defaultLocation = {
+                lat: 21.1909,
+                lng: 72.7953
+            }; // Surat
 
-    marker = new google.maps.Marker({
-        position: defaultLocation,
-        map: map,
-        title: "Your Location",
-    });
+            geocoder = new google.maps.Geocoder();
 
-    infoWindow = new google.maps.InfoWindow({
-        content: "Loading weather..."
-    });
+            map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 14,
+                center: defaultLocation,
+            });
 
-    marker.addListener("mouseover", () => {
-        infoWindow.open(map, marker);
-    });
+            marker = new google.maps.Marker({
+                map: map,
+            });
 
-    marker.addListener("mouseout", () => {
-        infoWindow.close();
-    });
+            infoWindow = new google.maps.InfoWindow();
 
-    marker.addListener("click", () => {
-        infoWindow.open(map, marker);
-    });
-
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const lat = position.coords.latitude;
-                const lng = position.coords.longitude;
-
-                const userLocation = { lat, lng };
-
-                map.setCenter(userLocation);
-                marker.setPosition(userLocation);
-
-                loadWeather(lat, lng);
-            },
-            () => {
-                loadWeather(defaultLocation.lat, defaultLocation.lng);
+            // 🔹 Try browser location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        setLocation(position.coords.latitude, position.coords.longitude);
+                    },
+                    () => {
+                        // Permission denied → fallback address
+                        setAddressLocation("Ascon Plaza, Surat, India");
+                    }
+                );
+            } else {
+                setAddressLocation("Ascon Plaza, Surat, India");
             }
-        );
-    }
-}
+        }
 
-function loadWeather(lat, lng) {
+        /* ==========================
+           SET LOCATION BY LAT/LNG
+        ========================== */
+        function setLocation(lat, lng) {
 
-    fetch(`/weather?lat=${lat}&lng=${lng}`)
-        .then(res => res.json())
-        .then(data => {
+            const location = {
+                lat,
+                lng
+            };
 
-            if (data.status === 'success') {
+            map.setCenter(location);
+            marker.setPosition(location);
 
-                const weatherHTML = `
-                    <div style="min-width:250px;font-size:13px;">
-                        <strong>📍 ${data.city}</strong><br>
-                        🌡 <b>${data.temperature}°C</b><br>
+            loadWeather(lat, lng);
+
+            infoWindow.setContent("📍 Your current location");
+            infoWindow.open(map, marker);
+        }
+
+        /* ==========================
+           SET LOCATION BY ADDRESS
+        ========================== */
+        function setAddressLocation(address) {
+
+            geocoder.geocode({
+                address: address
+            }, function(results, status) {
+
+                if (status === "OK") {
+
+                    const location = results[0].geometry.location;
+
+                    map.setCenter(location);
+                    marker.setPosition(location);
+
+                    loadWeather(location.lat(), location.lng());
+
+                    infoWindow.setContent("📍 " + address);
+                    infoWindow.open(map, marker);
+
+                } else {
+                    console.error("Geocode failed: " + status);
+                }
+            });
+        }
+
+        /* ==========================
+           LOAD WEATHER
+        ========================== */
+        function loadWeather(lat, lng) {
+
+            fetch(`/weather?lat=${lat}&lng=${lng}`)
+                .then(res => res.json())
+                .then(data => {
+
+                    if (data.status === 'success') {
+
+                        const html = `
+                    <div style="min-width:220px;font-size:13px;">
+                        <strong>${data.city}</strong><br>
+                        🌡 ${data.temperature}°C<br>
                         ${data.description}<br>
-                        💧 Humidity: ${data.humidity}%<br>
-                        🌬 Wind: ${data.wind_speed} m/s
+                        💧 ${data.humidity}% 
+                         🌬 ${data.wind_speed} m/s
                     </div>
                 `;
 
-                infoWindow.setContent(weatherHTML);
-            }
-        })
-        .catch(err => {
-            infoWindow.setContent("Weather unavailable");
-            console.error(err);
-        });
-}
-</script>
-
-
+                        infoWindow.setContent(html);
+                        infoWindow.open(map, marker);
+                    }
+                })
+                .catch(() => {
+                    infoWindow.setContent("Weather unavailable");
+                });
+        }
+    </script>
 @endsection

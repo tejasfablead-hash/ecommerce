@@ -50,6 +50,7 @@
                     <div class="card-body">
                         <h6>Order Info</h6>
                         <p><strong>Order ID:</strong> {{ $order->order_number }}</p>
+                        <p><strong>Transaction ID:</strong> {{ $order->transactionId ?? '-' }}</p>
                         <p><strong>Payment:</strong> {{ ucfirst($order->payment_method) }}</p>
                         <p><strong>Payment Status:</strong> {{ ucfirst($order->payment_status) }}</p>
                         <p><strong>Order Status:</strong> {{ ucfirst($order->order_status) }}</p>

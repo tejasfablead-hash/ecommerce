@@ -104,7 +104,7 @@
                                             Remember Me
                                         </label>
                                     </div>
-                                    <a href="" class="text-dark mb-3">
+                                    <a href="{{route('ForgotPage')}}" class="text-dark mb-3">
                                         Forgot password?
                                     </a>
 

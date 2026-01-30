@@ -66,7 +66,7 @@
     @php
         $saleProducts = $product->where('status', 'active')->take(2);
         $latestProducts = $product->where('status', 'active')->take(8);
-        $comingProducts = $product->where('status', 'inactive')->skip(8);
+        $comingProducts = $product->where('status', 'active')->skip(8);
     @endphp
 
 

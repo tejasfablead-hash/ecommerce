@@ -11,13 +11,11 @@ class AIService
     {
         $messages = [];
 
-        // System message
         $messages[] = [
             'role' => 'system',
             'content' => 'You are a helpful ecommerce assistant.'
         ];
 
-        // Add previous conversation
         foreach ($context as $item) {
             $messages[] = [
                 'role' => $item['role'],
@@ -25,7 +23,6 @@ class AIService
             ];
         }
 
-        // Add current user message
         $messages[] = [
             'role' => 'user',
             'content' => $message,
@@ -41,11 +38,9 @@ class AIService
                 'messages' => $messages,
             ]);
 
-            // 🔍 Log status & response
             Log::info('OpenAI Status', ['status' => $response->status()]);
             Log::info('OpenAI Response', $response->json());
 
-            // Handle quota exceeded
             if ($response->failed()) {
                 $json = $response->json();
                 if(isset($json['error']['code']) && $json['error']['code'] === 'insufficient_quota'){

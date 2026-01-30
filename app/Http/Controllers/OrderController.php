@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use App\Services\SMSService;
-
+use Carbon\Carbon;
 
 class OrderController extends Controller
 {
@@ -70,7 +70,7 @@ class OrderController extends Controller
                 'total'      => $item->qty * $item->price,
             ]);
         }
-         $phone = $request->phone;
+        $phone = $request->phone;
         if (!str_starts_with($phone, '+')) {
             $phone = '+91' . $phone; // Add country code
         }
@@ -150,23 +150,33 @@ class OrderController extends Controller
                 'message' => 'Delivered order cannot be changed'
             ], 403);
         }
+        $paymentStatus = match ($request->order_status) {
+            'delivered' => 'paid',
+            'cancelled' => 'cancelled',
+            default     => 'pending',
+        };
         $order->update([
-            'order_status' => $request->order_status
+            'order_status' => $request->order_status,
+            'payment_status' => $paymentStatus
         ]);
 
-             $phone = $order->phone;
-        if (!str_starts_with($phone, '+')) {
-            $phone = '+91' . $phone; 
-        }
 
+        $phone = $order->phone;
+        if (!str_starts_with($phone, '+')) {
+            $phone = '+91' . $phone;
+        }
+        $deliveredDate = Carbon::parse($order->updated_at)->format('d-M-Y');
 
         $statusMessage = match ($request->order_status) {
             'confirmed' => "✅ Your order {$order->order_number} is CONFIRMED.",
             'shipped'   => "🚚 Your order {$order->order_number} has been SHIPPED.",
-            'delivered' => "📦 Your order {$order->order_number} DELIVERED. Thank you!",
+            'delivered' => "📦 Your order {$order->order_number} DELIVERED on {$deliveredDate}. Thank you!",
             'cancelled' => "❌ Your order {$order->order_number} is CANCELLED.",
             default     => null
         };
+
+
+
 
         if ($statusMessage) {
             $sms->send($phone, $statusMessage);

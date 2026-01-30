@@ -18,17 +18,23 @@ class PaypalController extends Controller
 
         $order = Order::with('orderitem.product')->find($orderId);
         // dd($order);
-
-
+        
         if (!$order) {
             return response()->json([
                 'status' => false,
                 'message' => 'Order not found'
             ], 404);
         }
+        if ($order->payment_status === 'paid') {
+            return response()->json([
+                'status' => false,
+                'message' => 'Order already paid'
+            ], 400);
+        }
 
         $order->update([
             'order_number' => $request->paypal_order_id,
+            'transactionId' => $request->transaction_id,
             'payment_method' => $request->payment_method,
             'payment_status' => 'paid',
             'order_status' => 'confirmed'
@@ -75,9 +81,10 @@ class PaypalController extends Controller
         $sms->send(
             $phone,
             "✅ Payment Successful!
-Order No: {$order->order_number}
-Amount Paid: ₹{$order->grand_total}
-Thank you for shopping with us."
+            Order No: {$order->order_number}
+            Transaction No: {$order->transactionId}
+            Amount Paid: ₹{$order->grand_total}
+            Thank you for shopping with us."
         );
 
 

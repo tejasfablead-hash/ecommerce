@@ -79,16 +79,13 @@
                  </li>
 
                  <li class="nxl-item nxl-hasmenu">
-                     <a href="javascript:void(0);" class="nxl-link">
+                     <a href="{{ route('OrderViewPage') }}" class="nxl-link">
                          <span class="nxl-micon"><i class="feather-shopping-cart"></i>
                          </span>
                          <span class="nxl-mtext">Order</span><span class="nxl-arrow"><i
                                  class="feather-chevron-right"></i></span>
                      </a>
-                     <ul class="nxl-submenu">
-                         <li class="nxl-item"><a class="nxl-link" href="{{ route('OrderViewPage') }}">All Order</a></li>
-                          </li>
-                     </ul>
+                   
                  </li>
 
                  <li class="nxl-item nxl-hasmenu">

@@ -150,7 +150,7 @@
     <div class="nxl-container">
         <div class="nxl-content">
 
-  <div class="page-header">
+            <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
                         <h5 class="m-b-10">Chat</h5>
@@ -169,7 +169,7 @@
                             </a>
                         </div>
                         <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
-                              <a href="{{route('javascript:void(0)')}}" class="btn btn-primary ">
+                            <a href="{{ route('DashboardPage') }}" class="btn btn-primary ">
                                 <i class="feather-arrow-left me-2"></i>
                                 <span>Back</span>
                             </a>
@@ -279,142 +279,151 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('ajax.js') }}"></script>
     <script>
-        let activeChat = null;
-        let isEditing = false;
-        let editingMessageId = null;
+  let activeChat = null;
+let isEditing = false;
+let editingMessageId = null;
+let lastMessageId = 0;
 
-        $(document).on('click', '.chat-user', function() {
-            activeChat = $(this).data('id');
+$(document).on('click', '.chat-user', function() {
+    activeChat = $(this).data('id');
+    $('.chat-user').removeClass('active');
+    $(this).addClass('active');
 
-            $('.chat-user').removeClass('active');
-            $(this).addClass('active');
+    $('#chat-title').text($(this).find('strong').text());
+    $('#chat-avatar').text($(this).find('.avatar').text());
+    $(this).find('.unread-count').fadeOut(200);
 
-            $('#chat-title').text($(this).find('strong').text());
-            $('#chat-avatar').text($(this).find('.avatar').text());
-            $('#profile-name').text($(this).find('strong').text());
-            $(this).find('.unread-count').fadeOut(200);
-            loadMessages();
-        });
+    lastMessageId = 0; // Reset when switching chat
+    $('#chat-box').html(''); // clear old messages
+    loadMessages(true); // force scroll to bottom
+});
 
-        $('#send-chat').on('click', function() {
-            let msg = $('#chat-message').val().trim();
-            if (!msg || !activeChat) return;
+// Send or update message
+$('#send-chat').on('click', function() {
+    let msg = $('#chat-message').val().trim();
+    if (!msg || !activeChat) return;
 
-            if (isEditing) {
-                var formData = new FormData();
-                formData.append('id', editingMessageId);
-                formData.append('message', msg);
-                var url = "{{ route('AdminchatUpdate') }}";
-                reusableAjaxCall(url, 'POST', formData, function(response) {
-                    resetEdit();
-                    loadMessages();
-                });
-                return;
-            }
+    let formData = new FormData();
+    let url = "";
 
-            var formData = new FormData();
-            formData.append('user_id', activeChat);
-            formData.append('message', msg);
-            var url = "{{ route('AdminchatSend') }}";
-            reusableAjaxCall(url, 'POST', formData, function(response) {
-                $('#chat-message').val('');
-                loadMessages();
-            });
-        });
+    if (isEditing && editingMessageId) {
+        formData.append('id', editingMessageId);
+        formData.append('message', msg);
+        url = "{{ route('AdminchatUpdate') }}";
 
-        function resetEdit() {
-            isEditing = false;
-            editingMessageId = null;
+        // AJAX update
+        reusableAjaxCall(url, 'POST', formData, function(response) {
+            let updatedMsgBox = $(`.chat-msg[data-id="${editingMessageId}"]`);
+            updatedMsgBox.find('.chat-text').text(msg);
+            updatedMsgBox.css('background', '#fff3cd');
+            setTimeout(() => updatedMsgBox.css('background', ''), 1000);
+
+            resetEdit();
             $('#chat-message').val('');
+        });
+    } else {
+        formData.append('user_id', activeChat);
+        formData.append('message', msg);
+        url = "{{ route('AdminchatSend') }}";
+
+        reusableAjaxCall(url, 'POST', formData, function(response) {
+            $('#chat-message').val('');
+            loadMessages(true); // scroll to bottom
+        });
+    }
+});
+
+function resetEdit() {
+    isEditing = false;
+    editingMessageId = null;
+    $('#chat-message').val('');
+}
+
+// Edit message click
+$(document).on('click', '.edit-msg', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    let box = $(this).closest('.chat-msg');
+    editingMessageId = box.data('id');
+    let text = box.find('.chat-text').text().trim();
+    $('#chat-message').val(text).focus();
+
+    isEditing = true;
+});
+
+// Delete message
+$(document).on('click', '.delete-msg', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    let msgId = $(this).closest('.chat-msg').data('id');
+    let formData = new FormData();
+    formData.append('id', msgId);
+
+    Swal.fire({
+        title: 'Delete message?',
+        text: 'This cannot be undone',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        confirmButtonText: 'Delete'
+    }).then((result) => {
+        if (result.value == true) {
+            reusableAjaxCall("{{ route('AdminchatDelete') }}", 'POST', formData, function(response) {
+                $(`.chat-msg[data-id="${msgId}"]`).remove();
+                Swal.fire('Deleted!', response.message, 'success');
+            });
         }
-        let chatUrlTemplate = "{{ route('AdminchatShow', ['chatId' => ':id']) }}";
-        function loadMessages() {
-            if (!activeChat) return;
-            let url = chatUrlTemplate.replace(':id', activeChat);
-            reusableAjaxCall(url, 'GET', {}, function(response) {
-                $('#chat-box').html('');
-                response.forEach(m => {
-                    let isMe = m.sender_id === {{ auth()->id() }};
-                    $('#chat-box').append(`
+    });
+});
+
+// Load messages
+let chatUrlTemplate = "{{ route('AdminchatShow', ['chatId' => ':id']) }}";
+
+function loadMessages(forceScroll = false) {
+    if (!activeChat) return;
+
+    let url = chatUrlTemplate.replace(':id', activeChat);
+    reusableAjaxCall(url, 'GET', {}, function(messages) {
+        let chatBox = $('#chat-box');
+        let isAtBottom = chatBox.scrollTop() + chatBox.innerHeight() >= chatBox[0].scrollHeight - 20;
+
+        messages.forEach(m => {
+            if ($('#chat-box').find(`.chat-msg[data-id="${m.id}"]`).length === 0) {
+                let isMe = m.sender_id === {{ auth()->id() }};
+                chatBox.append(`
                     <div class="chat-row ${isMe ? 'me' : ''}">
                         <div class="chat-bubble ${isMe ? 'me' : 'other'} chat-msg" data-id="${m.id}">
-                        <span class="chat-text">${m.message}</span>
-            ${isMe ? `
-                                                                <div class="msg-actions dropdown">
-                                                                 <span data-bs-toggle="dropdown">
-                                                                <i class="bi bi-three-dots-vertical"></i>
-                                                                </span>
-                                                                <ul class="dropdown-menu dropdown-menu-end shadow">
-                                                                <li>
-                                                                <a class="dropdown-item edit-msg" href="javascript:void(0)">
-                                                              <i class="bi bi-pencil me-2"></i>Edit
-                                                                </a>
-                                                            </li>
-                                                             <li>
-                                                                <a class="dropdown-item text-danger delete-msg" href="javascript:void(0)">
-                                                                    <i class="bi bi-trash me-2"></i>Delete
-                                                                </a>
-                                                        </li>
-                                                        </ul>
-                                                        </div>
-                                                            ` : ''}
-                                                        </div>
-                                                    </div>
-                                                `);
-                    $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
-                });
-            });
-        }
-
-        setInterval(() => {
-            if (activeChat && !isEditing) loadMessages();
-        }, 3000);
-
-        $(document).on('click', '.edit-msg', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            let box = $(this).closest('.chat-msg');
-            editingMessageId = box.data('id');
-
-            let text = box.find('.chat-text').text().trim();
-            $('#chat-message').val(text).focus();
-
-            isEditing = true;
+                            <span class="chat-text">${m.message}</span>
+                            ${isMe ? `
+                                <div class="msg-actions dropdown">
+                                    <span data-bs-toggle="dropdown">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </span>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow">
+                                        <li><a class="dropdown-item edit-msg" href="javascript:void(0)">
+                                            <i class="bi bi-pencil me-2"></i>Edit
+                                        </a></li>
+                                        <li><a class="dropdown-item text-danger delete-msg" href="javascript:void(0)">
+                                            <i class="bi bi-trash me-2"></i>Delete
+                                        </a></li>
+                                    </ul>
+                                </div>` : ''}
+                        </div>
+                    </div>
+                `);
+            }
         });
 
-        $(document).on('click', '.delete-msg', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            let url = "{{ route('AdminchatDelete') }}";
-            let msgId = $(this).closest('.chat-msg').data('id');
-            var formData = new FormData();
-            formData.append('id', msgId);
+        if (forceScroll || isAtBottom) chatBox.scrollTop(chatBox[0].scrollHeight);
+    });
+}
 
-            Swal.fire({
-                title: 'Delete message?',
-                text: 'This cannot be undone',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                confirmButtonText: 'Delete'
-            }).then((result) => {
-                if (result.value == true) {
-                    reusableAjaxCall(url, 'POST', formData, function(response) {
-                            Swal.fire('Deleted!', response.message, 'success');
-                            loadMessages();
-                        },
-                        function(error) {
-                            Swal.fire('Error!', 'Something went wrong.', 'error');
-                            console.log(error);
-                        });
+// Auto-refresh messages
+setInterval(() => {
+    if (activeChat && !isEditing) loadMessages();
+}, 4000);
 
-                } else if (result.dismiss === Swal.DismissReason.cancel) {
-                    Swal.fire('Cancelled', 'Your Message is safe :)', 'info');
-                }
-
-            });
-
-        });
     </script>
 @endsection

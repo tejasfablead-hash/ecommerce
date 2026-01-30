@@ -10,79 +10,50 @@
     <meta name="keyword" content="">
     <meta name="author" content="theme_ocean">
     <title>Duralex Login </title>
-    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico">
-    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/vendors/css/vendors.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/theme.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/images/favicon.ico') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendors/css/vendors.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendors/css/dataTables.bs5.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendors/css/select2.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendors/css/select2-theme.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendors/css/daterangepicker.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/theme.min.css') }}" />
 
 </head>
 
 <body>
-
+    <!--! ================================================================ !-->
+    <!--! [Start] Main Content !-->
+    <!--! ================================================================ !-->
     <main class="auth-minimal-wrapper">
         <div class="auth-minimal-inner">
             <div class="minimal-card-wrapper">
                 <div class="card mb-4 mt-5 mx-4 mx-sm-0 position-relative">
                     <div
                         class="wd-50 bg-white p-2 rounded-circle shadow-lg position-absolute translate-middle top-0 start-50">
-                        <img src="assets/images/logo-abbr.png" alt="" class="img-fluid">
+                        <img src="{{ asset('assets/images/logo-abbr.png') }}" alt="" class="img-fluid">
                     </div>
                     <div class="card-body p-sm-5">
-                        <h2 class="fs-20 fw-bolder mb-4">Login</h2>
-                        <form id="Loginform" enctype="multipart/form-data" class="w-100 mt-4 pt-2">
-                            @csrf
+                        <h2 class="fs-20 fw-bolder mb-4">Reset</h2>
+                        <h4 class="fs-13 fw-bold mb-2">Reset to your username/password</h4>
+                        <p class="fs-12 fw-medium text-muted">Enter your email and a reset link will sent to you, let's
+                            access our the best recommendation for you.</p>
+                        <form action="" id="forgotform" class="w-100 mt-4 pt-2">
                             <div class="mb-4">
-                                <input type="email" class="form-control" name="email" placeholder="Email">
-                                <small class="text-danger error " id="email_error"></small>
+                                <input class="form-control" name="email" placeholder="Enter Email or Username">
+                                <small class="text-danger error" id="email_error"></small>
                             </div>
-                            <div class="mb-4 generate-pass">
-                                <div class="input-group field">
-                                    <input type="password" class="form-control password" name="password"
-                                        id="newPassword" placeholder="Password ">
-                                    {{-- <div class="input-group-text c-pointer gen-pass" data-bs-toggle="tooltip" title="Generate Password"><i class="feather-hash"></i></div> --}}
-                                    <div class="input-group-text border-start bg-gray-2 c-pointer show-pass"
-                                        data-bs-toggle="tooltip" title="Show/Hide Password"><i></i></div>
-
-                                </div>
-                                <small class="text-danger error " id="password_error"></small>
+                            <div class="mt-5">
+                                <input type="submit" class="btn btn-lg btn-primary w-100" value="Reset Now">
                             </div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div>
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="rememberMe">
-                                        <label class="custom-control-label c-pointer" for="rememberMe">Remember
-                                            Me</label>
-                                    </div>
-                                </div>
-                                <div>
-                                    <a href="{{route('AdminForgotPage')}}" class="fs-11 text-primary">Forget password?</a>
-                                </div>
-                            </div>
-                            <div class="mt-3">
-                                <input type="submit" class="btn btn-lg btn-primary w-100" value="Login">
-                            </div>
-
-                            {{-- <div class="w-100 mt-4 text-center mx-auto">
-                                <div class="mb-4 border-bottom position-relative"><span
-                                        class="small py-1 px-3 text-uppercase text-muted bg-white position-absolute translate-middle">or</span>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-center gap-2">
-                                    <a href="javascript:void(0);" class="btn btn-light-brand flex-fill"
-                                        data-bs-toggle="tooltip" data-bs-trigger="hover" title="Login with Facebook">
-                                        <i class="feather-facebook"></i>
-                                    </a>
-                                    <a href="javascript:void(0);" class="btn btn-light-brand flex-fill"
-                                        data-bs-toggle="tooltip" data-bs-trigger="hover" title="Login with Google">
-                                        <i class="fa-brands fa-google"></i>
-                                    </a>
-
-                                </div>
-                            </div> --}}
-
                         </form>
+
                     </div>
                 </div>
             </div>
+        </div>
     </main>
 
     <div class="theme-customizer">
@@ -107,15 +78,15 @@
                         style="top: -12px">Skins</label>
                     <div class="row g-2 theme-options-items app-skin" id="appSkinList">
                         <div class="col-6 text-center position-relative single-option light-button active">
-                            <input type="radio" class="btn-check" id="app-skin-light" name="app-skin"
-                                value="1" data-app-skin="app-skin-light">
+                            <input type="radio" class="btn-check" id="app-skin-light" name="app-skin" value="1"
+                                data-app-skin="app-skin-light">
                             <label
                                 class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label"
                                 for="app-skin-light">Light</label>
                         </div>
                         <div class="col-6 text-center position-relative single-option dark-button">
-                            <input type="radio" class="btn-check" id="app-skin-dark" name="app-skin"
-                                value="2" data-app-skin="app-skin-dark">
+                            <input type="radio" class="btn-check" id="app-skin-dark" name="app-skin" value="2"
+                                data-app-skin="app-skin-dark">
                             <label
                                 class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label"
                                 for="app-skin-dark">Dark</label>
@@ -299,81 +270,53 @@
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.7.1.js" crossorigin="anonymous"></script>
-    <script src="assets/vendors/js/vendors.min.js"></script>
-    <script src="assets/vendors/js/lslstrength.min.js"></script>
-    <script src="assets/js/common-init.min.js"></script>
-    <script src="assets/js/theme-customizer-init.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Vendors -->
+    <script src="{{ asset('assets/vendors/js/vendors.min.js') }}"></script>
+
+    <script src="{{ asset('assets/vendors/js/dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/vendors/js/dataTables.bs5.min.js') }}"></script>
+
+    <!-- Common -->
+    <script src="{{ asset('assets/js/common-init.min.js') }}"></script>
+    <script src="{{ asset('assets/js/theme-customizer-init.min.js') }}"></script>
     <script src="{{ asset('ajax.js') }}"></script>
     <script>
         $(document).ready(function() {
 
-            $('#Loginform').submit(function(e) {
+            $('#forgotform').submit(function(e) {
                 e.preventDefault();
-
-                var data = $('#Loginform')[0];
-                var formData = new FormData(data);
+                var formData = new FormData(this);
                 $('.error').text('');
-                var url = "{{ route('LoginMatchPage') }}";
+                var url = "{{ route('AdminForgotPasswordPage') }}";
                 reusableAjaxCall(url, 'POST', formData, function(response) {
-                        console.log('response', response);
-                        const Toast = Swal.mixin({
-                            toast: true,
-                            position: "top-end",
-                            showConfirmButton: false,
+                    console.log('response', response);
+                    if (response.status) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: response.message,
                             timer: 3000,
-                            timerProgressBar: true,
-                            didOpen: (toast) => {
-                                toast.onmouseenter = Swal.stopTimer;
-                                toast.onmouseleave = Swal.resumeTimer;
-                            }
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = response.link;
                         });
-                        if (response.status === true) {
-                            if (response.role === "admin") {
-                                Toast.fire({
-                                    icon: "success",
-                                    title: response.message || "Login successfully"
-                                });
-                                setTimeout(function() {
-                                    window.location.href = response.redirect;
-                                }, 2000);
-                            } else {
-                                Toast.fire({
-                                    icon: "error",
-                                    title: "Unauthorized Access"
-                                });
-                                setTimeout(function() {
-                                    window.location.href = "{{ route('LoginPage') }}";
-                                }, 2000);
-                            }
-                        } else {
-                            Toast.fire({
-                                icon: "error",
-                                title: response.message || "Something went wrong"
-                            });
+                        $('#forgotform')[0].reset();
+                    }
+                }, function(error) {
+                    if (error.responseJSON && error.responseJSON.errors) {
+                        let errors = error.responseJSON.errors;
+                        if (errors.email) {
+                            $('#email_error').text(errors.email[0]);
                         }
-                        $('#Loginform')[0].reset();
-                    },
-                    function(error) {
-                        let message = "Something went wrong";
-
-                        if (error.responseJSON && error.responseJSON.message) {
-                            message = error.responseJSON.message;
-                        }
-
-                        const Toast = Swal.mixin({
-                            toast: true,
-                            position: "top-end",
-                            showConfirmButton: false,
-                            timer: 3000,
-                            timerProgressBar: true,
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Something went wrong!'
                         });
-
-                        Toast.fire({
-                            icon: "error",
-                            title: message
-                        });
-                    });
+                    }
+                });
 
             });
         });

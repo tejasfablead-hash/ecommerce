@@ -44,6 +44,7 @@
                                             <tr>
                                                 <th>User</th>
                                                 <th>OrderId</th>
+                                                <th>TransactionId</th>
                                                 <th>Product Name</th>
                                                 <th>Payment Method</th>
                                                 <th>Payment Status</th>
@@ -58,7 +59,7 @@
 
                                                     <td>{{ $item->getcustomer->name }}</td>
                                                     <td>{{ $item->order_number }}</td>
-
+                                                    <td>{{ $item->transactionId }}</td>
                                                     <td>
                                                         <ul class="list-unstyled mb-0">
                                                             @foreach ($item->orderitem as $orderItem)
