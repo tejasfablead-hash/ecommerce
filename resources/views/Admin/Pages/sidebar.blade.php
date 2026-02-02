@@ -73,6 +73,7 @@
                      <ul class="nxl-submenu">
                          <li class="nxl-item"><a class="nxl-link" href="{{ route('ProductViewPage') }}">All Product</a></li>
                          <li class="nxl-item"><a class="nxl-link" href="{{ route('ProductPage') }}"> Create Product</a>
+                         <li class="nxl-item"><a class="nxl-link" href="{{ route('Scrapepage') }}"> Scrape Product</a>
                          </li>
                      
                      </ul>
@@ -99,12 +100,21 @@
 
                  <li class="nxl-item nxl-hasmenu">
                      <a href="{{ route('AdminChatPage') }}" class="nxl-link">
-                         <span class="nxl-micon"><i class="feather-cast"></i></span>
+                         <span class="nxl-micon"><i
+                                 class="feather-message-square"></i></span>
                          <span class="nxl-mtext">Chat</span><span class="nxl-arrow"><i
                                  class="feather-chevron-right"></i></span>
                      </a>
                 
                  </li>
+                 {{-- <li class="nxl-item nxl-hasmenu">
+                     <a href="{{ route('EventPage') }}" class="nxl-link">
+                         <span class="nxl-micon"><i class="feather-cast"></i></span>
+                         <span class="nxl-mtext">Event</span><span class="nxl-arrow"><i
+                                 class="feather-chevron-right"></i></span>
+                     </a>
+                
+                 </li> --}}
                  <li class="nxl-item nxl-hasmenu">
                      <a href="javascript:void(0);" class="nxl-link">
                          <span class="nxl-micon"><i class="feather-power"></i></span>

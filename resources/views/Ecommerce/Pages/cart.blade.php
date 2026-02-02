@@ -228,6 +228,7 @@
                                 row.fadeOut(300, function() {
                                     $(this).remove();
                                     calculate();
+                                    loadCartCount();
                                     if ($('tbody tr').length === 0) {
                                         $('tbody').html(`
                                 <tr>
@@ -324,6 +325,7 @@
                     });
                     if (response.status == true) {
                         calculate();
+                        loadCartCount();
                         Toast.fire({
                             icon: "success",
                             title: response.message || "Cart Updated"

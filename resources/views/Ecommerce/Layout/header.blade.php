@@ -1,11 +1,9 @@
 <style>
-    /* Right navbar items alignment */
     .navbar-right .nav-item {
         display: flex;
         align-items: center;
     }
 
-    /* Bell wrapper */
     .notification-bell {
         position: relative;
         width: 32px;
@@ -18,13 +16,11 @@
         cursor: pointer;
     }
 
-    /* Bell icon */
     .notification-bell i {
         font-size: 16px;
         line-height: 1;
     }
 
-    /* Badge – top right corner */
     .bell-badge {
         position: absolute;
         top: -3px;
@@ -41,7 +37,6 @@
         font-weight: 600;
     }
 
-    /* Dropdown UI */
     .notification-dropdown {
         width: 280px;
         padding: 0;
@@ -64,6 +59,14 @@
     .chat-notification-item:hover {
         background: #fafaf8;
 
+    }
+
+    .wishlist-badge {
+        top: -10px;
+        right: -14px;
+        font-size: 9px;
+        min-width: 16px;
+        height: 16px;
     }
 </style>
 <header class="header_area sticky-header">
@@ -146,12 +149,12 @@
                             </div>
                         </li>
 
-
-                        <li class="nav-item pr-2">
+                        <li class="nav-item pr-2 position-relative">
                             @auth
-                                <a href="{{ route('WishlistPage') }}" class="social-info wishlist-icon mt-1">
+                                <a href="{{ route('WishlistPage') }}"
+                                    class="social-info wishlist-icon mt-2 position-relative">
                                     <i class="ti-heart" style="color: black"></i>
-                                    <span class="wishlist-count"></span>
+                                    <span id="wishlist-count" class="bell-badge wishlist-badge">0</span>
                                 </a>
                             @endauth
 
@@ -161,8 +164,11 @@
                                 </a>
                             @endguest
                         </li>
-                        <li class="nav-item "><a href="{{ route('UserCartPage') }}" class="cart"><span
-                                    class="ti-bag"></span></a></li>
+
+
+                        <li class="nav-item position-relative mt-1"><a href="{{ route('UserCartPage') }}"
+                                class="cart"><span class="ti-bag"></span>
+                                &nbsp;&nbsp;<span id="cart-count" class="bell-badge mt-4">0</span></a></li>
                         <li class="nav-item pl-2">
                             <button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
                         </li>
@@ -187,7 +193,39 @@
 <script src="{{ asset('ajax.js') }}"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
+    function loadCartCount() {
+        var url = "{{ route('UserCartCount') }}";
+        reusableAjaxCall(url, 'GET', null, function(response) {
+            if (response.count > 0) {
+                $('#cart-count')
+                    .text(response.count)
+                    .css('display', 'flex');
+            } else {
+                $('#cart-count').hide();
+            }
+        });
+    }
+
+    function loadWishlistCount() {
+        
+        var url = "{{ route('UserWishlistCount') }}";
+
+        reusableAjaxCall(url, 'GET', null, function(response) {
+            if (response.count > 0) {
+                $('#wishlist-count')
+                    .text(response.count)
+                    .css('display', 'flex');
+            } else {
+                $('#wishlist-count').text(0).hide();
+            }
+        });
+    }
+
     $(document).ready(function() {
+
+        loadCartCount();
+        loadWishlistCount();
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

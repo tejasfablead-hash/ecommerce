@@ -53,11 +53,26 @@ class CartController extends Controller
                 'price' => $product->price
             ]);
         }
+
+        $cartCount = Cart::where('user_id', Auth::id())->sum('qty');
+
         return response()->json([
             'status' => true,
+            'cart_count' => $cartCount,
             'message' => 'Product added to cart'
         ]);
     }
+    public function cartCount()
+    {
+        if (!Auth::check()) {
+            return response()->json(['count' => 0]);
+        }
+        $cartCount = Cart::where('user_id', Auth::id())->sum('qty');
+        return response()->json([
+            'count' => $cartCount
+        ]);
+    }
+
 
     public function continueShopping()
     {

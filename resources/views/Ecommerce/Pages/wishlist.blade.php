@@ -139,10 +139,9 @@
                 reusableAjaxCall(url, 'POST', formData, function(response) {
 
                     if (response.status === true) {
-
+                        // loadWishlistCount();
                         card.fadeOut(400, function() {
                             $(this).remove();
-
                             if ($('.wishlist-card').length === 0) {
                                 $('.wishlist_area .row').remove();
                                 $('.wishlist_area .container').append(`

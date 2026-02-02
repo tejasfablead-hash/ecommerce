@@ -66,7 +66,6 @@ class AdminPasswordController extends Controller
             ]);
         }
 
-       
         User::where('email', $reset->email)
             ->update(['password' => Hash::make($request->password)]);
 
