@@ -41,6 +41,7 @@
                         <p class="fs-12 fw-medium text-muted">Enter your email and a reset link will sent to you, let's
                             access our the best recommendation for you.</p>
                         <form action="" id="forgotform" class="w-100 mt-4 pt-2">
+                            @csrf
                             <div class="mb-4">
                                 <input class="form-control" name="email" placeholder="Enter Email or Username">
                                 <small class="text-danger error" id="email_error"></small>

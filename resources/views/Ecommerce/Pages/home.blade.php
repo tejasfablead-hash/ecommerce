@@ -641,22 +641,28 @@
 
                 reusableAjaxCall(url, 'POST', formData, function(response) {
                     if (response.status == true) {
-                        if (response.count > 0) {
+                        loadWishlistCount();
+                        if (response.type === 'added') {
                             $('.wishlist-count').remove();
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Added to Wishlist',
-                                text: 'Redirecting to wishlist...',
+                                text: 'Check to wishlist...',
                                 timer: 3000,
                                 showConfirmButton: false
                             });
-                            setTimeout(() => {
-                                window.location.href = "{{ route('WishlistPage') }}";
-                            }, 3000);
+                            // setTimeout(() => {
+                            //     window.location.href = "{{ route('WishlistPage') }}";
+                            // }, 3000);
 
-                        } else {
-                            $('.wishlist-count').remove();
-
+                        } else if (response.type === 'exists') {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Removed from Wishlist',
+                                text: 'Product removed from your wishlist',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
                         }
                     }
                 });
@@ -670,17 +676,17 @@
 
                 reusableAjaxCall(url, 'POST', formData, function(response) {
                     if (response.status == true) {
+                        loadCartCount();
                         Swal.fire({
                             icon: 'success',
                             title: 'Added to Cart',
-                            text: 'Redirecting to your Cart...',
+                            text: 'Check to your Cart...',
                             timer: 3000,
                             showConfirmButton: false
                         });
-                        setTimeout(() => {
-                            window.location.href = "{{ route('UserCartPage') }}";
-                        }, 3000);
-
+                        // setTimeout(() => {
+                        //     window.location.href = "{{ route('UserCartPage') }}";
+                        // }, 3000);
 
                     }
                 });

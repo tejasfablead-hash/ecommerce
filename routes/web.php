@@ -8,12 +8,14 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckOutController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ScraperController;
 use App\Http\Controllers\SocialLoginController;
 use App\Http\Controllers\UserChatController;
 use App\Http\Controllers\UserNotificationController;
@@ -91,9 +93,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/chat/delete', [DashboardController::class, 'delete'])
         ->name('AdminchatDelete');
 
-
     Route::get('/order-details/{id}', [OrderController::class, 'details'])->name('OrderDetailViewPage');
     Route::get('/orders/notifications', [OrderController::class, 'getNotifications'])->name('OrdernotificationsPage');
+
+    Route::get('/event', [EventController::class, 'index'])->name('EventPage');
+    Route::post('/calendar', [EventController::class, 'store'])->name('EventStorePage');
+    Route::get('/events/fetch', [EventController::class, 'fetchEvents'])->name('EventFetchPage');
+
+    Route::get('/scrape-product', [ScraperController::class, 'index'])->name('Scrapepage');
+    Route::post('/scrape-products', [ScraperController::class, 'scrapeProducts'])->name('ScrapeproductPage');
 });
 
 Route::middleware(['auth', 'user'])->group(function () {
@@ -109,9 +117,13 @@ Route::middleware(['auth', 'user'])->group(function () {
 
     Route::get('/user/wishlist', [WishlistsController::class, 'index'])->name('WishlistPage');
     Route::post('/user/wishlist-toggle', [WishlistsController::class, 'toggle'])->name('WishlistStorePage');
+    Route::get('/user/wishlist-count', [WishlistsController::class, 'count'])
+        ->name('UserWishlistCount');
 
     Route::get('/user/cart', [CartController::class, 'cart'])->name('UserCartPage');
     Route::post('/user/add-to-cart', [CartController::class, 'addtoCart'])->name('UserAddCartPage');
+    Route::get('/user/cart-count', [CartController::class, 'cartCount'])
+        ->name('UserCartCount');
     Route::get('/user/cart-delete/{id}', [CartController::class, 'delete'])->name('UserCartDeletePage');
     Route::post('/user/cart/update-qty', [CartController::class, 'update'])
         ->name('UserCartUpdatePage');
@@ -138,5 +150,4 @@ Route::middleware(['auth', 'user'])->group(function () {
 
     Route::post('/ai/chat', [AIChatController::class, 'ask']);
     Route::get('/weather', [ApiController::class, 'weather']);
-
 });

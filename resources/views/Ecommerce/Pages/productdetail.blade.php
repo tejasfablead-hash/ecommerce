@@ -128,7 +128,7 @@
                     <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
                         aria-selected="true">Description</a>
                 </li>
-               
+
                 <li class="nav-item">
                     <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab"
                         aria-controls="contact" aria-selected="false">Comments</a>
@@ -140,7 +140,8 @@
             </ul>
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
-                    <p>{{ $product->description }}</p>  </div>
+                    <p>{{ $product->description }}</p>
+                </div>
                 <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                     <div class="table-responsive">
                         <table class="table">
@@ -464,7 +465,6 @@
     @if ($product)
         <script>
             $(document).ready(function() {
-
                 $('.wishlist-btn').click(function() {
                     let productId = $(this).data('product-id');
                     let url = "{{ route('WishlistStorePage') }}";
@@ -472,8 +472,9 @@
                     formData.append('product_id', productId);
 
                     reusableAjaxCall(url, 'POST', formData, function(response) {
-                        if (response.status) {
-                            if (response.count > 0) {
+                        if (response.status == true) {
+                            loadWishlistCount();
+                            if (response.type === 'added') {
                                 $('.wishlist-count').remove();
                                 Swal.fire({
                                     icon: 'success',
@@ -482,12 +483,20 @@
                                     timer: 3000,
                                     showConfirmButton: false
                                 });
-                                setTimeout(() => {
-                                    window.location.href = "{{ route('WishlistPage') }}";
-                                }, 3000);
-                            } else {
-                                $('.wishlist-count').remove();
+                                // setTimeout(() => {
+                                //     window.location.href = "{{ route('WishlistPage') }}";
+                                // }, 3000);
+
+                            } else if (response.type === 'exists') {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Removed from Wishlist',
+                                    text: 'Product removed from your wishlist',
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                });
                             }
+
                         }
                     });
                 });
@@ -499,16 +508,17 @@
 
                     reusableAjaxCall(url, 'POST', formData, function(response) {
                         if (response.status == true) {
+                            loadCartCount();
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Added to Cart',
-                                text: 'Redirecting to your Cart...',
+                                text: 'Check to your Cart...',
                                 timer: 3000,
                                 showConfirmButton: false
                             });
-                            setTimeout(() => {
-                                window.location.href = "{{ route('UserCartPage') }}";
-                            }, 3000);
+                            // setTimeout(() => {
+                            //     window.location.href = "{{ route('UserCartPage') }}";
+                            // }, 3000);
                         }
                     });
                 });
