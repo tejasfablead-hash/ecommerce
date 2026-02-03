@@ -8,7 +8,7 @@
                     <h1>Shopping Cart</h1>
                     <nav class="d-flex align-items-center">
                         <a href="javascript:void(0)">Home<span class="lnr lnr-arrow-right"></span></a>
-                        <a href="category.html">Cart</a>
+                        <a href="javascript:void(0)">Cart</a>
                     </nav>
                 </div>
             </div>
@@ -64,7 +64,7 @@
                                             <div class="product_count">
                                                 <input type="number" id="qtyInput" class="input-text qty qty-input"
                                                     value="{{ $item->qty }}" min="1"
-                                                    data-cart-id="{{ $item->id }}"
+                                                    data-old="{{ $item->qty }}" data-cart-id="{{ $item->id }}"
                                                     data-price="{{ $item->getproduct->price }}">
                                             </div>
                                         </td>
@@ -305,8 +305,10 @@
             $(document).on('change', '.qty-input', function(e) {
                 calculate();
                 e.preventDefault();
-                let qty = $(this).val();
-                let cartId = $(this).data('cart-id');
+                let input = $(this);
+                let qty = parseInt(input.val()) || 1;
+                let oldQty = input.data('old') || 1;
+                let cartId = input.data('cart-id');
                 var formData = new FormData();
                 formData.append('qty', qty);
                 formData.append('cartId', cartId);
@@ -324,6 +326,7 @@
                         }
                     });
                     if (response.status == true) {
+                        input.data('old', qty);
                         calculate();
                         loadCartCount();
                         Toast.fire({
@@ -331,6 +334,13 @@
                             title: response.message || "Cart Updated"
                         });
 
+                    } else {
+                        input.val(oldQty);
+                        calculate();
+                        Toast.fire({
+                            icon: "error",
+                            title: response.message || "Out of stock"
+                        });
                     }
                 });
 

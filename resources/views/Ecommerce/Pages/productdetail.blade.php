@@ -25,8 +25,8 @@
                     <h1>Product Details </h1>
                     <nav class="d-flex align-items-center">
                         <a href="javascript:void(0)">Home<span class="lnr lnr-arrow-right"></span></a>
-                        <a href="#">Shop<span class="lnr lnr-arrow-right"></span></a>
-                        <a href="single-product.html">product-details</a>
+                        <a href="javascript:void(0)" >Shop<span class="lnr lnr-arrow-right"></span></a>
+                        <a href="javascript:void(0)">product-details</a>
                     </nav>
                 </div>
             </div>
@@ -69,10 +69,10 @@
                                 <li><a class="active" href="#"><span>Category</span> :
                                         {{ $product->getcategory->name }}</a></li>
                                 @if ($product->qty == 0)
-                                    <li><a href="#"><span>Availibility</span> : No Stock ({{ $product->qty }})</a>
+                                    <li><a href="javascript:void(0)" ><span>Availibility</span> : No Stock ({{ $product->qty }})</a>
                                     </li>
                                 @else
-                                    <li><a href="#"><span>Availibility</span> : In Stock ({{ $product->qty }}) </a>
+                                    <li><a href="javascript:void(0)" ><span>Availibility</span> : In Stock ({{ $product->qty }}) </a>
                                     </li>
                                 @endif
                             </ul>
@@ -322,19 +322,19 @@
                                     <div class="rating_list">
                                         <h3>Based on 3 Reviews</h3>
                                         <ul class="list">
-                                            <li><a href="#">5 Star <i class="fa fa-star"></i><i
+                                            <li><a href="javascript:void(0)" >5 Star <i class="fa fa-star"></i><i
                                                         class="fa fa-star"></i><i class="fa fa-star"></i><i
                                                         class="fa fa-star"></i><i class="fa fa-star"></i> 01</a></li>
-                                            <li><a href="#">4 Star <i class="fa fa-star"></i><i
+                                            <li><a href="javascript:void(0)" >4 Star <i class="fa fa-star"></i><i
                                                         class="fa fa-star"></i><i class="fa fa-star"></i><i
                                                         class="fa fa-star"></i><i class="fa fa-star"></i> 01</a></li>
-                                            <li><a href="#">3 Star <i class="fa fa-star"></i><i
+                                            <li><a href="javascript:void(0)" >3 Star <i class="fa fa-star"></i><i
                                                         class="fa fa-star"></i><i class="fa fa-star"></i><i
                                                         class="fa fa-star"></i><i class="fa fa-star"></i> 01</a></li>
-                                            <li><a href="#">2 Star <i class="fa fa-star"></i><i
+                                            <li><a href="javascript:void(0)" >2 Star <i class="fa fa-star"></i><i
                                                         class="fa fa-star"></i><i class="fa fa-star"></i><i
                                                         class="fa fa-star"></i><i class="fa fa-star"></i> 01</a></li>
-                                            <li><a href="#">1 Star <i class="fa fa-star"></i><i
+                                            <li><a href="javascript:void(0)" >1 Star <i class="fa fa-star"></i><i
                                                         class="fa fa-star"></i><i class="fa fa-star"></i><i
                                                         class="fa fa-star"></i><i class="fa fa-star"></i> 01</a></li>
                                         </ul>
@@ -409,11 +409,11 @@
                                 <h4>Add a Review</h4>
                                 <p>Your Rating:</p>
                                 <ul class="list">
-                                    <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                    <li><a href="javascript:void(0)" ><i class="fa fa-star"></i></a></li>
+                                    <li><a href="javascript:void(0)" ><i class="fa fa-star"></i></a></li>
+                                    <li><a href="javascript:void(0)" ><i class="fa fa-star"></i></a></li>
+                                    <li><a href="javascript:void(0)" ><i class="fa fa-star"></i></a></li>
+                                    <li><a href="javascript:void(0)" ><i class="fa fa-star"></i></a></li>
                                 </ul>
                                 <p>Outstanding</p>
                                 <form class="row contact_form" action="contact_process.php" method="post"

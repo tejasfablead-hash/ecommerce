@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\RedirectIfNotAuthenticated;
 use App\Http\Middleware\UserMiddleware;
 use Illuminate\Foundation\Application;
@@ -16,7 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'admin' => AdminMiddleware::class,
-            'user' => UserMiddleware::class
+            'user' => UserMiddleware::class,
+            'auth' => Authenticate::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

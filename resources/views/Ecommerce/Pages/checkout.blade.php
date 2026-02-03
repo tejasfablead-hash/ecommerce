@@ -5,7 +5,7 @@
                 <div class="col-first">
                     <h1>Checkout</h1>
                     <nav class="d-flex align-items-center"> <a href="javascript:void(0)">Home<span
-                                class="lnr lnr-arrow-right"></span></a> <a href="single-product.html">Checkout</a> </nav>
+                                class="lnr lnr-arrow-right"></span></a> <a href="javascript:void(0)">Checkout</a> </nav>
                 </div>
             </div>
         </div>

@@ -88,7 +88,7 @@
                             @csrf
                             <div class="col-md-12 form-group">
                                 <input type="email" class="form-control" name="email" placeholder="Email Address">
-                                <small class="text-danger error" id="email_error"></small>
+                                <small class="text-danger error " id="email_error"></small>
                             </div>
 
                             <div class="col-md-12 form-group">

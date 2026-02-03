@@ -133,7 +133,7 @@
                                     <thead >
                                         <tr>
                                             <th scope="col">Customer</th>
-                                            <th scope="col">OrderId</th>
+                                            <th scope="col">Order Id</th>
                                             <th scope="col">Payment</th>
                                             <th scope="col">Date</th>
                                             <th scope="col">Payment Status</th>
@@ -152,8 +152,8 @@
                                                             alt="{{ $order->getcustomer->name ?? 'Guest' }}"
                                                             class="rounded-circle" width="40">
                                                         <div>
-                                                            <div>{{ $order->getcustomer->name ?? 'Guest' }}</div>
-                                                            <small class="text-muted">{{ $order->email }}</small>
+                                                            <div class="text-capitalize">{{ $order->getcustomer->name ?? 'Guest' }}</div>
+                                                            
                                                         </div>
                                                     </div>
                                                 </td>

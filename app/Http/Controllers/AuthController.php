@@ -6,7 +6,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -31,21 +33,39 @@ class AuthController extends Controller
                 'message' => 'All fields are Required'
             ], 422);
         }
+
+        $key = Str::lower($request->email) . '|' . $request->ip();
+
+        if (RateLimiter::tooManyAttempts($key, 5)) {
+
+            $seconds = RateLimiter::availableIn($key);
+            $minutes = ceil($seconds / 60);
+
+            return response()->json([
+                'status' => false,
+                'message' => "Too many login attempts. Try again after {$minutes} Minutes."
+            ], 429);
+        }
         $credentials = $request->only('email', 'password');
 
         if (!Auth::attempt($credentials, $request->boolean('remember'))) {
+            RateLimiter::hit($key, 300); // 300 sec = 5 min
+
             return response()->json([
                 'status' => false,
                 'message' => 'Invalid email or password',
             ], 401);
         }
 
+        // ✅ Correct login → reset attempts
+        RateLimiter::clear($key);
+
         $request->session()->regenerate();
         $role = Auth::user()->role;
         if ($role === 'admin') {
-            $redirect = route('DashboardPage'); 
+            $redirect = route('DashboardPage');
         } elseif ($role === 'customer') {
-            $redirect = route('HomePage'); 
+            $redirect = route('HomePage');
         } else {
             Auth::logout();
             $request->session()->invalidate();

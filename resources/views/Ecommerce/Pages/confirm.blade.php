@@ -7,8 +7,8 @@
                 <div class="col-first">
                     <h1>Confirmation</h1>
                     <nav class="d-flex align-items-center">
-                        <a href="">Home<span class="lnr lnr-arrow-right"></span></a>
-                        <a href="">Confirmation</a>
+                        <a href="javascript:void(0)">Home<span class="lnr lnr-arrow-right"></span></a>
+                        <a href="javascript:void(0)">Confirmation</a>
                     </nav>
                 </div>
             </div>
@@ -35,10 +35,10 @@
                     <div class="col-lg-4">
                         <div class="details_item ">
                             <ul class="list text-capitalize">
-                                <li><a href="#"><span>Transaction Id</span> : {{ $order->transactionId }}</a></li>
-                                <li><a href="#"><span>Order number</span> : {{ $order->order_number }}</a></li>
-                                <li><a href="#"><span>Date</span> : {{ $order->updated_at->format('d M Y') }}</a></li>
-                                <li><a href="#"><span>Total</span> : ₹{{ $order->grand_total }}</a></li>
+                                <li><a href="javascript:void(0)" ><span>Transaction Id</span> : {{ $order->transactionId }}</a></li>
+                                <li><a href="javascript:void(0)" ><span>Order number</span> : {{ $order->order_number }}</a></li>
+                                <li><a href="javascript:void(0)" ><span>Date</span> : {{ $order->updated_at->format('d M Y') }}</a></li>
+                                <li><a href="javascript:void(0)" ><span>Total</span> : ₹{{ $order->grand_total }}</a></li>
 
                             </ul>
                         </div>
@@ -47,11 +47,11 @@
                     <div class="col-lg-4">
                         <div class="details_item">
                             <ul class="list ">
-                                <li class="text-capitalize"><a href="#"><span>Name</span> :
+                                <li class="text-capitalize"><a href="javascript:void(0)" ><span>Name</span> :
                                         {{ $order->customer_name }}</a></li>
-                                <li><a href="#"><span>Email</span> : {{ $order->email }}</a></li>
-                                <li><a href="#"><span>Phone</span> : {{ $order->phone }}</a></li>
-                                <li class="text-capitalize"><a href="#"><span>Address</span> :
+                                <li><a href="javascript:void(0)" ><span>Email</span> : {{ $order->email }}</a></li>
+                                <li><a href="javascript:void(0)" ><span>Phone</span> : {{ $order->phone }}</a></li>
+                                <li class="text-capitalize"><a href="javascript:void(0)" ><span>Address</span> :
                                         {{ $order->address }}</a></li>
                             </ul>
                         </div>
@@ -59,9 +59,9 @@
                     <div class="col-lg-4">
                         <div class="details_item">
                             <ul class="list text-capitalize">
-                                <li><a href="#"><span>Payment method</span> : {{ $order->payment_method }}</a></li>
-                                <li><a href="#"><span>Order Status</span> : {{ $order->order_status }}</a></li>
-                                <li><a href="#"><span>Postcode </span> : {{ $order->pincode }}</a></li>
+                                <li><a href="javascript:void(0)" ><span>Payment method</span> : {{ $order->payment_method }}</a></li>
+                                <li><a href="javascript:void(0)" ><span>Order Status</span> : {{ $order->order_status }}</a></li>
+                                <li><a href="javascript:void(0)" ><span>Postcode </span> : {{ $order->pincode }}</a></li>
                             </ul>
                         </div>
                     </div>

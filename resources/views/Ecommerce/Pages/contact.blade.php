@@ -66,7 +66,7 @@
                     <h1>Contact Us</h1>
                     <nav class="d-flex align-items-center">
                         <a href="javascript:void(0)">Home<span class="lnr lnr-arrow-right"></span></a>
-                        <a href="category.html">Contact</a>
+                        <a href="javascript:void(0)">Contact</a>
                     </nav>
                 </div>
             </div>
@@ -90,17 +90,18 @@
                         </div>
                         <div class="info_item">
                             <i class="lnr lnr-phone-handset"></i>
-                            <h6><a href="#">00 (440) 9865 562</a></h6>
+                            <h6><a href="javascript:void(0)">00 (440) 9865 562</a></h6>
                             <p>Mon to Fri 9am to 6 pm</p>
                         </div>
                         <div class="info_item">
                             <i class="lnr lnr-envelope"></i>
-                            <h6><a href="#">
+                            <h6><a href="javascript:void(0)">
                                     info@fableadtechnolabs.com</a></h6>
                             <p>Send us your query anytime!</p>
                         </div>
                     </div>
                 </div>
+
                 <div class="col-lg-9">
                     <form class="row contact_form" action="contact_process.php" method="post" id="contactForm"
                         novalidate="novalidate">

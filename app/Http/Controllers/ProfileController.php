@@ -84,7 +84,7 @@ class ProfileController extends Controller
         $validate = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email'    => 'required|email',
-            'subject' => 'required|nullable',
+            'subject' => 'required|integer|min:1|max:5',
             'message'    => 'required',
         ]);
 
