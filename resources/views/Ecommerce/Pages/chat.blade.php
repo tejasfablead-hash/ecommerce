@@ -135,7 +135,7 @@
                     <h1>Support</h1>
                     <nav class="d-flex align-items-center">
                         <a href="{{ route('HomePage') }}">Home<span class="lnr lnr-arrow-right"></span></a>
-                        <a href="#">Chat</a>
+                        <a href="javascript:void(0)">Chat</a>
                     </nav>
                 </div>
             </div>

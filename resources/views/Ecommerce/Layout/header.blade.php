@@ -168,7 +168,7 @@
 
                         <li class="nav-item position-relative mt-1"><a href="{{ route('UserCartPage') }}"
                                 class="cart"><span class="ti-bag"></span>
-                                &nbsp;&nbsp;<span id="cart-count" class="bell-badge mt-4">0</span></a></li>
+                                &nbsp;&nbsp;<span id="cart-count" class="bell-badge mt-4 ">0</span></a></li>
                         <li class="nav-item pl-2">
                             <button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
                         </li>

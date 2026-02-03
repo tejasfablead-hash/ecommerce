@@ -48,9 +48,9 @@
                 <div class="col-first">
                     <h1>Wishlist </h1>
                     <nav class="d-flex align-items-center">
-                        <a href="">Home<span class="lnr lnr-arrow-right"></span></a>
-                        <a href="#">Shop<span class="lnr lnr-arrow-right"></span></a>
-                        <a href="category.html">Product Wishlist</a>
+                        <a href="javascript:void(0)">Home<span class="lnr lnr-arrow-right"></span></a>
+                        <a href="javascript:void(0)">Shop<span class="lnr lnr-arrow-right"></span></a>
+                        <a href="javascript:void(0)">Product Wishlist</a>
                     </nav>
                 </div>
             </div>
@@ -139,7 +139,7 @@
                 reusableAjaxCall(url, 'POST', formData, function(response) {
 
                     if (response.status === true) {
-                        // loadWishlistCount();
+                        loadWishlistCount();
                         card.fadeOut(400, function() {
                             $(this).remove();
                             if ($('.wishlist-card').length === 0) {

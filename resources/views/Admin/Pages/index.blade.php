@@ -33,7 +33,7 @@
     @yield('container')
     {{-- @include('Admin.Pages.customizer') --}}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/index.global.min.js"></script>
 
 
     <!-- Vendors -->
@@ -41,7 +41,6 @@
 
     <script src="{{ asset('assets/vendors/js/dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/vendors/js/dataTables.bs5.min.js') }}"></script>
-
     <!-- Common -->
     <script src="{{ asset('assets/js/common-init.min.js') }}"></script>
     <script src="{{ asset('assets/js/theme-customizer-init.min.js') }}"></script>

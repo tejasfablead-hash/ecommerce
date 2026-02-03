@@ -48,8 +48,8 @@
                     <h1>Shop Category </h1>
                     <nav class="d-flex align-items-center">
                         <a href="javascript:void(0)">Home<span class="lnr lnr-arrow-right"></span></a>
-                        <a href="#">Shop<span class="lnr lnr-arrow-right"></span></a>
-                        <a href="category.html">Fashion Category</a>
+                        <a href="javascript:void(0)">Shop<span class="lnr lnr-arrow-right"></span></a>
+                        <a href="javascript:void(0)">Fashion Category</a>
                     </nav>
                 </div>
             </div>
@@ -221,7 +221,7 @@
                 </div>
                 <div class="col-lg-3">
                     <div class="ctg-right">
-                        <a href="#" target="_blank">
+                        <a href="javascript:void(0)" target="_blank">
                             <img class="img-fluid d-block mx-auto" src="{{ asset('img/category/c5.jpg') }}"
                                 alt="">
                         </a>

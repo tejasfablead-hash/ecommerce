@@ -617,7 +617,7 @@
                 </div>
                 <div class="col-lg-3">
                     <div class="ctg-right">
-                        <a href="#" target="_blank">
+                        <a href="javascript:void(0)" target="_blank">
                             <img class="img-fluid d-block mx-auto" src="{{ asset('img/category/c5.jpg') }}"
                                 alt="">
                         </a>

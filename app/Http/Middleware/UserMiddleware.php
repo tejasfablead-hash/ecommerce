@@ -16,9 +16,14 @@ class UserMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-          if (!Auth::check() || Auth::user()->role !== 'customer') {
-            abort(403, 'Unauthorized');
-        }
+            if (!Auth::check()) {
+        return redirect()->route('UserLoginPage');
+    }
+
+    if (Auth::user()->role !== 'customer') {
+        abort(403, 'Unauthorized');
+    }
+
         return $next($request);
     }
 }

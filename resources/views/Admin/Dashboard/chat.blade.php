@@ -293,9 +293,9 @@ $(document).on('click', '.chat-user', function() {
     $('#chat-avatar').text($(this).find('.avatar').text());
     $(this).find('.unread-count').fadeOut(200);
 
-    lastMessageId = 0; // Reset when switching chat
-    $('#chat-box').html(''); // clear old messages
-    loadMessages(true); // force scroll to bottom
+    lastMessageId = 0; 
+    $('#chat-box').html(''); 
+    loadMessages(true); 
 });
 
 // Send or update message
@@ -328,7 +328,7 @@ $('#send-chat').on('click', function() {
 
         reusableAjaxCall(url, 'POST', formData, function(response) {
             $('#chat-message').val('');
-            loadMessages(true); // scroll to bottom
+            loadMessages(true); 
         });
     }
 });

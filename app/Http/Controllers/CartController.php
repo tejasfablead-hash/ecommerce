@@ -98,16 +98,28 @@ class CartController extends Controller
         ]);
 
         $cart = Cart::where('id', $request->cartId)->where('user_id', Auth::id())
-            ->first();
+            ->with('getproduct')->first();
         if (!$cart) {
-            return response()->json(['status' => false]);
+            return response()->json([
+                'status' => false,
+                'message' => 'Cart item not found'
+            ]);
         }
-        $updateqty = $cart->update([
+        $stock = $cart->getproduct->qty; // product stock
+        $requestedQty = $request->qty;
+
+        if ($requestedQty > $stock) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Quantity out of stock'
+            ]);
+        }
+        $cart->update([
             'qty' => $request->qty
         ]);
         return response()->json([
             'status' => true,
-            'qty' => $updateqty
+            'message' => 'Cart updated successfully'
         ]);
     }
 

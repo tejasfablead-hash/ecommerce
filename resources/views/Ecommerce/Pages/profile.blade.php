@@ -1,5 +1,28 @@
 @extends('Ecommerce.Layout.index')
 @section('container')
+    <style>
+        .rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+        }
+
+        .rating input {
+            display: none;
+        }
+
+        .rating label {
+            font-size: 48px;
+            color: #ddd;
+            cursor: pointer;
+        }
+
+        .rating input:checked~label,
+        .rating label:hover,
+        .rating label:hover~label {
+            color: #f8ba10;
+        }
+    </style>
 
     <!-- Start Banner Area -->
     <section class="banner-area organic-breadcrumb">
@@ -8,7 +31,7 @@
                 <div class="col-first">
                     <h1 class="fw-bold">My Profile</h1>
                     <nav class="d-flex align-items-center">
-                        <a href="">Home <span class="lnr lnr-arrow-right"></span></a>
+                        <a href="javascript:void(0)">Home <span class="lnr lnr-arrow-right"></span></a>
                         <a href="javascript:void(0)">Profile</a>
                     </nav>
                 </div>
@@ -211,9 +234,9 @@
                     </div>
                     <!-- Optional: Feedback Card -->
                     <div class="card shadow-sm border-0 rounded-4">
-                        <div class="card-body">
+                        <div class="card-body ">
                             <h4 class="fw-bold mb-4">Send Feedback</h4>
-                            <form id="feedback" action="">
+                            <form id="feedback" action="" class="contact_form" novalidate="novalidate">
                                 @csrf
                                 <div class="row g-3 mb-3">
                                     <div class="col-md-6">
@@ -230,18 +253,26 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <input type="text" name="subject" class="form-control form-control-lg"
-                                        placeholder="Subject">
+                                    <textarea name="message" class="form-control form-control-lg" rows="2" placeholder="Message"></textarea>
+                                    <small class="text-danger error" id="message_error"></small>
+                                </div>
+                                  <div class="mb-3">
+                                    <div class="rating">
+                                        <input type="radio" name="subject" id="star5" value="5"><label
+                                            for="star5">★</label>
+                                        <input type="radio" name="subject" id="star4" value="4"><label
+                                            for="star4">★</label>
+                                        <input type="radio" name="subject" id="star3" value="3"><label
+                                            for="star3">★</label>
+                                        <input type="radio" name="subject" id="star2" value="2"><label
+                                            for="star2">★</label>
+                                        <input type="radio" name="subject" id="star1" value="1"><label
+                                            for="star1">★</label>
+                                    </div>
                                     <small class="text-danger error" id="subject_error"></small>
                                 </div>
 
-                                <div class="mb-3">
-                                    <textarea name="message" class="form-control form-control-lg" rows="5" placeholder="Message"></textarea>
-                                    <small class="text-danger error" id="message_error"></small>
-
-                                </div>
-
-                                <input type="submit" value="Submit Feedback" class="primary-btn btn-sm"
+                                <input type="submit" value="Submit Feedback" class=" mt-2  primary-btn btn-sm"
                                     style="border:none;">
                             </form>
                         </div>

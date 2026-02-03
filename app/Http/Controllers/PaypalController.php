@@ -18,7 +18,7 @@ class PaypalController extends Controller
 
         $order = Order::with('orderitem.product')->find($orderId);
         // dd($order);
-        
+
         if (!$order) {
             return response()->json([
                 'status' => false,
@@ -61,7 +61,6 @@ class PaypalController extends Controller
                 ]);
             }
         }
-
 
         Cart::where('user_id', Auth::id())->delete();
 

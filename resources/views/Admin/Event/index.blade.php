@@ -72,40 +72,40 @@
         </div>
         @include('Admin.Pages.footer')
     </main>
+    <script src="{{ asset('ajax.js') }}"></script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
 
-    console.log('FullCalendar type:', typeof FullCalendar);
-    // ✅ must print: function
+            console.log('FullCalendar type:', typeof FullCalendar);
 
-    const calendar = new FullCalendar.Calendar(
-        document.getElementById('calendar'),
-        {
-            initialView: 'dayGridMonth',
-            events: @json($calendarEvents)
-        }
-    );
 
-    calendar.render();
+            const calendar = new FullCalendar.Calendar(
+                document.getElementById('calendar'), {
+                    initialView: 'dayGridMonth',
+                    events: @json($calendarEvents)
+                }
+            );
 
-    $('#eventForm').on('submit', function(e){
-        e.preventDefault();
+            calendar.render();
 
-        $.post("{{ route('EventStorePage') }}", $(this).serialize(), function(res){
-            if(res.status){
-                calendar.addEvent({
-                    title: res.event.title,
-                    start: res.event.event_date,
-                    description: res.event.description
+            $('#eventForm').on('submit', function(e) {
+                e.preventDefault();
+                let url = "{{ route('EventStorePage') }}";
+                let formData = new FormData();
+                reusableAjaxCall(url, 'POST', formData, function(response) {
+                    if (response.status) {
+                        calendar.addEvent({
+                            title: response.event.title,
+                            start: response.event.event_date,
+                            description: response.event.description
+                        });
+                        $('#eventForm')[0].reset();
+                        alert('Event Added');
+                    }
                 });
-                $('#eventForm')[0].reset();
-                alert('Event Added');
-            }
+            });
+
         });
-    });
-
-});
-</script>
-
+    </script>
 @endsection
