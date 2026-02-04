@@ -190,7 +190,6 @@
                 });
                 chatBox.scrollTop(chatBox[0].scrollHeight);
             });
-
         }
 
         $('#send-chat').on('click', function() {

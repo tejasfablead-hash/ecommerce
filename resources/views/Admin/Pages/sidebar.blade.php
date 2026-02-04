@@ -98,6 +98,16 @@
                    
                  </li>
 
+                   <li class="nxl-item nxl-hasmenu">
+                     <a href="{{ route('FeedbackviewPage') }}" class="nxl-link">
+                         <span class="nxl-micon"><i class="feather-star"></i>
+                         </span>
+                         <span class="nxl-mtext">Feedback</span><span class="nxl-arrow"><i
+                                 class="feather-chevron-right"></i></span>
+                     </a>
+                   
+                 </li>
+
                  <li class="nxl-item nxl-hasmenu">
                      <a href="{{ route('AdminChatPage') }}" class="nxl-link">
                          <span class="nxl-micon"><i

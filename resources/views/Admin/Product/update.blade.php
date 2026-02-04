@@ -214,11 +214,11 @@
                     }
                     $('#productform')[0].reset();
                 }, function(error) {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Error",
-                        text: "Server error, please try again!"
-                    });
+                    // Swal.fire({
+                    //     icon: "error",
+                    //     title: "Error",
+                    //     text: "Server error, please try again!"
+                    // });
                     console.log(error);
                 });
             });

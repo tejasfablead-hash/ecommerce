@@ -233,51 +233,56 @@
                         </div>
                     </div>
                     <!-- Optional: Feedback Card -->
-                    <div class="card shadow-sm border-0 rounded-4">
-                        <div class="card-body ">
-                            <h4 class="fw-bold mb-4">Send Feedback</h4>
-                            <form id="feedback" action="" class="contact_form" novalidate="novalidate">
-                                @csrf
-                                <div class="row g-3 mb-3">
-                                    <div class="col-md-6">
-                                        <input type="text" name="name" class="form-control form-control-lg"
-                                            value="" placeholder="name">
-                                        <small class="text-danger error" id="name_error"></small>
-
+                    @if ($feedbackOrder )
+                        <div class="card shadow-sm border-0 rounded-4">
+                            <div class="card-body ">
+                                <h4 class="fw-bold mb-4">Send Feedback</h4>
+                                <form id="feedback" action="" class="contact_form" novalidate="novalidate">
+                                    @csrf
+                                    <div class="row g-3 mb-3">
+                                        <div class="col-md-6">
+                                            <input type="hidden" name="order_id" value="{{ $feedbackOrder->id }}">
+                                            <input type="text" name="name" class="form-control form-control-lg"
+                                                value="" placeholder="name">
+                                            <small class="text-danger error" id="name_error"></small>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="email" name="email" class="form-control form-control-lg"
+                                                value="" placeholder="email">
+                                            <small class="text-danger error" id="email_error"></small>
+                                        </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <input type="email" name="email" class="form-control form-control-lg"
-                                            value="" placeholder="email">
-                                        <small class="text-danger error" id="email_error"></small>
-                                    </div>
-                                </div>
 
-                                <div class="mb-3">
-                                    <textarea name="message" class="form-control form-control-lg" rows="2" placeholder="Message"></textarea>
-                                    <small class="text-danger error" id="message_error"></small>
-                                </div>
-                                  <div class="mb-3">
-                                    <div class="rating">
-                                        <input type="radio" name="subject" id="star5" value="5"><label
-                                            for="star5">★</label>
-                                        <input type="radio" name="subject" id="star4" value="4"><label
-                                            for="star4">★</label>
-                                        <input type="radio" name="subject" id="star3" value="3"><label
-                                            for="star3">★</label>
-                                        <input type="radio" name="subject" id="star2" value="2"><label
-                                            for="star2">★</label>
-                                        <input type="radio" name="subject" id="star1" value="1"><label
-                                            for="star1">★</label>
+                                    <div class="mb-3">
+                                        <textarea name="message" class="form-control form-control-lg" rows="2" placeholder="Message"></textarea>
+                                        <small class="text-danger error" id="message_error"></small>
                                     </div>
-                                    <small class="text-danger error" id="subject_error"></small>
-                                </div>
+                                    <div class="mb-3">
+                                        <div class="rating">
+                                            <input type="radio" name="subject" id="star5" value="5"><label
+                                                for="star5">★</label>
+                                            <input type="radio" name="subject" id="star4" value="4"><label
+                                                for="star4">★</label>
+                                            <input type="radio" name="subject" id="star3" value="3"><label
+                                                for="star3">★</label>
+                                            <input type="radio" name="subject" id="star2" value="2"><label
+                                                for="star2">★</label>
+                                            <input type="radio" name="subject" id="star1" value="1"><label
+                                                for="star1">★</label>
+                                        </div>
+                                        <small class="text-danger error" id="subject_error"></small>
+                                    </div>
 
-                                <input type="submit" value="Submit Feedback" class=" mt-2  primary-btn btn-sm"
-                                    style="border:none;">
-                            </form>
+                                    <input type="submit" value="Submit Feedback" class=" mt-2  primary-btn btn-sm"
+                                        style="border:none;">
+                                </form>
+                            </div>
                         </div>
-                    </div>
-
+                    @else
+                        {{-- <div class="alert alert-dark card shadow-sm border-0 rounded-4">
+                            Feedback Already Send.
+                        </div> --}}
+                    @endif
                 </div>
             </div>
         </div>
@@ -350,8 +355,9 @@
                                 icon: "success",
                                 title: response.message || "Feedback Send Successfully"
                             });
+                              $('#feedback').closest('.card').fadeOut();
                             setTimeout(function() {
-                                window.location.href = "{{ route('UserProfilePage') }}";
+                                window.location.href = "{{ route('UserConfirmPage') }}";
                             }, 2000);
 
                         } else {

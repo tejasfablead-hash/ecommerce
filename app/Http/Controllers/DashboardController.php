@@ -41,7 +41,7 @@ class DashboardController extends Controller
             'Dec'
         ]);
 
-        
+
         $ordersRaw = Order::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
             ->groupBy('month')
             ->pluck('total', 'month');
@@ -63,11 +63,10 @@ class DashboardController extends Controller
             ];
         });
 
-     
+
         $latestOrders = Order::with('getcustomer')
-            ->latest()
-            ->take(6)
-            ->get();
+           ->latest()
+            ->paginate(5);
 
 
         return view('Admin.Dashboard.dashboard', compact(
@@ -87,8 +86,8 @@ class DashboardController extends Controller
     }
     public function update(Request $request)
     {
-        $id =Auth::user()->id;
-        $user = User::where('id',$id)->first();
+        $id = Auth::user()->id;
+        $user = User::where('id', $id)->first();
         $newimage = $user->image;
 
         $validator = Validator::make($request->all(), [
@@ -210,12 +209,42 @@ class DashboardController extends Controller
         $adminId = Auth::id();
 
         ChatMessage::where('id', $request->id)
-            ->where('sender_id', $adminId) 
+            ->where('sender_id', $adminId)
             ->delete();
 
         return response()->json([
             'success' => true,
             'message' => 'Message deleted successfully'
+        ]);
+    }
+
+    public function Search(Request $request)
+    {
+        $q = strtolower($request->q);
+
+        $status = [
+            'confirmed',
+            'delivered',
+            'cancelled',
+            'pending',
+        ];
+        return response()->json([
+            'orders' => Order::where('order_number', 'like', "%$q%")
+                ->latest()->limit(5)->get(),
+            'transactionId' => Order::where('transactionId', 'like', "%$q%")
+                ->latest()->limit(5)->get(),
+
+            'status' => Order::whereIn('order_status', array_filter($status, function ($status) use ($q) {
+                return str_contains($status, $q);
+            }))
+                ->latest()
+                ->limit(5)
+                ->get(),
+
+            'users' => User::where('name', 'like', "%$q%")
+                ->limit(5)->get(),
+            'products' => Product::where('name', 'like', "%$q%")
+                ->limit(5)->get(),
         ]);
     }
 }
