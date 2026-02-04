@@ -20,6 +20,8 @@ class Order extends Model
         'payment_method',
         'payment_status',
         'order_status',
+        'feedback_token',
+        'feedback_given',
         'customer_name',
         'email',
         'phone',
@@ -32,8 +34,12 @@ class Order extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-     public function orderitem()
+    public function orderitem()
     {
         return $this->hasMany(OrderItem::class, 'order_id', 'id');
+    }
+     public function getfeedback()
+    {
+        return $this->hasOne(Feedback::class, 'order_id', 'id');
     }
 }

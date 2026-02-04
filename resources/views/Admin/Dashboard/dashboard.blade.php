@@ -130,7 +130,7 @@
 
                             <div class="card-body table-responsive">
                                 <table id="leadList" class="table table-hover">
-                                    <thead >
+                                    <thead>
                                         <tr>
                                             <th scope="col">Customer</th>
                                             <th scope="col">Order Id</th>
@@ -152,12 +152,13 @@
                                                             alt="{{ $order->getcustomer->name ?? 'Guest' }}"
                                                             class="rounded-circle" width="40">
                                                         <div>
-                                                            <div class="text-capitalize">{{ $order->getcustomer->name ?? 'Guest' }}</div>
-                                                            
+                                                            <div class="text-capitalize">
+                                                                {{ $order->getcustomer->name ?? 'Guest' }}</div>
+
                                                         </div>
                                                     </div>
                                                 </td>
- <td>
+                                                <td>
                                                     <span>
                                                         {{ ucfirst($order->order_number) }}
                                                     </span>
@@ -202,8 +203,9 @@
                                             </tr>
                                         @endif
                                     </tbody>
+
                                 </table>
-                                
+
                             </div>
                         </div>
                     </div>
@@ -283,58 +285,57 @@
         });
     </script>
     <script>
-document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
 
-    var revenueOptions = {
-        chart: {
-            height: 350,
-            type: 'line',
-            toolbar: {
-                show: false
-            }
-        },
+            var revenueOptions = {
+                chart: {
+                    height: 350,
+                    type: 'line',
+                    toolbar: {
+                        show: false
+                    }
+                },
 
-        series: [{
-            name: 'Revenue',
-            data: @json($monthlyRevenue->values())
-        }],
+                series: [{
+                    name: 'Revenue',
+                    data: @json($monthlyRevenue->values())
+                }],
 
-        xaxis: {
-            categories: @json($monthlyRevenue->keys())
-        },
+                xaxis: {
+                    categories: @json($monthlyRevenue->keys())
+                },
 
-        stroke: {
-            curve: 'smooth',
-            width: 3
-        },
+                stroke: {
+                    curve: 'smooth',
+                    width: 3
+                },
 
-        markers: {
-            size: 4
-        },
+                markers: {
+                    size: 4
+                },
 
-        yaxis: {
-            title: {
-                text: 'Revenue (₹)'
-            }
-        },
+                yaxis: {
+                    title: {
+                        text: 'Revenue (₹)'
+                    }
+                },
 
-        colors: ['#28a745'],
+                colors: ['#28a745'],
 
-        tooltip: {
-            y: {
-                formatter: function (val) {
-                    return '₹' + val.toFixed(2);
+                tooltip: {
+                    y: {
+                        formatter: function(val) {
+                            return '₹' + val.toFixed(2);
+                        }
+                    }
                 }
-            }
-        }
-    };
+            };
 
-    new ApexCharts(
-        document.querySelector("#total-sales-color-graph"),
-        revenueOptions
-    ).render();
+            new ApexCharts(
+                document.querySelector("#total-sales-color-graph"),
+                revenueOptions
+            ).render();
 
-});
-</script>
-
+        });
+    </script>
 @endpush

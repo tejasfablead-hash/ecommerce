@@ -22,8 +22,11 @@ class OrderController extends Controller
         $cartItems = Cart::where('user_id', $user)->with('getproduct')->get();
         // dd($cartItems);
         if ($cartItems->isEmpty()) {
-            return redirect()->route('UserProductPage')
-                ->with('error', 'Your cart is empty');
+           
+        return response()->json([
+            'status'  => true,
+            'message' =>'Your cart is empty'
+        ]);
         }
 
         $validate = Validator::make($request->all(), [
@@ -72,7 +75,7 @@ class OrderController extends Controller
         }
         $phone = $request->phone;
         if (!str_starts_with($phone, '+')) {
-            $phone = '+91' . $phone; // Add country code
+            $phone = '+91' . $phone; 
         }
 
         $sms->send(
@@ -133,57 +136,57 @@ class OrderController extends Controller
 
     public function updateorder(Request $request, SMSService $sms)
     {
-        $order = Order::find($request->order_id);
-        $validator = Validator::make($request->all(), [
-            'order_id' => 'required|exists:orders,id',
-            'order_status' => 'required|in:pending,confirmed,shipped,delivered,cancelled'
-        ]);
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'errors' => $validator->errors()
-            ], 422);
-        }
+        $order = Order::findOrFail($request->order_id);
+
         if (in_array($order->order_status, ['delivered', 'cancelled'])) {
             return response()->json([
                 'status' => false,
                 'message' => 'Delivered order cannot be changed'
             ], 403);
         }
+
         $paymentStatus = match ($request->order_status) {
             'delivered' => 'paid',
             'cancelled' => 'cancelled',
             default     => 'pending',
         };
+
         $order->update([
-            'order_status' => $request->order_status,
+            'order_status'   => $request->order_status,
             'payment_status' => $paymentStatus
         ]);
 
+        $phone = str_starts_with($order->phone, '+') ? $order->phone : '+91' . $order->phone;
+        $message = null;
+        if ($request->order_status === 'delivered') {
 
-        $phone = $order->phone;
-        if (!str_starts_with($phone, '+')) {
-            $phone = '+91' . $phone;
+            if (!$order->feedback_token) {
+                $order->update([
+                    'feedback_token' => Str::uuid(),
+                    'feedback_given' => false
+                ]);
+            }
+
+            $link = url('/feedback/' . $order->feedback_token);
+
+            $message = "📦 Order Delivered!
+                        Order: {$order->order_number}
+                        Please give feedback:
+                        {$link}";
+        } else {
+            $message = match ($request->order_status) {
+                'confirmed' => "✅ Order {$order->order_number} CONFIRMED",
+                'shipped'   => "🚚 Order {$order->order_number} SHIPPED",
+                'cancelled' => "❌ Order {$order->order_number} CANCELLED",
+            };
         }
-        $deliveredDate = Carbon::parse($order->updated_at)->format('d-M-Y');
 
-        $statusMessage = match ($request->order_status) {
-            'confirmed' => "✅ Your order {$order->order_number} is CONFIRMED.",
-            'shipped'   => "🚚 Your order {$order->order_number} has been SHIPPED.",
-            'delivered' => "📦 Your order {$order->order_number} DELIVERED on {$deliveredDate}. Thank you!",
-            'cancelled' => "❌ Your order {$order->order_number} is CANCELLED.",
-            default     => null
-        };
-
-
-
-
-        if ($statusMessage) {
-            $sms->send($phone, $statusMessage);
+        if (!empty($message)) {
+            $sms->send($phone, $message);
         }
         return response()->json([
             'status' => true,
             'message' => 'Order status updated successfully'
-        ], 200);
+        ]);
     }
 }

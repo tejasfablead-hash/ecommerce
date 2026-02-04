@@ -56,16 +56,15 @@
                                         <tbody>
                                             @foreach ($order as $item)
                                                 <tr class="single-item text-capitalize">
-
                                                     <td>{{ $item->getcustomer->name }}</td>
-                                                    <td>{{ $item->order_number }}</td>
-                                                    <td>{{ $item->transactionId }}</td>
+                                                    <td>{{ Str::limit($item->order_number, 10) }}</td>
+                                                    <td>{{ Str::limit($item->transactionId, 10) }}</td>
                                                     <td>
                                                         <ul class="list-unstyled mb-0">
                                                             @foreach ($item->orderitem as $orderItem)
                                                                 <li class="d-flex align-items-center gap-1">
                                                                     <span class="fw-medium">
-                                                                        {{ Str::limit($orderItem->product->name, 10) }}
+                                                                        {{ Str::limit($orderItem->product->name, 7) }}
                                                                     </span>
                                                                 </li>
                                                             @endforeach

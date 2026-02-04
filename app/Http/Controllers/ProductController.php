@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductRequest;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -15,25 +16,12 @@ class ProductController extends Controller
         $category = Category::all();
         return view('Admin.Product.insert', compact('category'));
     }
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        $validate = Validator::make($request->all(), [
-            'category' => 'required',
-            'product' => 'required',
-            'price' => 'required',
-            'qty' => 'required',
-            'description' => 'required',
-            'image' => 'nullable|array',
-            'image.*' => 'image|mimes:jpeg,png,jpg,gif'
-        ]);
-        if ($validate->fails()) {
-            return response()->json([
-                'status' => false,
-                'errors' => $validate->errors()
-            ], 422);
-        }
+
         try {
             $path = [];
+
             if ($request->hasFile('image')) {
                 foreach ($request->file('image') as $file) {
                     $path[] = $file->store('product', 'public');
@@ -77,26 +65,10 @@ class ProductController extends Controller
         return view('Admin.Product.update', compact(['category', 'single']));
     }
 
-    public function update(Request $request)
+    public function update(ProductRequest $request)
     {
         $update = Product::where('id', $request->id)->first();
-        $status = $request->qty > 0 ? 'active' : 'inactive';
 
-        $validate = Validator::make($request->all(), [
-            'category' => 'required',
-            'product' => 'required',
-            'price' => 'required',
-            'qty' => 'required',
-            'description' => 'required',
-            'image' => 'nullable|array',
-            'image.*' => 'image|mimes:jpeg,png,jpg,gif'
-        ]);
-        if ($validate->fails()) {
-            return response()->json([
-                'status' => false,
-                'errors' => $validate->errors()
-            ], 422);
-        }
         try {
             $path = json_decode($update->image ?? '[]', true);
 
@@ -110,6 +82,8 @@ class ProductController extends Controller
                     $path[] = $file->store('product', 'public');
                 }
             }
+            $status = $request->qty > 0 ? 'active' : 'inactive';
+
             $update->update([
                 'category_id' => $request->category,
                 'name' => $request->product,
@@ -136,27 +110,38 @@ class ProductController extends Controller
 
     public function delete($id)
     {
+        try {
+            $delete = Product::find($id);
 
-        $delete = Product::find($id);
+            if (!$delete) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Record Not Available'
+                ], 404);
+            }
 
-        if (!$delete) {
+            $paths = json_decode($delete->image ?? '[]', true);
+            if (!empty($paths)) {
+                foreach ($paths as $oldFile) {
+                    if (Storage::disk('public')->exists($oldFile)) {
+                        Storage::disk('public')->delete($oldFile);
+                    }
+                }
+            }
+
+            $delete->delete();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Record Deleted Successfully'
+            ], 200);
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => 'Record Not Available'
-            ], 404);
+                'message' => 'Something went wrong while deleting the record',
+                'error'   => $e->getMessage()
+            ], 500);
         }
-        $path = json_decode($delete->image ?? '[]', true);
-        if ($path) {
-            foreach ($path as $oldFile) {
-                Storage::disk('public')->delete($oldFile);
-            }
-        }
-
-        $delete->delete();
-        return response()->json([
-            'status' => true,
-            'message' => 'Record Deleted Successfully'
-        ], 200);
     }
 
     public function detail($id)

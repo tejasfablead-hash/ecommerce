@@ -31,7 +31,7 @@
     @include('Admin.Pages.sidebar')
     @include('Admin.Pages.header')
     @yield('container')
-    {{-- @include('Admin.Pages.customizer') --}}
+    @include('Admin.Pages.customizer')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/index.global.min.js"></script>
 

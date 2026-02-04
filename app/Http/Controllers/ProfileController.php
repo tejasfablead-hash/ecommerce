@@ -22,8 +22,14 @@ class ProfileController extends Controller
                 ->latest()
                 ->with(['orderitem.product'])
                 ->get();
+            $feedbackOrder = Order::where('user_id', $user)
+                ->where('order_status', 'delivered')
+                ->where('payment_status', 'paid')
+                ->where('feedback_given', false)
+                ->latest()
+                ->first();
         }
-        return view('Ecommerce.Pages.profile', compact('orders'));
+        return view('Ecommerce.Pages.profile', compact('orders', 'feedbackOrder'));
     }
 
     public function update(Request $request)
@@ -81,40 +87,52 @@ class ProfileController extends Controller
     }
     public function feedback(Request $request)
     {
-        $validate = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+        $validator = Validator::make($request->all(), [
+            'order_id' => 'required|exists:orders,id',
+            'name'     => 'required|string|max:255',
             'email'    => 'required|email',
-            'subject' => 'required|integer|min:1|max:5',
-            'message'    => 'required',
+            'subject'  => 'required|integer|min:1|max:5',
+            'message'  => 'required|string',
         ]);
 
-        if ($validate->fails()) {
+        if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'errors' => $validate->errors(),
-                'message' => 'All fields are Required'
+                'errors' => $validator->errors()
             ], 422);
         }
-        try {
 
-            $user = Feedback::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'subject' => $request->subject,
-                'message' => $request->message
-            ]);
+        // 🔒 Check: feedback already given?
+        $order = Order::find($request->order_id);
 
+        if ($order->feedback_given) {
             return response()->json([
-                'status' => true,
-                'message' => 'Feedback Send Succcessfully',
-                'user' => $user
-            ], 201);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status'  => false,
-                'message' => 'Feedback Send failed',
-                'error'   => $e->getMessage()
-            ], 500);
+                'status' => false,
+                'message' => 'Feedback already submitted'
+            ], 409);
         }
+
+        Feedback::create([
+            'order_id' => $order->id,
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'subject'  => $request->subject,
+            'message'  => $request->message,
+        ]);
+
+        // update order
+        $order->update([
+            'feedback_given' => true
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Feedback sent successfully'
+        ], 201);
+    }
+
+    public function viewfeedback(){
+        $feedback = Feedback::all();
+        return view('Admin.Feedback.view',compact('feedback'));
     }
 }

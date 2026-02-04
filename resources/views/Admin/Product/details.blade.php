@@ -25,7 +25,7 @@
                         </div>
                         <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
                             <a href="{{ route('ProductEditPage', $product->id) }}" class="btn btn-primary">
-                                <i class="feather-plus me-2"></i>
+                                <i class="feather-arrow-left me-2"></i>
                                 <span>Edit Product</span>
                             </a>
                         </div>
@@ -71,7 +71,7 @@
             </div>
 
             {{-- PRODUCT INFO --}}
-            <div class="col-lg-7">
+            <div class="col-lg-7 text-capitalize">
                 <div class="card">
                     <div class="card-body">
 

@@ -298,7 +298,6 @@
                 $('#discountInput').val(discount);
                 $('#subtotalInput').val(subtotal.toFixed(2));
 
-
             }
             calculate();
 

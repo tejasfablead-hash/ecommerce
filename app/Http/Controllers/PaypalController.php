@@ -97,12 +97,15 @@ class PaypalController extends Controller
 
     public function confirm()
     {
-        $user = Auth::id();
+        $userId = Auth::id();
         $order = null;
-        if ($user && session('latest_paid_order_id')) {
-            $order = Order::with('orderitem.product')
-                ->find(session('latest_paid_order_id'));
-        }
+       if ($userId) {
+        $order = Order::with('orderitem.product')
+            ->where('user_id', $userId) // make sure it's the user's order
+            ->where('payment_status', 'paid') // only paid orders
+            ->latest() // order by created_at descending
+            ->first();
+    }
         // dd($order);
 
         return view('Ecommerce.Pages.confirm', compact('order'));

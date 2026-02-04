@@ -89,9 +89,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/chat/unread-count', [DashboardController::class, 'unreadCount']);
     Route::post('/chat/update', [DashboardController::class, 'updatechat'])
         ->name('AdminchatUpdate');
-
     Route::post('/chat/delete', [DashboardController::class, 'delete'])
         ->name('AdminchatDelete');
+    Route::get('/search', [DashboardController::class, 'Search'])->name('AdminSearch');
+    Route::get('/view-feedback', [ProfileController::class, 'viewfeedback'])->name('FeedbackviewPage');
+
 
     Route::get('/order-details/{id}', [OrderController::class, 'details'])->name('OrderDetailViewPage');
     Route::get('/orders/notifications', [OrderController::class, 'getNotifications'])->name('OrdernotificationsPage');

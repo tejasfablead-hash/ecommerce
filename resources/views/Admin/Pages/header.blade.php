@@ -345,20 +345,27 @@
                          data-bs-auto-close="outside">
                          <i class="feather-search"></i>
                      </a>
+
                      <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-search-dropdown">
                          <div class="input-group search-form">
                              <span class="input-group-text">
                                  <i class="feather-search fs-6 text-muted"></i>
                              </span>
-                             <input type="text" class="form-control search-input-field" placeholder="Search...." />
+                             <input type="text" class="form-control search-input-field" id="admin-search"
+                                 placeholder="Search...." autocomplete="off" />
                              <span class="input-group-text">
                                  <button type="button" class="btn-close"></button>
                              </span>
                          </div>
+
                          <div class="dropdown-divider mt-0"></div>
 
+                         <div id="search-results" class="p-2" style="max-height:300px; overflow-y:auto;">
+                             <div class="text-muted text-center">Type to search...</div>
+                         </div>
                      </div>
                  </div>
+
 
                  <div class="nxl-h-item d-none d-sm-flex">
                      <div class="full-screen-switcher">
@@ -521,6 +528,91 @@
              }
          });
 
+         $(document).on('keyup', '#admin-search', function() {
+             let query = $(this).val();
+
+             if (query.length < 2) {
+                 $('#search-results').html(
+                     '<div class="text-muted text-center">Type at least 2 characters</div>'
+                 );
+                 return;
+             }
+
+             $.ajax({
+                 url: "{{ route('AdminSearch') }}",
+                 type: "GET",
+                 data: {
+                     q: query
+                 },
+                 success: function(res) {
+                     let html = '';
+
+                     if (
+                         res.orders.length === 0 &&
+                         res.transactionId.length === 0 &&
+                         res.status.length === 0 &&
+                         res.users.length === 0 &&
+                         res.products.length === 0
+                     ) {
+                         html = '<div class="text-center text-muted">No result found</div>';
+                     }
+
+                     if (res.orders.length > 0) {
+                         html += `<div class="fw-bold mb-1">Orders</div>`;
+                         res.orders.forEach(o => {
+                             html += `
+                        <a href="/admin/order-details/${o.id}" class="d-block py-1 text-dark">
+                            #${o.order_number}
+                        </a>`;
+                         });
+                     }
+                     if (res.transactionId.length > 0) {
+                         html += `<div class="fw-bold mt-2 mb-1">Transaction Id</div>`;
+                         res.transactionId.forEach(u => {
+                             html += `
+                        <div class="py-1">${u.transactionId}</div>`;
+                         });
+                     }
+                     if (res.status.length > 0) {
+                         res.status.forEach(order => {
+                             html += `
+        <div class="search-item">
+            <strong>#${order.order_number}</strong>
+            <span class="badge bg-info ms-2">
+                ${order.order_status}
+            </span>
+            <br>
+            <small>₹${order.grand_total}</small>
+        </div>
+        `;
+                         });
+                     }
+
+
+                     if (res.users.length > 0) {
+                         html += `<div class="fw-bold mt-2 mb-1">Users</div>`;
+                         res.users.forEach(u => {
+                             html += `
+                        <div class="py-1">${u.name}</div>`;
+                         });
+                     }
+
+                     if (res.products.length > 0) {
+                         html += `<div class="fw-bold mt-2 mb-1">Products</div>`;
+                         res.products.forEach(p => {
+                             html += `
+                        <a href="/admin/product-details/${p.id}" class="d-block py-1 text-dark">
+                            #${p.name}
+                        </a>`
+                         });
+                     }
+
+                     $('#search-results').html(html);
+                 }
+             });
+         });
+
+
          $(document).on('click', '.logout-btn', function(e) {
              e.preventDefault();
              let redirectUrl = $(this).data('redirect');
@@ -580,5 +672,18 @@
          setInterval(loadOrderNotifications, 30000);
 
 
+     });
+ </script>
+ <script>
+     document.addEventListener('keydown', function(e) {
+         if (e.key === 'Escape') {
+
+             const searchDropdown = document.querySelector('.nxl-header-search .dropdown-menu.show');
+             const toggleBtn = document.querySelector('.nxl-header-search [data-bs-toggle="dropdown"]');
+
+             if (searchDropdown && toggleBtn) {
+                 bootstrap.Dropdown.getOrCreateInstance(toggleBtn).hide();
+             }
+         }
      });
  </script>
