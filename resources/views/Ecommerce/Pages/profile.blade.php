@@ -20,18 +20,19 @@
         .rating input:checked~label,
         .rating label:hover,
         .rating label:hover~label {
-            color: #f8ba10;
+            color: #f8a710;
         }
     </style>
 
     <!-- Start Banner Area -->
     <section class="banner-area organic-breadcrumb">
         <div class="container">
-            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-between">
+            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
                 <div class="col-first">
-                    <h1 class="fw-bold">My Profile</h1>
+                    <h1>Profile Info </h1>
                     <nav class="d-flex align-items-center">
-                        <a href="javascript:void(0)">Home <span class="lnr lnr-arrow-right"></span></a>
+                        <a href="javascript:void(0)">Home<span class="lnr lnr-arrow-right"></span></a>
+                        <a href="javascript:void(0)">Shop<span class="lnr lnr-arrow-right"></span></a>
                         <a href="javascript:void(0)">Profile</a>
                     </nav>
                 </div>
@@ -132,9 +133,8 @@
                                     <button type="button" class="btn btn-dark rounded-pill px-4" data-bs-dismiss="modal">
                                         Cancel
                                     </button>
-
-                                    <input type="submit" name="submit" value="Save Changes"
-                                        class="btn btn-primary rounded-pill px-4">
+                                    <input type="submit" style="background-color:#f58122;" name="submit" value="Save Changes"
+                                        class="btn text-white  rounded-pill px-4">
 
                                 </div>
                             </form>
@@ -208,10 +208,14 @@
                                                         </td>
 
                                                         <!-- Action -->
-                                                        <td class="text-end">
+                                                        <td class="text-end card_area">
                                                             <a href="{{ route('UserConfirmPage', $order->id) }}"
-                                                                class="btn btn-sm btn-primary">
+                                                                class="btn btn-sm btn-dark cart-info">
                                                                 View
+                                                            </a>
+                                                             <a href="{{ route('UserOrderPdf', $order->id) }}" style="background-color:#f8a528;"
+                                                                 class="btn btn-sm text-white cart-info">
+                                                                PDF
                                                             </a>
                                                         </td>
                                                     </tr>
@@ -233,7 +237,7 @@
                         </div>
                     </div>
                     <!-- Optional: Feedback Card -->
-                    @if ($feedbackOrder )
+                    {{-- @if ($feedbackOrder )
                         <div class="card shadow-sm border-0 rounded-4">
                             <div class="card-body ">
                                 <h4 class="fw-bold mb-4">Send Feedback</h4>
@@ -279,10 +283,10 @@
                             </div>
                         </div>
                     @else
-                        {{-- <div class="alert alert-dark card shadow-sm border-0 rounded-4">
+                         <div class="alert alert-dark card shadow-sm border-0 rounded-4">
                             Feedback Already Send.
-                        </div> --}}
-                    @endif
+                        </div>
+                    @endif --}}
                 </div>
             </div>
         </div>
@@ -331,47 +335,47 @@
                 );
             });
 
-            $('#feedback').submit(function(e) {
-                e.preventDefault();
-                var data = $('#feedback')[0];
-                var formData = new FormData(data);
-                $('.error').text('');
-                let url = "{{ route('UserFeedbackPage') }}";
-                reusableAjaxCall(url, 'POST', formData, function(response) {
-                        console.log('response', response);
-                        const Toast = Swal.mixin({
-                            toast: true,
-                            position: "top-end",
-                            showConfirmButton: false,
-                            timer: 3000,
-                            timerProgressBar: true,
-                            didOpen: (toast) => {
-                                toast.onmouseenter = Swal.stopTimer;
-                                toast.onmouseleave = Swal.resumeTimer;
-                            }
-                        });
-                        if (response.status === true) {
-                            Toast.fire({
-                                icon: "success",
-                                title: response.message || "Feedback Send Successfully"
-                            });
-                              $('#feedback').closest('.card').fadeOut();
-                            setTimeout(function() {
-                                window.location.href = "{{ route('UserConfirmPage') }}";
-                            }, 2000);
+            // $('#feedback').submit(function(e) {
+            //     e.preventDefault();
+            //     var data = $('#feedback')[0];
+            //     var formData = new FormData(data);
+            //     $('.error').text('');
+            //     let url = "{{ route('UserFeedbackPage') }}";
+            //     reusableAjaxCall(url, 'POST', formData, function(response) {
+            //             console.log('response', response);
+            //             const Toast = Swal.mixin({
+            //                 toast: true,
+            //                 position: "top-end",
+            //                 showConfirmButton: false,
+            //                 timer: 3000,
+            //                 timerProgressBar: true,
+            //                 didOpen: (toast) => {
+            //                     toast.onmouseenter = Swal.stopTimer;
+            //                     toast.onmouseleave = Swal.resumeTimer;
+            //                 }
+            //             });
+            //             if (response.status === true) {
+            //                 Toast.fire({
+            //                     icon: "success",
+            //                     title: response.message || "Feedback Send Successfully"
+            //                 });
+            //                   $('#feedback').closest('.card').fadeOut();
+            //                 setTimeout(function() {
+            //                     window.location.href = "{{ route('UserConfirmPage') }}";
+            //                 }, 2000);
 
-                        } else {
-                            Toast.fire({
-                                icon: "error",
-                                title: response.message || "Feedback not Sent"
-                            });
-                        }
-                        $('#feedback')[0].reset();
-                    },
-                    function(error) {
-                        console.log('error', error);
-                    });
-            });
+            //             } else {
+            //                 Toast.fire({
+            //                     icon: "error",
+            //                     title: response.message || "Feedback not Sent"
+            //                 });
+            //             }
+            //             $('#feedback')[0].reset();
+            //         },
+            //         function(error) {
+            //             console.log('error', error);
+            //         });
+            // });
         });
     </script>
 

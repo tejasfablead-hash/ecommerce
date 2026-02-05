@@ -87,7 +87,7 @@
                                 <div class=" text-center">
                                     <h6 class="card-title">{{ $item->product->name }}</h6>
                                     <div class="price">
-                                        <h6>₹{{ $item->product->price }}</h6>
+                                        <h6>₹{{ $item->product->discount_value }}</h6>
                                     </div>
                                 </div>
 

@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
      protected $table = "products";
-    protected $fillable = ['category_id', 'name', 'price','qty','description','status','image'];
+    protected $fillable = ['category_id', 'name', 'price','qty','discount','discount_value','description','status','image'];
 
     protected $casts = [
     'price' => 'decimal:2',
     'qty' => 'integer',
+     'discount_value' => 'decimal:2',
    
 ];
 

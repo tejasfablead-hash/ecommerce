@@ -145,6 +145,7 @@
 
                                     <tbody>
                                         @foreach ($latestOrders as $order)
+                                        @if ($order->payment_status=='pending')
                                             <tr>
                                                 <td>
                                                     <div class="d-flex align-items-center gap-2">
@@ -195,6 +196,8 @@
                                                     </a>
                                                 </td>
                                             </tr>
+                                        @endif
+                                            
                                         @endforeach
 
                                         @if ($latestOrders->isEmpty())

@@ -30,8 +30,8 @@ class ScraperService
                 $titleNode = $node->filter('h3 a');
                 $title = $titleNode->attr('title');
 
-                $priceText = $node->filter('p.price_color')->text(); // "£51.77"
-                $price = floatval(str_replace('£', '', $priceText)); // 51.77 as decimal
+                $priceText = $node->filter('p.price_color')->text();
+                $price = floatval(str_replace('£', '', $priceText));
 
                 $imageNode = $node->filter('.image_container img');
                 $image = $imageNode->attr('src');
@@ -59,7 +59,6 @@ class ScraperService
                     ]
                 );
             }
-
             return ['status' => true, 'products' => $products];
         } catch (RequestException $e) {
             return [

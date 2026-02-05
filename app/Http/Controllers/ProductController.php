@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductRequest;
 use App\Models\Category;
+use App\Models\Feedback;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -34,6 +37,8 @@ class ProductController extends Controller
                 'name' => $request->product,
                 'price' => $request->price,
                 'qty' => $request->qty,
+                'discount' => $request->discount,
+                'discount_value' => $request->discount_value,
                 'description' => $request->description,
                 'status'      => $status,
                 'image' => json_encode($path),
@@ -89,6 +94,8 @@ class ProductController extends Controller
                 'name' => $request->product,
                 'price' => $request->price,
                 'qty' => $request->qty,
+                'discount' => $request->discount,
+                'discount_value' => $request->discount_value,
                 'description' => $request->description,
                 'status'      => $status,
                 'image' => json_encode($path),
@@ -152,21 +159,34 @@ class ProductController extends Controller
 
     public function product($id)
     {
+
         $product = Product::where('category_id', $id)->get();
+
         return view('Ecommerce.Pages.product', compact('product'));
     }
 
     public function productdetail($id = null)
     {
+        $user = Auth::id();
+        $feedbackOrder = Order::where('user_id', $user)
+            ->where('order_status', 'delivered')
+            ->where('payment_status', 'paid')
+            ->where('feedback_given', false)
+            ->latest()
+            ->first();
+
         if (empty($id)) {
             return view('Ecommerce.Pages.productdetail', [
                 'product' => null
             ]);
         }
 
+        $feedback = Feedback::all();
+
+        // dd($feedback);
         $product = Product::find($id);
 
-        return view('Ecommerce.Pages.productdetail', compact('product'));
+        return view('Ecommerce.Pages.productdetail', compact('product', 'feedbackOrder', 'feedback'));
     }
     public function products()
     {

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use App\Services\SMSService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 
 class OrderController extends Controller
@@ -22,17 +23,16 @@ class OrderController extends Controller
         $cartItems = Cart::where('user_id', $user)->with('getproduct')->get();
         // dd($cartItems);
         if ($cartItems->isEmpty()) {
-           
-        return response()->json([
-            'status'  => true,
-            'message' =>'Your cart is empty'
-        ]);
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Your cart is empty'
+            ]);
         }
 
         $validate = Validator::make($request->all(), [
             'userid' => 'required',
             'firstname' => 'required',
-            'lastname' => 'required',
             'email' => 'required|email',
             'phone' => 'required|numeric',
             'address' => 'required',
@@ -46,7 +46,7 @@ class OrderController extends Controller
             ], 422);
         }
         $order = Order::create([
-            'user_id'           => $user,
+            'user_id'           =>$request->userid,
             'order_number'   => 'TMP-' . time(),
             'subtotal'          => session('subtotal'),
             'discount_percent'  => session('discountvalue'),
@@ -57,7 +57,7 @@ class OrderController extends Controller
             'payment_method'    => 'cod',
             'payment_status'    => 'pending',
             'order_status'      => 'pending',
-            'customer_name'     => $request->firstname . ' ' . $request->lastname,
+            'customer_name'     => $request->firstname,
             'email'             => $request->email,
             'phone'             => $request->phone,
             'address'           => $request->address,
@@ -75,7 +75,7 @@ class OrderController extends Controller
         }
         $phone = $request->phone;
         if (!str_starts_with($phone, '+')) {
-            $phone = '+91' . $phone; 
+            $phone = '+91' . $phone;
         }
 
         $sms->send(
@@ -95,13 +95,18 @@ class OrderController extends Controller
         ]);
     }
 
-    public function view()
+    public function view(Request $request)
     {
-        $order = Order::with([
-            'getcustomer',
-            'orderitem.product'
-        ])->latest()->paginate(10);
+        $status = $request->status;
 
+        $order = Order::with(['getcustomer', 'orderitem.product'])
+            ->when($status, function ($q) use ($status) {
+                $q->where('order_status', $status);
+            })
+            ->latest()
+            ->get(); // DataTable ke saath paginate mat use karo
+
+     
         return view('Admin.Order.view', compact('order'));
     }
     public function details($id)
@@ -189,4 +194,15 @@ class OrderController extends Controller
             'message' => 'Order status updated successfully'
         ]);
     }
+
+    public function downloadOrderPdf($id)
+{
+    $order = Order::with(['orderitem.product', 'getcustomer'])
+        ->where('user_id', Auth::user()->id)
+        ->findOrFail($id);
+
+    $pdf = Pdf::loadView('Ecommerce.Pages.order-pdf', compact('order'));
+
+    return $pdf->download('Order_'.$order->order_number.'.pdf');
+}
 }

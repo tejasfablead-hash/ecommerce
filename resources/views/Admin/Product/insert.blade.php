@@ -46,7 +46,7 @@
                             <div class="card-body general-info">
                                 <div class="mb-5 d-flex align-items-center justify-content-between">
                                     <h5 class="fw-bold mb-0 me-4">
-                                        <span class="d-block mb-2">Create Product :</span>
+                                        <span class="d-block mb-2">Create Product </span>
                                         <span class="fs-12 fw-normal text-muted text-truncate-1-line">General
                                             information
                                             for product</span>
@@ -111,6 +111,33 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="row mb-4 align-items-center">
+                                                <label class="fw-semibold">Discount :</label>
+                                                <div class="col-lg-12">
+                                                    <input type="number" name="discount" class="form-control"
+                                                        id="discount" placeholder="Discount">
+                                                    <small class="text-danger error" id="discount_type_error"></small>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="row mb-4 align-items-center">
+                                                <label class="fw-semibold">Discount Value:</label>
+                                                <div class="col-lg-12">
+                                                    <input type="number" readonly step="0.01" name="discount_value"
+                                                        class="form-control" id="discountprice"
+                                                        placeholder="Ex: 10 or 200">
+                                                    <small class="text-danger error" id="discount_value_error"></small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="row mb-4 align-items-center">
@@ -162,6 +189,7 @@
 
     <script>
         $(document).ready(function() {
+
             $('#productform').submit(function(e) {
 
                 e.preventDefault();
@@ -207,6 +235,23 @@
                     console.log(error);
                 });
             });
+
+            function calculate() {
+                let price = parseFloat($('input[name="price"]').val()) || 0;
+                let discountPercent = parseFloat($('#discount').val()) || 0;
+
+                let finalPrice = price;
+
+                if (discountPercent > 0) {
+                    finalPrice = price - (price * discountPercent / 100);
+                }
+
+                $('#discountprice').val(finalPrice.toFixed(2));
+            }
+
+            $('input[name="price"], #discount').on('keyup change', function () {
+            calculate();
+        });
         });
     </script>
 @endsection

@@ -87,29 +87,27 @@
                     <ul class="nav navbar-nav menu_nav ml-auto">
                         <li class="nav-item"><a class="nav-link" href="{{ route('UserProductPage') }}">Product
                             </a></li>
+                              <li class="nav-item"><a class="nav-link" href="{{ route('UserCategoryPage') }}">Category
+                            </a></li>
                         {{-- <li class="nav-item active"><a class="nav-link" href="{{route('HomePage')}}">Home</a></li> --}}
                         <li class="nav-item submenu dropdown">
 
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
                                 aria-haspopup="true" aria-expanded="false">Shop</a>
                             <ul class="dropdown-menu">
-                                <li class="nav-item"><a class="nav-link" href="{{ route('UserCategoryPage') }}">Shop
-                                        Category</a></li>
+                                
                                 <li class="nav-item"><a class="nav-link" href="{{ route('WishlistPage') }}">
                                         Wishlist</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ route('UserCartPage') }}">Shopping
                                         Cart</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ route('UserCheckoutPage') }}">Product
                                         Checkout</a></li>
-                                <li class="nav-item"><a class="nav-link"
-                                        href="{{ route('UserConfirmPage') }}">Confirmation</a></li>
+                                {{-- <li class="nav-item"><a class="nav-link"
+                                        href="{{ route('UserConfirmPage') }}">Confirmation</a></li> --}}
                             </ul>
                         </li>
 
-                        <li class="nav-item submenu dropdown">
-                            <a href="{{ route('UserContactPage') }}" class="nav-link dropdown-toggle" role="button"
-                                aria-haspopup="true" aria-expanded="false">Contact</a>
-                        </li>
+
 
 
                         <li class="nav-item submenu dropdown">
@@ -118,6 +116,9 @@
                             <ul class="dropdown-menu">
                                 <li class="nav-item"><a class="nav-link"
                                         href="{{ route('UserProfilePage') }}">Profile</a></li>
+                                <li class="nav-item ">
+                                    <a href="{{ route('UserContactPage') }}" class="nav-link ">Contact</a>
+                                </li>
                                 <li class="nav-item"><a class="nav-link logout-btn"
                                         data-redirect="{{ route('UserLoginPage') }}" href="javascript:void(0);">Sign
                                         Out </a></li>
@@ -207,7 +208,7 @@
     }
 
     function loadWishlistCount() {
-        
+
         var url = "{{ route('UserWishlistCount') }}";
 
         reusableAjaxCall(url, 'GET', null, function(response) {

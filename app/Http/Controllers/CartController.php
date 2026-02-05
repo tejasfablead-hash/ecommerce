@@ -50,7 +50,7 @@ class CartController extends Controller
                 'user_id' => Auth::id(),
                 'product_id' => $product->id,
                 'qty' => $qty,
-                'price' => $product->price
+                'price' => $product->discount_value
             ]);
         }
 

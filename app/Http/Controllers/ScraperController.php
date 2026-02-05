@@ -9,7 +9,7 @@ class ScraperController extends Controller
 {
     public function index()
     {
-        return view('Admin.Product.scrape'); // admin blade
+        return view('Admin.Product.scrape'); 
     }
 
  public function scrapeProducts(Request $request, ScraperService $scraper)

@@ -259,11 +259,27 @@
 
                                     <div class="product-details mt-2">
 
-                                        <h6>{{ $item->name }}</h6>
-                                        <div class="price">
-                                            <h6>${{ $item->price }}</h6>
-                                            {{-- <h6 class="l-through">$210.00</h6> --}}
+                                        <h6 class="mb-1">
+                                            {{ $item->name }}
+                                            @if ($item->discount > 0)
+                                                <span class="text-success fw-bold ms-1">
+                                                    {{ number_format($item->discount, 0) }}% OFF
+                                                </span>
+                                            @endif
+                                        </h6>
+
+                                        <div class="price d-flex align-items-center gap-2">
+                                            <h6 class="mb-0 fw-bold text-dark">
+                                                $ {{ number_format($item->discount_value, 2) }}
+                                            </h6>
+
+                                            @if ($item->discount > 0)
+                                                <h6 class="mb-0 text-muted l-through">
+                                                   $ {{ number_format($item->price, 2) }}
+                                                </h6>
+                                            @endif
                                         </div>
+
                                         <div class="prd-bottom">
                                             @if ($item->qty > 0)
                                                 <a href="javascript:void(0)" class="social-info cart-info"
@@ -283,6 +299,7 @@
                                                 <span class="lnr lnr-heart"></span>
                                                 <p class="hover-text">Wishlist</p>
                                             </a>
+
                                             <a href="{{ route('UserProductdetailsPage', $item->id) }}"
                                                 class="social-info">
                                                 <span class="lnr lnr-move"></span>
@@ -290,6 +307,7 @@
                                             </a>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         @empty
@@ -355,11 +373,28 @@
                                         @endif
                                     </div>
                                     <div class="product-details mt-2">
-                                        <h6>{{ $item->name }}</h6>
-                                        <div class="price">
-                                            <h6>${{ $item->price }}</h6>
-                                            {{-- <h6 class="l-through">$210.00</h6> --}}
+
+                                        <h6 class="mb-1">
+                                            {{ $item->name }}
+                                            @if ($item->discount > 0)
+                                                <span class="text-success fw-bold ms-1">
+                                                    {{ number_format($item->discount, 0) }}% OFF
+                                                </span>
+                                            @endif
+                                        </h6>
+
+                                        <div class="price d-flex align-items-center gap-2">
+                                            <h6 class="mb-0 fw-bold text-dark">
+                                                $ {{ number_format($item->discount_value, 2) }}
+                                            </h6>
+
+                                            @if ($item->discount > 0)
+                                                <h6 class="mb-0 text-muted l-through">
+                                                   $ {{ number_format($item->price, 2) }}
+                                                </h6>
+                                            @endif
                                         </div>
+
                                         <div class="prd-bottom">
                                             @if ($item->qty > 0)
                                                 <a href="javascript:void(0)" class="social-info cart-info"
@@ -379,6 +414,7 @@
                                                 <span class="lnr lnr-heart"></span>
                                                 <p class="hover-text">Wishlist</p>
                                             </a>
+
                                             <a href="{{ route('UserProductdetailsPage', $item->id) }}"
                                                 class="social-info">
                                                 <span class="lnr lnr-move"></span>
@@ -471,9 +507,9 @@
                                         </a>
                                     @endif
                                     <div class="product-details">
-                                        <div class="price">
-                                            <h6>${{ $item->price }}</h6>
-                                            {{-- <h6 class="l-through">$210.00</h6> --}}
+                                        <div class="price ">
+                                            <h6 class="mt-1">${{ $item->discount_value }}</h6>
+                                            <h6 class="l-through">${{ $item->price }}</h6>
                                         </div>
                                         <h4>{{ $item->name }}</h4>
 
@@ -602,7 +638,10 @@
                                         <a href="{{ route('UserProductdetailsPage', $item->id) }}"
                                             class="title">{{ Str::limit($item->name, 10) }}</a>
                                         <div class="price">
-                                            <h6>${{ $item->price }}</h6>
+
+                                            <h6>${{ $item->discount_value }}</h6> @if ($item->discount>0)
+                                                 <br><h6 class="l-through">${{ $item->price }}</h6>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>

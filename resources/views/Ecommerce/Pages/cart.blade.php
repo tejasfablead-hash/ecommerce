@@ -1,6 +1,59 @@
 @extends('Ecommerce.Layout.index')
 @section('container')
+
+    <style>
+        .qty-circle-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Circle buttons */
+        .qty-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            background: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-circle:hover {
+            background: #f5f5f5;
+        }
+
+        /* Middle input box */
+        .qty-box {
+            width: 40px;
+            height: 32px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Remove arrows */
+        .qty-box::-webkit-inner-spin-button,
+        .qty-box::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .qty-box {
+            -moz-appearance: textfield;
+        }
+    </style>
+
+
     <!-- Start Banner Area -->
+
     <section class="banner-area organic-breadcrumb">
         <div class="container">
             <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
@@ -54,24 +107,37 @@
                                                 </div>
                                                 <div class="media-body">
                                                     <h5 style="color: black">{{ $item->getproduct->name }}</h5>
+                                                    @if ($item->getproduct->discount > 0)
+                                                        <p class="text-success">{{ (int) $item->getproduct->discount }}% Off
+                                                        </p>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <h5>₹{{ $item->getproduct->price }}</h5>
+                                            <h5>₹{{ $item->getproduct->discount_value }}</h5>
+                                            @if ($item->getproduct->discount > 0)
+                                                <p style="text-decoration-line: line-through;">
+                                                    ₹{{ $item->getproduct->price }}
+                                                </p>
+                                            @endif
                                         </td>
                                         <td>
-                                            <div class="product_count">
-                                                <input type="number" id="qtyInput" class="input-text qty qty-input"
-                                                    value="{{ $item->qty }}" min="1"
-                                                    data-old="{{ $item->qty }}" data-cart-id="{{ $item->id }}"
-                                                    data-price="{{ $item->getproduct->price }}">
+                                            <div class="qty-circle-wrapper">
+                                                <button type="button" class="qty-circle qty-minus">−</button>
+
+                                                <input type="number" class="qty-box qty-input" value="{{ $item->qty }}"
+                                                    min="1" data-old="{{ $item->qty }}"
+                                                    data-cart-id="{{ $item->id }}"
+                                                    data-price="{{ $item->getproduct->discount_value }}">
+
+                                                <button type="button" class="qty-circle qty-plus">+</button>
                                             </div>
                                         </td>
 
                                         <td>
                                             <h5 class="item-total">
-                                                ₹{{ number_format($item->getproduct->price, 2) }}
+                                                ₹{{ number_format($item->getproduct->discount_value, 2) }}
                                             </h5>
                                         </td>
                                         <td>
@@ -202,6 +268,20 @@
     <script src="{{ asset('ajax.js') }}"></script>
     <script>
         $(document).ready(function() {
+            $(document).on('click', '.qty-plus', function() {
+                let input = $(this).closest('.qty-circle-wrapper').find('.qty-input');
+                let currentQty = parseInt(input.val()) || 1;
+                input.val(currentQty + 1).trigger('change');
+            });
+
+            $(document).on('click', '.qty-minus', function() {
+                let input = $(this).closest('.qty-circle-wrapper').find('.qty-input');
+                let currentQty = parseInt(input.val()) || 1;
+
+                if (currentQty > 1) {
+                    input.val(currentQty - 1).trigger('change');
+                }
+            });
 
             $(document).on('click', '.remove-cart', function(e) {
 
@@ -299,51 +379,56 @@
                 $('#subtotalInput').val(subtotal.toFixed(2));
 
             }
+
             calculate();
 
-            $(document).on('change', '.qty-input', function(e) {
-                calculate();
-                e.preventDefault();
+            $(document).on('change', '.qty-input', function() {
+
                 let input = $(this);
                 let qty = parseInt(input.val()) || 1;
-                let oldQty = input.data('old') || 1;
+                let oldQty = input.data('old');
                 let cartId = input.data('cart-id');
-                var formData = new FormData();
+
+                if (qty < 1) {
+                    input.val(oldQty);
+                    return;
+                }
+
+                let formData = new FormData();
                 formData.append('qty', qty);
                 formData.append('cartId', cartId);
-                var url = "{{ route('UserCartUpdatePage') }}";
-                reusableAjaxCall(url, 'POST', formData, function(response) {
-                    const Toast = Swal.mixin({
-                        toast: true,
-                        position: "top-end",
-                        showConfirmButton: false,
-                        timer: 3000,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                            toast.onmouseenter = Swal.stopTimer;
-                            toast.onmouseleave = Swal.resumeTimer;
+
+                reusableAjaxCall("{{ route('UserCartUpdatePage') }}", 'POST', formData,
+                    function(response) {
+
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+
+                        if (response.status === true) {
+                            input.data('old', qty);
+                            calculate();
+                            loadCartCount();
+
+                            Toast.fire({
+                                icon: "success",
+                                title: response.message || "Quantity updated"
+                            });
+
+                        } else {
+                            input.val(oldQty);
+                            calculate();
+
+                            Toast.fire({
+                                icon: "error",
+                                title: response.message || "Stock not available"
+                            });
                         }
-                    });
-                    if (response.status == true) {
-                        input.data('old', qty);
-                        calculate();
-                        loadCartCount();
-                        Toast.fire({
-                            icon: "success",
-                            title: response.message || "Cart Updated"
-                        });
-
-                    } else {
-                        input.val(oldQty);
-                        calculate();
-                        Toast.fire({
-                            icon: "error",
-                            title: response.message || "Out of stock"
-                        });
                     }
-                });
-
-
+                );
             });
             $(document).on('input', '#discount', function() {
                 calculate();

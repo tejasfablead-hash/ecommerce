@@ -27,22 +27,20 @@
                         <form class="row contact_form" id="orderform"> @csrf <input type="hidden" class="form-control"
                                 id="id" name="userid" value="{{ Auth::user()->id }}"> <small
                                 class="text-danger error" id="id_error"></small>
-                            <div class="col-md-6 form-group p_star"> <input type="text" class="form-control"
-                                    id="first" name="firstname" placeholder="First name"> <small
+                            <div class="col-md-6 form-group p_star"> <input type="hidden" class="form-control"
+                                    id="first" name="firstname" value="{{ Auth::user()->name }}" placeholder="First name"> <small
                                     class="text-danger error" id="firstname_error"></small> </div>
-                            <div class="col-md-6 form-group p_star"> <input type="text" class="form-control"
-                                    id="last" name="lastname" placeholder="Last name"> <small class="text-danger error"
-                                    id="lastname_error"></small> </div>
-                            <div class="col-md-6 form-group p_star"> <input type="text" class="form-control"
-                                    id="number" name="phone" placeholder="Phone number"> <small
+                            <div class="col-md-6 form-group p_star"> <input type="hidden" class="form-control"
+                                    id="number" name="phone" value="{{ Auth::user()->phone }}"  placeholder="Phone number"> <small
                                     class="text-danger error" id="phone_error"></small> </div>
-                            <div class="col-md-6 form-group p_star"> <input type="email" class="form-control"
-                                    placeholder="Email Address" name="email"> <small class="text-danger error"
+                            <div class="col-md-6 form-group p_star"> <input type="hidden" class="form-control"
+                                    placeholder="Email Address" value="{{ Auth::user()->email }}" name="email"> <small class="text-danger error"
                                     id="email_error"></small> </div>
-                            <div class="col-md-12 form-group p_star"> <input type="text" class="form-control"
+                            <div class="col-md-12 form-group p_star"> Address : <input type="text" class="form-control"
                                     id="city" name="address" placeholder="Address/Town/City"> <small
                                     class="text-danger error" id="address_error"></small> </div>
-                            <div class="col-md-12 form-group"> <input type="text" class="form-control" id="zip"
+                                 
+                            <div class="col-md-12 form-group">   Pincode :  <input type="text" class="form-control" id="zip"
                                     name="postcode" placeholder="Postcode/ZIP"> <small class="text-danger error"
                                     id="postcode_error"></small> </div>
                     </div>
@@ -89,12 +87,20 @@
                                         <tr>
                                             <td>Discount (%)</td>
                                             <td></td>
-                                            <td class="text-end">{{ session('discountvalue') ?? 0 }}%</td>
+                                            @if (session('discountvalue') > 0)
+                                                <td class="text-end">{{ session('discountvalue') ?? 0 }}%</td>
+                                            @else
+                                                <td class="text-end">-</td>
+                                            @endif
                                         </tr>
                                         <tr>
                                             <td>Discount Price</td>
                                             <td></td>
-                                            <td class="text-end">₹{{ session('discountprice') ?? 0 }}</td>
+                                            @if (session('discountprice') > 0)
+                                                <td class="text-end">₹{{ session('discountprice') ?? 0 }}</td>
+                                            @else
+                                                <td class="text-end">-</td>
+                                            @endif
                                         </tr>
                                         <tr class="fw-bold">
                                             <td style="color:#050505;">Total</td>
@@ -107,10 +113,10 @@
                                 <div class="payment_item active">
                                     <p id="billingdetails" class="d-none mt-2 text-danger"></p>
                                 </div>
-                                <div class="creat_account"> <input type="checkbox" id="f-option4" name="selector">
+                                {{-- <div class="creat_account"> <input type="checkbox" id="f-option4" name="selector">
                                     <label for="f-option4">I’ve read and accept the </label>
                                     <p style="color: rgb(243, 81, 81)">terms & conditions</p>
-                                </div>
+                                </div> --}}
                                 <div class="creat_account"> <input type="submit" class="primary-btn w-100"
                                         id="paypal-remove" style="border:none" name="submit"
                                         value="Confirm Your Order">
@@ -158,6 +164,7 @@
                         renderPaypal(response.order_id);
                         paypalRendered = true;
                     }
+                    $('#orderform')[0].reset();
                 }
             }, function(xhr) {
                 let res = xhr.responseJSON;

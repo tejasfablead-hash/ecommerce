@@ -147,7 +147,7 @@
         </div>
     </div>
 
-<section class="brand-area section_gap">
+    <section class="brand-area section_gap">
         <div class="container">
             <div class="row">
                 <a class="col single-img" href="javascript:void(0)">
@@ -169,7 +169,7 @@
         </div>
     </section>
     <!-- Start related-product Area -->
-     <section class="related-product-area section_gap_bottom">
+    <section class="related-product-area section_gap_bottom">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-6 text-center">
@@ -199,14 +199,18 @@
                                             $firstImage = $images[0];
                                         @endphp
                                         <a href="{{ route('UserProductdetailsPage', $item->id) }}"><img
-                                                src="{{ asset('/storage/' . $firstImage) }}" height="60px"
-                                                width="75px" alt="{{ $item->name }}" class="img-fluid"></a>
+                                                src="{{ asset('/storage/' . $firstImage) }}" height="60px" width="75px"
+                                                alt="{{ $item->name }}" class="img-fluid"></a>
                                     @endif
                                     <div class="desc">
                                         <a href="{{ route('UserProductdetailsPage', $item->id) }}"
                                             class="title">{{ Str::limit($item->name, 10) }}</a>
                                         <div class="price">
-                                            <h6>${{ $item->price }}</h6>
+                                            <h6>${{ $item->discount_value }}</h6>
+                                            @if ($item->discount > 0)
+                                                <br>
+                                                <h6 class="l-through">${{ $item->price }}</h6>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
