@@ -114,6 +114,34 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="row mb-4 align-items-center">
+                                                <label class="fw-semibold">Discount :</label>
+                                                <div class="col-lg-12">
+                                                    <input type="text" value="{{ $single->discount }}" name="discount" class="form-control"
+                                                        id="discount" placeholder="Discount">
+                                                    <small class="text-danger error" id="discount_type_error"></small>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="row mb-4 align-items-center">
+                                                <label class="fw-semibold">Discount Value:</label>
+                                                <div class="col-lg-12">
+                                                    <input type="number" readonly step="0.01" name="discount_value"
+                                                        class="form-control" value="{{ $single->discount_value }}" id="discountprice" readonly
+                                                        placeholder="Ex: 10 or 200">
+                                                    <small class="text-danger error" id="discount_value_error"></small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="row mb-4 align-items-center">
@@ -222,6 +250,22 @@
                     console.log(error);
                 });
             });
+             function calculate() {
+                let price = parseFloat($('input[name="price"]').val()) || 0;
+                let discountPercent = parseFloat($('#discount').val()) || 0;
+
+                let finalPrice = price;
+
+                if (discountPercent > 0) {
+                    finalPrice = price - (price * discountPercent / 100);
+                }
+
+                $('#discountprice').val(finalPrice.toFixed(2));
+            }
+
+            $('input[name="price"], #discount').on('keyup change', function () {
+            calculate();
+        });
         });
     </script>
 @endsection

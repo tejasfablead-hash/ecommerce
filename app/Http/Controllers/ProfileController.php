@@ -22,14 +22,17 @@ class ProfileController extends Controller
                 ->latest()
                 ->with(['orderitem.product'])
                 ->get();
-            $feedbackOrder = Order::where('user_id', $user)
-                ->where('order_status', 'delivered')
-                ->where('payment_status', 'paid')
-                ->where('feedback_given', false)
-                ->latest()
-                ->first();
+            // $feedbackOrder = Order::where('user_id', $user)
+            //     ->where('order_status', 'delivered')
+            //     ->where('payment_status', 'paid')
+            //     ->where('feedback_given', false)
+            //     ->latest()
+            //     ->first();
         }
-        return view('Ecommerce.Pages.profile', compact('orders', 'feedbackOrder'));
+        return view('Ecommerce.Pages.profile', compact(
+            'orders'
+            // , 'feedbackOrder'
+        ));
     }
 
     public function update(Request $request)
@@ -120,7 +123,6 @@ class ProfileController extends Controller
             'message'  => $request->message,
         ]);
 
-        // update order
         $order->update([
             'feedback_given' => true
         ]);
@@ -131,8 +133,11 @@ class ProfileController extends Controller
         ], 201);
     }
 
-    public function viewfeedback(){
+    public function viewfeedback()
+    {
         $feedback = Feedback::all();
-        return view('Admin.Feedback.view',compact('feedback'));
+        return view('Admin.Feedback.view', compact('feedback'));
     }
+
+  
 }

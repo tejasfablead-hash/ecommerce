@@ -42,11 +42,12 @@
                                     <table class="table table-hover" id="leadList">
                                         <thead>
                                             <tr>
-                                                <th>Image</th>
+                                                <th>Product</th>
                                                 <th>Category</th>
-                                                <th>Product Name</th>
                                                 <th>Price</th>
                                                 <th>Qty</th>
+                                                <th>Discount</th>
+                                                <th>Discount Amount</th>
                                                 <th>Status</th>
                                                 <th>Actions</th>
                                             </tr>
@@ -58,20 +59,25 @@
                                                 @endphp
                                                 <tr class="single-item text-capitalize">
                                                     <td>
-                                                        <div class="avatar-image avatar-md">
-                                                            @if (is_array($images) && count($images) > 0)
-                                                                @php
-                                                                    $firstImage = $images[0];
-                                                                @endphp
-                                                                <img src="{{ asset('/storage/' . $firstImage) }}"
-                                                                    class="img-fluid">
-                                                            @endif
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <div class="avatar-image avatar-md">
+                                                                @if (is_array($images) && count($images) > 0)
+                                                                    <img src="{{ asset('/storage/' . $images[0]) }}"
+                                                                        class="img-fluid">
+                                                                @endif
+                                                            </div>
+                                                            <span class="">{{ $item->name }}</span>
                                                         </div>
                                                     </td>
                                                     <td>{{ $item->getcategory->name }}</td>
-                                                    <td>{{ $item->name }}</td>
                                                     <td>{{ $item->price }}</td>
                                                     <td>{{ $item->qty }}</td>
+                                                    @if ($item->discount > 0)
+                                                        <td>{{ (int) $item->discount ?? '-' }}%</td>
+                                                    @else
+                                                        <td> - </td>
+                                                    @endif
+                                                    <td>{{ $item->discount_value ?? '-' }}</td>
                                                     <td>{{ $item->status }}</td>
                                                     <td>
                                                         <div class="hstack gap-2">
@@ -109,18 +115,20 @@
 @endsection
 @push('scripts')
     <script src="{{ asset('ajax.js') }}"></script>
-<script>
-    $(document).ready(function () {
-        if ($.fn.DataTable) {
-            $('#leadList').DataTable({
-                pageLength: 10,
-                order: [[0, 'desc']]
-            });
-        } else {
-            console.error('DataTable not loaded');
-        }
-    });
-</script>
+    <script>
+        $(document).ready(function() {
+            if ($.fn.DataTable) {
+                $('#leadList').DataTable({
+                    pageLength: 10,
+                    order: [
+                        [0, 'desc']
+                    ]
+                });
+            } else {
+                console.error('DataTable not loaded');
+            }
+        });
+    </script>
     <script>
         $(document).ready(function() {
 

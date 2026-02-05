@@ -32,14 +32,32 @@
             </div>
             <!-- [ page-header ] end -->
 
+            <div class="main-content">
+            <div class="row mb-3">
+    <div class="col-md-3">
+        <select class="form-select" id="statusFilter">
+            <option value="">-- All Orders --</option>
+            <option value="pending" {{ ($status ?? '') == 'pending' ? 'selected' : '' }}>Pending</option>
+            <option value="confirmed" {{ ($status ?? '') == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
+            <option value="shipped" {{ ($status ?? '') == 'shipped' ? 'selected' : '' }}>Shipped</option>
+            <option value="delivered" {{ ($status ?? '') == 'delivered' ? 'selected' : '' }}>Delivered</option>
+            <option value="cancelled" {{ ($status ?? '') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+        </select>
+    </div>
+</div></div>
+
             <!-- [ Main Content ] start -->
             <div class="main-content">
                 <div class="row">
                     <div class="col-lg-12">
+                        
                         <div class="card stretch stretch-full">
                             <div class="card-body p-0">
+                                
                                 <div class="table-responsive">
+                                    
                                     <table class="table table-hover" id="leadList">
+                                        
                                         <thead>
                                             <tr>
                                                 <th>User</th>
@@ -55,7 +73,7 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($order as $item)
-                                                <tr class="single-item text-capitalize">
+                                                 <tr class="single-item text-capitalize">
                                                     <td>{{ $item->getcustomer->name }}</td>
                                                     <td>{{ Str::limit($item->order_number, 10) }}</td>
                                                     <td>{{ Str::limit($item->transactionId, 10) }}</td>
@@ -120,9 +138,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="mt-3 d-flex justify-content-end">
-                                    {{ $order->withQueryString()->links('pagination::bootstrap-5') }}
-                                </div>
+                               
                             </div>
                         </div>
                     </div>
@@ -139,23 +155,36 @@
     <script src="{{ asset('ajax.js') }}"></script>
 
     <script>
-        $(document).ready(function() {
+    $('#statusFilter').on('change', function () {
+        let status = $(this).val();
+        let url = "{{ route('OrderViewPage') }}";
 
+        if (status !== '') {
+            url += '?status=' + status;
+        }
+
+        window.location.href = url;
+    });
+</script>
+
+    <script>
+        $(document).ready(function() {
             if ($.fn.DataTable) {
                 $('#leadList').DataTable({
-                    paging: false, 
-                    info: false, 
-                    searching: true, 
-                    ordering: true,
+                    pageLength: 10,
                     order: [
                         [0, 'desc']
-                    ], 
-                    lengthChange: true, 
-                    pageLength: 10, 
-                    lengthMenu: [5, 10, 25, 50, 100],
+                    ]
                 });
+            } else {
+                console.error('DataTable not loaded');
             }
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
 
+        
             $(document).on('change', '.order-status', function(e) {
                 e.preventDefault();
 

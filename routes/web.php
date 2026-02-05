@@ -82,7 +82,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/customer', [OrderController::class, 'customer'])->name('CustomerPage');
     Route::get('/order-view', [OrderController::class, 'view'])->name('OrderViewPage');
     Route::post('/order-status', [OrderController::class, 'updateorder'])->name('OrderUpdateOrderPage');
-
+    Route::get('/order-details/{id}', [OrderController::class, 'details'])->name('OrderDetailViewPage');
+    Route::get('/orders/notifications', [OrderController::class, 'getNotifications'])->name('OrdernotificationsPage');
+ 
     Route::get('/chat', [DashboardController::class, 'chat'])->name('AdminChatPage');
     Route::get('/chat/{chatId}', [DashboardController::class, 'show'])->name('AdminchatShow');
     Route::post('/chat/send', [DashboardController::class, 'send'])->name('AdminchatSend');
@@ -94,9 +96,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/search', [DashboardController::class, 'Search'])->name('AdminSearch');
     Route::get('/view-feedback', [ProfileController::class, 'viewfeedback'])->name('FeedbackviewPage');
 
-
-    Route::get('/order-details/{id}', [OrderController::class, 'details'])->name('OrderDetailViewPage');
-    Route::get('/orders/notifications', [OrderController::class, 'getNotifications'])->name('OrdernotificationsPage');
 
     Route::get('/event', [EventController::class, 'index'])->name('EventPage');
     Route::post('/calendar', [EventController::class, 'store'])->name('EventStorePage');
@@ -136,6 +135,8 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::post('/cart/store-grand-total', [CheckoutController::class, 'storeGrandTotal'])
         ->name('UserCheckoutTotalPage');
     Route::post('/user/checkout', [OrderController::class, 'order'])->name('UserOrderPage');
+       Route::get('/order-pdf/{id}', [OrderController::class, 'downloadOrderPdf'])
+        ->name('UserOrderPdf');
     Route::post('/paypal/success', [PaypalController::class, 'success'])
         ->name('PaypalSuccessPage');
     Route::get('/user/confirm', [PaypalController::class, 'confirm'])->name('UserConfirmPage');

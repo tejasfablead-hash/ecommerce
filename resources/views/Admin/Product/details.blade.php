@@ -1,11 +1,10 @@
 @extends('Admin.Pages.index')
 @section('container')
+    <main class="nxl-container">
+        <div class="nxl-content">
 
-<main class="nxl-container">
-    <div class="nxl-content">
-
-        {{-- PAGE HEADER --}}
-        <div class="page-header text-capitalize">
+            {{-- PAGE HEADER --}}
+            <div class="page-header text-capitalize">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
                         <h5 class="m-b-10">Product</h5>
@@ -33,100 +32,113 @@
                 </div>
             </div>
 
-        {{-- MAIN CONTENT --}}
-        <div class="main-content">
-        <div class="row">
+            {{-- MAIN CONTENT --}}
+            <div class="main-content">
+                <div class="row">
 
-            {{-- IMAGE SECTION --}}
-            <div class="col-lg-5">
-                <div class="card">
-                    <div class="card-body">
+                    {{-- IMAGE SECTION --}}
+                    <div class="col-lg-5">
+                        <div class="card">
+                            <div class="card-body">
 
-                        @php
-                            $images = json_decode($product->image, true);
-                        @endphp
+                                @php
+                                    $images = json_decode($product->image, true);
+                                @endphp
 
-                        {{-- MAIN IMAGE --}}
-                        <div class="mb-3 text-center">
-                            <img id="mainImage"
-                                 src="{{ asset('storage/'.$images[0]) }}"
-                                 class="img-fluid rounded border"
-                                 style="max-height: 350px; object-fit: contain;">
-                        </div>
+                                {{-- MAIN IMAGE --}}
+                                <div class="mb-3 text-center">
+                                    <img id="mainImage" src="{{ asset('storage/' . $images[0]) }}"
+                                        class="img-fluid rounded border" style="max-height: 350px; object-fit: contain;">
+                                </div>
 
-                        {{-- THUMBNAILS --}}
-                        <div class="d-flex flex-wrap gap-2 justify-content-center">
-                            @foreach($images as $img)
-                                <img src="{{ asset('storage/'.$img) }}"
-                                     class="border rounded thumb-img"
-                                     width="70"
-                                     height="70"
-                                     style="cursor:pointer; object-fit:cover"
-                                     onclick="changeImage(this)">
-                            @endforeach
-                        </div>
+                                {{-- THUMBNAILS --}}
+                                <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                    @foreach ($images as $img)
+                                        <img src="{{ asset('storage/' . $img) }}" class="border rounded thumb-img"
+                                            width="70" height="70" style="cursor:pointer; object-fit:cover"
+                                            onclick="changeImage(this)">
+                                    @endforeach
+                                </div>
 
-                    </div>
-                </div>
-            </div>
-
-            {{-- PRODUCT INFO --}}
-            <div class="col-lg-7 text-capitalize">
-                <div class="card">
-                    <div class="card-body">
-
-                        <h4 class="fw-bold mb-2">{{ $product->name }}</h4>
-
-                        <span class="badge bg-info mb-3">
-                            {{ $product->getcategory->name }}
-                        </span>
-
-                        <hr>
-
-                        <div class="row mb-3">
-                            <div class="col-6">
-                                <p class="text-muted mb-1">Price</p>
-                                <h6>₹ {{ number_format($product->price, 2) }}</h6>
-                            </div>
-                            <div class="col-6">
-                                <p class="text-muted mb-1">Quantity</p>
-                                <h6>{{ $product->qty }}</h6>
                             </div>
                         </div>
-
-                        <div class="mb-3">
-                            <p class="text-muted mb-1">Status</p>
-                            <span class="badge {{ $product->status ? 'bg-success' : 'bg-danger' }}">
-                                {{ $product->status ? 'Active' : 'Inactive' }}
-                            </span>
-                        </div>
-
-                        <div class="mb-3">
-                            <p class="text-muted mb-1">Description</p>
-                            <p class="mb-0">{{ $product->description }}</p>
-                        </div>
-
-                        <hr>
-
-                        <p class="text-muted mb-1">Created At</p>
-                        <p>{{ $product->created_at->format('d M Y') }}</p>
-
                     </div>
+
+                    {{-- PRODUCT INFO --}}
+                    <div class="col-lg-7 text-capitalize">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <h4 class="fw-bold mb-2">{{ $product->name }}</h4>
+
+                                <span class="badge bg-info mb-3">
+                                    {{ $product->getcategory->name }}
+                                </span>
+
+                                <hr>
+
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <p class="text-muted mb-1">Price</p>
+
+                                        @if ($product->discount && $product->discount > 0)
+                                            <div class="d-flex align-items-center gap-2">
+                                                <h4 class="fw-bold text-dark mb-0">
+                                                    ₹{{ number_format($product->discount_value, 2) }}
+                                                </h4>
+
+                                                <span class="badge bg-success">
+                                                    {{(int) $product->discount }}% OFF
+                                                </span>
+                                            </div>
+                                            <p class="text-muted text-decoration-line-through">
+                                                ₹{{ number_format($product->price, 2) }}
+                                            </p>
+                                        @else
+                                            <h4 class="fw-bold text-dark">
+                                                ₹ {{ number_format($product->price, 2) }}
+                                            </h4>
+                                        @endif
+                                    </div>
+
+                                    <div class="col-6">
+                                        <p class="text-muted mb-1">Quantity</p>
+                                        <h6>{{ $product->qty }}</h6>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    {{-- <p class="text-muted mb-1">Status</p> --}}
+                                    <span class="badge {{ $product->status ? 'bg-success' : 'bg-danger' }}">
+                                        {{ $product->status ? 'Active' : 'Inactive' }}
+                                    </span>
+                                </div>
+
+                                <div class="mb-3">
+                                    {{-- <p class="text-muted mb-1">Description</p> --}}
+                                    <p class="mb-0">{{ $product->description }}</p>
+                                </div>
+
+                                <hr>
+
+                                {{-- <p class="text-muted mb-1">Created At</p> --}}
+                                <p>{{ $product->created_at->format('d M Y') }}</p>
+
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-
         </div>
-        </div>
-    </div>
 
-    @include('Admin.Pages.footer')
-</main>
+        @include('Admin.Pages.footer')
+    </main>
 
-{{-- IMAGE SWITCH SCRIPT --}}
-<script>
-    function changeImage(el) {
-        document.getElementById('mainImage').src = el.src;
-    }
-</script>
-
+    {{-- IMAGE SWITCH SCRIPT --}}
+    <script>
+        function changeImage(el) {
+            document.getElementById('mainImage').src = el.src;
+        }
+    </script>
 @endsection
