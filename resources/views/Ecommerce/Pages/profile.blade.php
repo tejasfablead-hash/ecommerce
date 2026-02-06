@@ -133,8 +133,8 @@
                                     <button type="button" class="btn btn-dark rounded-pill px-4" data-bs-dismiss="modal">
                                         Cancel
                                     </button>
-                                    <input type="submit" style="background-color:#f58122;" name="submit" value="Save Changes"
-                                        class="btn text-white  rounded-pill px-4">
+                                    <input type="submit" style="background-color:#f58122;" name="submit"
+                                        value="Save Changes" class="btn text-white  rounded-pill px-4">
 
                                 </div>
                             </form>
@@ -172,7 +172,7 @@
                                                     <tr>
                                                         <!-- Order ID -->
                                                         <td>
-                                                            <strong>#{{ $order->order_number }}</strong>
+                                                            <strong>#{{\Illuminate\Support\Str::limit( $order->order_number,15,'...') }}</strong>
                                                         </td>
 
                                                         <!-- Products -->
@@ -209,13 +209,14 @@
 
                                                         <!-- Action -->
                                                         <td class="text-end card_area">
-                                                            <a href="{{ route('UserConfirmPage', $order->id) }}"
+                                                            <a href="{{ route('UserConfirmViewPage', $order->id) }}"
                                                                 class="btn btn-sm btn-dark cart-info">
                                                                 View
                                                             </a>
-                                                             <a href="{{ route('UserOrderPdf', $order->id) }}" style="background-color:#f8a528;"
-                                                                 class="btn btn-sm text-white cart-info">
-                                                                PDF
+                                                            <a href="{{ route('UserOrderPdf', $order->id) }}"
+                                                                style="background-color:#f8a528;"
+                                                                class="btn btn-sm text-white cart-info">
+                                                               Invoice
                                                             </a>
                                                         </td>
                                                     </tr>
@@ -237,7 +238,7 @@
                         </div>
                     </div>
                     <!-- Optional: Feedback Card -->
-                    {{-- @if ($feedbackOrder )
+                    {{-- @if ($feedbackOrder)
                         <div class="card shadow-sm border-0 rounded-4">
                             <div class="card-body ">
                                 <h4 class="fw-bold mb-4">Send Feedback</h4>

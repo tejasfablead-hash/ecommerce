@@ -141,7 +141,7 @@
                                             </h5>
                                         </td>
                                         <td>
-                                            <a href="" class="remove-cart remove-cart-item"
+                                            <a href="javascript:void(0)" class="remove-cart remove-cart-item"
                                                 data-id="{{ $item->id }}">
                                                 <i class="fa fa-trash-o" style="font-size:20px;color:red"></i>
                                             </a>

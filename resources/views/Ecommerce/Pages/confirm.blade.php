@@ -28,17 +28,28 @@
                     @endif
 
                 </h3>
-                <h4>Order Info</h4>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0">
+                        <i class="fa fa-receipt me-2 text-primary"></i>Order Info
+                    </h4>
+                    <a href="{{ route('UserOrderPdf', $order->id) }}" style="background-color:#f8a528;" class="btn btn-sm text-white cart-info">
+                        <i class="fa-solid fa-file-pdf"></i>
+                        Invoice
+                    </a>
+                </div>
                 <hr>
 
                 <div class="row order_d_inner">
                     <div class="col-lg-4">
                         <div class="details_item ">
                             <ul class="list text-capitalize">
-                                <li><a href="javascript:void(0)" ><span>Transaction Id</span> : {{ $order->transactionId }}</a></li>
-                                <li><a href="javascript:void(0)" ><span>Order number</span> : {{ $order->order_number }}</a></li>
-                                <li><a href="javascript:void(0)" ><span>Date</span> : {{ $order->updated_at->format('d M Y') }}</a></li>
-                                <li><a href="javascript:void(0)" ><span>Total</span> : ₹{{ $order->grand_total }}</a></li>
+                                <li><a href="javascript:void(0)"><span>Transaction Id</span> :
+                                        {{\Illuminate\Support\Str::limit( $order->transactionId,20,'..') }}</a></li>
+                                <li><a href="javascript:void(0)"><span>Order number</span> : {{\Illuminate\Support\Str::limit( $order->order_number,20,'..') }}</a>
+                                </li>
+                                <li><a href="javascript:void(0)"><span>Date</span> :
+                                        {{ $order->updated_at->format('d M Y') }}</a></li>
+                                <li><a href="javascript:void(0)"><span>Total</span> : ₹{{ $order->grand_total }}</a></li>
 
                             </ul>
                         </div>
@@ -47,11 +58,11 @@
                     <div class="col-lg-4">
                         <div class="details_item">
                             <ul class="list ">
-                                <li class="text-capitalize"><a href="javascript:void(0)" ><span>Name</span> :
+                                <li class="text-capitalize"><a href="javascript:void(0)"><span>Name</span> :
                                         {{ $order->customer_name }}</a></li>
-                                <li><a href="javascript:void(0)" ><span>Email</span> : {{ $order->email }}</a></li>
-                                <li><a href="javascript:void(0)" ><span>Phone</span> : {{ $order->phone }}</a></li>
-                                <li class="text-capitalize"><a href="javascript:void(0)" ><span>Address</span> :
+                                <li><a href="javascript:void(0)"><span>Email</span> : {{ $order->email }}</a></li>
+                                <li><a href="javascript:void(0)"><span>Phone</span> : {{ $order->phone }}</a></li>
+                                <li class="text-capitalize"><a href="javascript:void(0)"><span>Address</span> :
                                         {{ $order->address }}</a></li>
                             </ul>
                         </div>
@@ -59,9 +70,11 @@
                     <div class="col-lg-4">
                         <div class="details_item">
                             <ul class="list text-capitalize">
-                                <li><a href="javascript:void(0)" ><span>Payment method</span> : {{ $order->payment_method }}</a></li>
-                                <li><a href="javascript:void(0)" ><span>Order Status</span> : {{ $order->order_status }}</a></li>
-                                <li><a href="javascript:void(0)" ><span>Postcode </span> : {{ $order->pincode }}</a></li>
+                                <li><a href="javascript:void(0)"><span>Payment method</span> :
+                                        {{ $order->payment_method }}</a></li>
+                                <li><a href="javascript:void(0)"><span>Order Status</span> : {{ $order->order_status }}</a>
+                                </li>
+                                <li><a href="javascript:void(0)"><span>Postcode </span> : {{ $order->pincode }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -166,7 +179,7 @@
                     </p>
 
                     <a href="{{ route('UserProductPage') }}" class=" primary-btn mt-3">
-                        Try  Order Again
+                        Try Order Again
                     </a>
                     <a href="{{ route('HomePage') }}" class=" primary-btn mt-3" style="background:#7c8e93;color:white">
                         Go to Home

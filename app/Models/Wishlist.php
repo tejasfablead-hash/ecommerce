@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @mixin IdeHelperWishlist
+ */
 class Wishlist extends Model
 {
     protected $table = "wishlists";

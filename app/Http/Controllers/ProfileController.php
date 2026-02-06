@@ -20,18 +20,13 @@ class ProfileController extends Controller
             $orders = Order::where('user_id', $user)
                 ->where('payment_status', 'paid')
                 ->latest()
+                ->limit(4)
                 ->with(['orderitem.product'])
                 ->get();
-            // $feedbackOrder = Order::where('user_id', $user)
-            //     ->where('order_status', 'delivered')
-            //     ->where('payment_status', 'paid')
-            //     ->where('feedback_given', false)
-            //     ->latest()
-            //     ->first();
+      
         }
         return view('Ecommerce.Pages.profile', compact(
             'orders'
-            // , 'feedbackOrder'
         ));
     }
 
@@ -89,55 +84,54 @@ class ProfileController extends Controller
         }
     }
     public function feedback(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'order_id' => 'required|exists:orders,id',
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email',
-            'subject'  => 'required|integer|min:1|max:5',
-            'message'  => 'required|string',
-        ]);
+{
+    $userId = Auth::id();
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'errors' => $validator->errors()
-            ], 422);
-        }
+    $validator = Validator::make($request->all(), [
+        'order_id'   => 'required|exists:orders,id',
+        'product_id' => 'required|exists:products,id',
+        'rating'     => 'required|integer|min:1|max:5',
+        'message'    => 'required|string',
+    ]);
 
-        // 🔒 Check: feedback already given?
-        $order = Order::find($request->order_id);
-
-        if ($order->feedback_given) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Feedback already submitted'
-            ], 409);
-        }
-
-        Feedback::create([
-            'order_id' => $order->id,
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'subject'  => $request->subject,
-            'message'  => $request->message,
-        ]);
-
-        $order->update([
-            'feedback_given' => true
-        ]);
-
+    if ($validator->fails()) {
         return response()->json([
-            'status' => true,
-            'message' => 'Feedback sent successfully'
-        ], 201);
+            'status' => false,
+            'errors' => $validator->errors()
+        ], 422);
     }
+
+    $alreadyGiven = Feedback::where([
+        'order_id'   => $request->order_id,
+        'product_id' => $request->product_id,
+        'user_id'    => $userId,
+    ])->exists();
+
+    if ($alreadyGiven) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Feedback already submitted for this product'
+        ], 409);
+    }
+
+    Feedback::create([
+        'order_id'   => $request->order_id,
+        'user_id'    => $userId,
+        'product_id' => $request->product_id,
+        'rating'     => $request->rating,
+        'message'    => $request->message,
+    ]);
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Feedback submitted successfully'
+    ], 201);
+}
+
 
     public function viewfeedback()
     {
         $feedback = Feedback::all();
         return view('Admin.Feedback.view', compact('feedback'));
     }
-
-  
 }

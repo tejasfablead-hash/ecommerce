@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @mixin IdeHelperOrder
+ */
 class Order extends Model
 {
     protected $table = "orders";
@@ -40,6 +43,6 @@ class Order extends Model
     }
      public function getfeedback()
     {
-        return $this->hasOne(Feedback::class, 'order_id', 'id');
+        return $this->hasMany(Feedback::class, 'order_id', 'id');
     }
 }

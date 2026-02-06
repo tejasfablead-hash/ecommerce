@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('feedback', function (Blueprint $table) {
-            $table->foreignId('order_id')->after('message')->constrained()->onDelete('cascade');
         });
     }
 

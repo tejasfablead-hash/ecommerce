@@ -31,7 +31,7 @@ return new class extends Migration
             $table->decimal('grand_total', 10, 2);
 
             // Payment
-            $table->enum('payment_method', ['cod', 'paypal', 'razorpay'])->nullable();
+            $table->enum('payment_method', ['cod', 'paypal', 'razorpay','stripe'])->nullable();
             $table->enum('payment_status', ['pending', 'paid', 'failed'])
                   ->default('pending');
 

@@ -1,4 +1,13 @@
-@extends('Ecommerce.Layout.index') @section('container') <!-- Start Banner Area -->
+@extends('Ecommerce.Layout.index')
+@section('container')
+    <style>
+        .payment-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            /* 👈 yahin se spacing control */
+        }
+    </style> <!-- Start Banner Area -->
     <section class="banner-area organic-breadcrumb">
         <div class="container">
             <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
@@ -28,21 +37,23 @@
                                 id="id" name="userid" value="{{ Auth::user()->id }}"> <small
                                 class="text-danger error" id="id_error"></small>
                             <div class="col-md-6 form-group p_star"> <input type="hidden" class="form-control"
-                                    id="first" name="firstname" value="{{ Auth::user()->name }}" placeholder="First name"> <small
-                                    class="text-danger error" id="firstname_error"></small> </div>
+                                    id="first" name="firstname" value="{{ Auth::user()->name }}"
+                                    placeholder="First name"> <small class="text-danger error" id="firstname_error"></small>
+                            </div>
                             <div class="col-md-6 form-group p_star"> <input type="hidden" class="form-control"
-                                    id="number" name="phone" value="{{ Auth::user()->phone }}"  placeholder="Phone number"> <small
-                                    class="text-danger error" id="phone_error"></small> </div>
+                                    id="number" name="phone" value="{{ Auth::user()->phone }}"
+                                    placeholder="Phone number"> <small class="text-danger error" id="phone_error"></small>
+                            </div>
                             <div class="col-md-6 form-group p_star"> <input type="hidden" class="form-control"
-                                    placeholder="Email Address" value="{{ Auth::user()->email }}" name="email"> <small class="text-danger error"
-                                    id="email_error"></small> </div>
+                                    placeholder="Email Address" value="{{ Auth::user()->email }}" name="email"> <small
+                                    class="text-danger error" id="email_error"></small> </div>
                             <div class="col-md-12 form-group p_star"> Address : <input type="text" class="form-control"
                                     id="city" name="address" placeholder="Address/Town/City"> <small
                                     class="text-danger error" id="address_error"></small> </div>
-                                 
-                            <div class="col-md-12 form-group">   Pincode :  <input type="text" class="form-control" id="zip"
-                                    name="postcode" placeholder="Postcode/ZIP"> <small class="text-danger error"
-                                    id="postcode_error"></small> </div>
+
+                            <div class="col-md-12 form-group"> Pincode : <input type="text" class="form-control"
+                                    id="zip" name="postcode" placeholder="Postcode/ZIP"> <small
+                                    class="text-danger error" id="postcode_error"></small> </div>
                     </div>
                     <div class="col-lg-4 text-capitalize">
                         <div class="order_box">
@@ -117,15 +128,34 @@
                                     <label for="f-option4">I’ve read and accept the </label>
                                     <p style="color: rgb(243, 81, 81)">terms & conditions</p>
                                 </div> --}}
-                                <div class="creat_account"> <input type="submit" class="primary-btn w-100"
-                                        id="paypal-remove" style="border:none" name="submit"
-                                        value="Confirm Your Order">
+                                <div class="creat_account payment-buttons">
+                                    <button type="submit" class="primary-btn w-100 mb-2 border-0" id="placeOrderBtn">
+                                        Confirm Your Order
+                                    </button>
+
+                                    <!-- Payment Buttons -->
+                                    <button type="button" class="primary-btn w-100  d-none  border-0"
+                                        id="payWithPaypal">
+                                        Pay with PayPal
+                                    </button>
+
+                                    <button type="button" class="primary-btn w-100 d-none  border-0"
+                                        id="payWithRazorpay">
+                                        Pay with Razorpay
+                                    </button>
+                                    <button type="button" class="primary-btn w-100 mb-2 d-none border-0"
+                                        id="payWithStripe">
+                                        Pay with Card (Stripe)
+                                    </button>
+
+
                                     <div id="paypal-button-container" class="mt-2 d-none"></div>
                                 </div>
                             @else
                                 <tr>
                                     <p class="text-danger text-center mt-4"> 🛒 Your cart is empty </p> <a
-                                        href="{{ route('UserProductPage') }}" class="primary-btn mt-4"> Please Add Product
+                                        href="{{ route('UserProductPage') }}" class="primary-btn mt-4"> Please Add
+                                        Product
                                     </a>
                                 </tr>
                             @endif
@@ -137,7 +167,27 @@
     </section>
     <script src="https://code.jquery.com/jquery-3.7.1.js" crossorigin="anonymous"></script>
     <script src="https://www.paypal.com/sdk/js?client-id={{ config('services.paypal.client_id') }}&currency=USD"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
     <script src="{{ asset('ajax.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('stripe') === 'success') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Payment Successful',
+                    text: 'Your Stripe payment has been completed!',
+                    timer: 2500,
+                    showConfirmButton: false
+                });
+
+                setTimeout(() => {
+                    window.location.href = "{{ route('UserCheckoutPage') }}";
+                }, 2500);
+            }
+        });
+    </script>
 <script>
     $(document).ready(function() {
         let paypalRendered = false;
@@ -154,16 +204,15 @@
                     Swal.fire({
                         icon: 'success',
                         title: 'Order Confirmed',
-                        text: 'Please complete payment',
-                        timer: 2500,
+                        text: 'Choose payment method',
+                        timer: 2000,
                         showConfirmButton: false
                     });
-                    $('#paypal-remove').hide();
-                    $('#paypal-button-container').removeClass('d-none');
-                    if (!paypalRendered) {
-                        renderPaypal(response.order_id);
-                        paypalRendered = true;
-                    }
+
+                    $('#placeOrderBtn').hide();
+                    $('#payWithPaypal, #payWithRazorpay,#payWithStripe').removeClass('d-none');
+
+                    window.ORDER_ID = response.order_id;
                     $('#orderform')[0].reset();
                 }
             }, function(xhr) {
@@ -174,6 +223,79 @@
                 }
             });
         });
+
+        $('#payWithPaypal').on('click', function() {
+            $('#paypal-button-container').removeClass('d-none');
+
+            if (!paypalRendered) {
+                renderPaypal();
+                paypalRendered = true;
+            }
+        });
+
+        $('#payWithStripe').on('click', function() {
+
+            var formData = new FormData();
+            formData.append('order_id', window.ORDER_ID);
+            let url = "{{ route('stripe.create') }}";
+            reusableAjaxCall(
+                url,
+                'POST',
+                formData,
+                function(res) {
+                    window.location.href = res.url;
+                }
+            );
+        });
+
+
+        $('#payWithRazorpay').on('click', function() {
+
+            var formData = new FormData();
+            formData.append('order_id', window.ORDER_ID);
+            var url = "{{ route('Razorpayorder') }}";
+            reusableAjaxCall(url, 'POST', formData, function(res) {
+                let options = {
+                    "key": "{{ config('services.razorpay.key') }}",
+                    "amount": res.amount,
+                    "currency": "INR",
+                    "name": "Ecommerce",
+                    "description": "Order Payment",
+                    "order_id": res.razorpay_order_id,
+                    "handler": function(response) {
+
+                        var formData = new FormData();
+                        formData.append('order_id', window.ORDER_ID);
+                        formData.append('razorpay_payment_id', response
+                            .razorpay_payment_id);
+                        formData.append('razorpay_order_id', response
+                            .razorpay_order_id);
+                        formData.append('payment_method', 'razorpay');
+                        var url = "{{ route('Razorpaysuccess') }}";
+                        reusableAjaxCall(url, 'POST', formData, function(res) {
+                            if (res.status) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Payment Successful',
+                                    timer: 2500,
+                                    showConfirmButton: false
+                                });
+
+                                setTimeout(() => {
+                                    window.location
+                                        .href =
+                                        "{{ route('UserConfirmPage') }}";
+                                }, 2500);
+                            }
+                        });
+                    }
+                };
+
+                let rzp = new Razorpay(options);
+                rzp.open();
+            });
+        });
+
 
         function renderPaypal() {
             paypal.Buttons({
@@ -191,30 +313,26 @@
                         console.log(details);
                         let transactionId = details.purchase_units[0].payments.captures[0]
                             .id;
-                        $.ajax({
-                            url: "{{ route('PaypalSuccessPage') }}",
-                            method: "POST",
-                            data: {
-                                _token: "{{ csrf_token() }}",
-                                paypal_order_id: data.orderID,
-                                payment_status: details.status,
-                                transaction_id: transactionId,
-                                payment_method: 'paypal'
-                            },
-                            success: function(res) {
-                                if (res.status === true) {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Payment Successfull',
-                                        text: 'Please checked the OrderDetails...',
-                                        timer: 3000,
-                                        showConfirmButton: false
-                                    });
-                                    setTimeout(() => {
-                                        window.location.href =
-                                            "{{ route('UserConfirmPage') }}";
-                                    }, 3000);
-                                }
+
+                        var formData = new FormData();
+                        formData.append('paypal_order_id', data.orderID);
+                        formData.append('payment_status', details.status);
+                        formData.append('transaction_id', transactionId);
+                        formData.append('payment_method', 'paypal');
+                        var url = "{{ route('PaypalSuccessPage') }}";
+                        reusableAjaxCall(url, 'POST', formData, function(res) {
+                            if (res.status === true) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Payment Successfull',
+                                    text: 'Please checked the OrderDetails...',
+                                    timer: 3000,
+                                    showConfirmButton: false
+                                });
+                                setTimeout(() => {
+                                    window.location.href =
+                                        "{{ route('UserConfirmPage') }}";
+                                }, 3000);
                             }
                         });
                     });
