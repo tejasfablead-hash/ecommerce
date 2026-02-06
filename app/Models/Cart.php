@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @mixin IdeHelperCart
+ */
 class Cart extends Model
 {
     protected $table ="carts";

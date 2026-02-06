@@ -40,6 +40,15 @@ return [
         'secret' => env('PAYPAL_SECRET'),
         'mode' => env('PAYPAL_MODE'),
     ],
+    'razorpay' => [
+        'key' => env('RAZORPAY_KEY'),
+        'secret' => env('RAZORPAY_SECRET'),
+    ],
+    
+    'stripe' => [
+    'key' => env('STRIPE_KEY'),
+    'secret' => env('STRIPE_SECRET'),
+],
     'google' => [
         'client_id'     => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
@@ -49,14 +58,14 @@ return [
     'openai' => [
         'key' => env('OPENAI_API_KEY'),
     ],
- 'weather' => [
-    'key' => env('WEATHER_API_KEY'),
-],
-'twilio' => [
-    'sid'   => env('TWILIO_SID'),
-    'token' => env('TWILIO_TOKEN'),
-    'from'  => env('TWILIO_FROM'),
-],
+    'weather' => [
+        'key' => env('WEATHER_API_KEY'),
+    ],
+    'twilio' => [
+        'sid'   => env('TWILIO_SID'),
+        'token' => env('TWILIO_TOKEN'),
+        'from'  => env('TWILIO_FROM'),
+    ],
 
 
 ];

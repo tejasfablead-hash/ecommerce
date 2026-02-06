@@ -5,42 +5,51 @@
     <meta charset="utf-8">
     <title>Order Confirmation</title>
     <style>
-        body {
-            font-family: DejaVu Sans, sans-serif;
-            font-size: 13px;
-            color: #000;
-        }
+body {
+    font-family: DejaVu Sans, sans-serif;
+    font-size: 13px;
+    color: #000;
+}
 
-        h2,
-        h3 {
-            margin-bottom: 5px;
-        }
+h2, h3 {
+    margin-bottom: 5px;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
 
-        th,
-        td {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    vertical-align: top;
+}
 
-        th {
-            background-color: #f5f5f5;
-        }
+th {
+    background-color: #f5f5f5;
+}
 
-        .no-border td {
-            border: none;
-            padding: 3px 0;
-        }
+.no-border td {
+    border: none;
+    padding: 3px 0;
+}
 
-        .text-right {
-            text-align: right;
-        }
-    </style>
+.text-right {
+    text-align: right;
+}
+
+/* Fix long order numbers and transaction IDs */
+.fixed-width {
+    max-width: 180px;   /* Adjust as needed */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+}
+</style>
+
 </head>
 
 <body>
@@ -51,17 +60,24 @@
     <hr>
 
     <!-- ORDER INFO -->
-    <h3>Order Info</h3>
-    <table class="no-border">
-        <tr>
-            <td><strong>Transaction ID:</strong> {{ $order->transactionId }}</td>
-            <td><strong>Order Number:</strong> {{ $order->order_number }}</td>
-        </tr>
-        <tr>
-            <td><strong>Date:</strong> {{ $order->updated_at->format('d M Y') }}</td>
-            <td><strong>Total:</strong> ₹{{ number_format($order->grand_total, 2) }}</td>
-        </tr>
-    </table>
+   <h3>Order Info</h3>
+<table class="no-border">
+    <tr>
+        <td>
+            <strong>Transaction ID:</strong>
+            <span class="fixed-width">{{ $order->transactionId }}</span>
+        </td>
+        <td>
+            <strong>Order Number:</strong>
+            <span class="fixed-width">{{ $order->order_number }}</span>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>Date:</strong> {{ $order->updated_at->format('d M Y') }}</td>
+        <td><strong>Total:</strong> ₹{{ number_format($order->grand_total, 2) }}</td>
+    </tr>
+</table>
+
 
     <hr>
 

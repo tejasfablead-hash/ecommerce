@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Feedback;
 use App\Models\Order;
 use App\Models\Product;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -165,29 +166,44 @@ class ProductController extends Controller
         return view('Ecommerce.Pages.product', compact('product'));
     }
 
-    public function productdetail($id = null)
+    public function productdetail($id)
     {
-        $user = Auth::id();
-        $feedbackOrder = Order::where('user_id', $user)
-            ->where('order_status', 'delivered')
-            ->where('payment_status', 'paid')
-            ->where('feedback_given', false)
-            ->latest()
-            ->first();
+        $product = Product::findOrFail($id);
 
-        if (empty($id)) {
-            return view('Ecommerce.Pages.productdetail', [
-                'product' => null
-            ]);
+        $userId = Auth::id();
+
+        $feedbackOrder = null;
+
+        if ($userId) {
+            $feedbackOrder = Order::where('user_id', $userId)
+                ->whereIn('order_status', ['delivered', 'Delivered'])
+                ->where('payment_status', 'paid')
+                ->whereHas('orderitem', function ($q) use ($id) {
+                    $q->where('product_id', $id);
+                })
+                ->whereDoesntHave('getfeedback', function ($q) use ($id, $userId) {
+                    $q->where('product_id', $id)
+                        ->where('user_id', $userId);
+                })
+                ->latest()
+                ->first();
+
+            $canReview = $feedbackOrder ? true : false;
         }
-
-        $feedback = Feedback::all();
-
+        // dd($feedbackOrder);
+        $feedback = Feedback::where('product_id', $id)
+            ->with('user')
+            ->latest()
+            ->limit(5)
+            ->get();
         // dd($feedback);
-        $product = Product::find($id);
 
-        return view('Ecommerce.Pages.productdetail', compact('product', 'feedbackOrder', 'feedback'));
+        return view(
+            'Ecommerce.Pages.productdetail',
+            compact('product','canReview', 'feedbackOrder', 'feedback')
+        );
     }
+
     public function products()
     {
         $product = Product::orderBy('created_at', 'desc')

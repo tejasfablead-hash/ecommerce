@@ -15,18 +15,18 @@ use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RazorpayController;
 use App\Http\Controllers\ScraperController;
 use App\Http\Controllers\SocialLoginController;
+use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserChatController;
-use App\Http\Controllers\UserNotificationController;
 use App\Http\Controllers\WishlistsController;
-use App\Models\Category;
+
 use Illuminate\Support\Facades\Route;
 
 Route::get('/index', function () {
     return view('Admin.Pages.index');
 });
-
 
 Route::get('/', [AuthController::class, 'login'])->name('LoginPage');
 Route::post('/login', [AuthController::class, 'loginmatch'])->name('LoginMatchPage');
@@ -84,7 +84,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/order-status', [OrderController::class, 'updateorder'])->name('OrderUpdateOrderPage');
     Route::get('/order-details/{id}', [OrderController::class, 'details'])->name('OrderDetailViewPage');
     Route::get('/orders/notifications', [OrderController::class, 'getNotifications'])->name('OrdernotificationsPage');
- 
+
     Route::get('/chat', [DashboardController::class, 'chat'])->name('AdminChatPage');
     Route::get('/chat/{chatId}', [DashboardController::class, 'show'])->name('AdminchatShow');
     Route::post('/chat/send', [DashboardController::class, 'send'])->name('AdminchatSend');
@@ -135,11 +135,26 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::post('/cart/store-grand-total', [CheckoutController::class, 'storeGrandTotal'])
         ->name('UserCheckoutTotalPage');
     Route::post('/user/checkout', [OrderController::class, 'order'])->name('UserOrderPage');
-       Route::get('/order-pdf/{id}', [OrderController::class, 'downloadOrderPdf'])
+    Route::get('/order-pdf/{id}', [OrderController::class, 'downloadOrderPdf'])
         ->name('UserOrderPdf');
     Route::post('/paypal/success', [PaypalController::class, 'success'])
         ->name('PaypalSuccessPage');
     Route::get('/user/confirm', [PaypalController::class, 'confirm'])->name('UserConfirmPage');
+    Route::get('/user/order-view/{id}', [PaypalController::class, 'confirmview'])->name('UserConfirmViewPage');
+
+    Route::post('/razorpay/order', [RazorpayController::class, 'createRazorpayOrder'])
+        ->name('Razorpayorder');
+    Route::post('/razorpay/success', [RazorpayController::class, 'razorpaySuccess'])
+        ->name('Razorpaysuccess');
+    Route::post('/stripe/create-session', [StripeController::class, 'createSession'])
+        ->name('stripe.create');
+    Route::get('/stripe/success', [StripeController::class, 'success'])
+        ->name('stripe.success');
+    Route::get('/stripe/cancel', function () {
+        return redirect()->route('UserCheckoutPage')
+            ->with('error', 'Payment cancelled');
+    })->name('stripe.cancel');
+
 
     Route::get('/user/profile', [ProfileController::class, 'profile'])->name('UserProfilePage');
     Route::post('/user/update-profile', [ProfileController::class, 'update'])->name('UserEditProfilePage');
