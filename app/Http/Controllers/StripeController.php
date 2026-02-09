@@ -83,13 +83,14 @@ class StripeController extends Controller
             $sms->send(
                 $phone,
                 "✅ Payment Successful!
-Order No: {$order->order_number}
-Transaction No: {$order->transactionId}
-Amount Paid: ₹{$order->grand_total}"
-            );
+                Order No: {$order->order_number}
+                Transaction No: {$order->transactionId}
+                Amount Paid: ₹{$order->grand_total}"
+                            );
             session(['latest_paid_order_id' => $order->id]);
         }
 
         return redirect()->route('UserCheckoutPage', ['stripe' => 'success']);
     }
+    
 }

@@ -139,6 +139,72 @@ class OrderController extends Controller
         ]);
     }
 
+      public function placeCODOrder(Request $request)
+    {
+        $request->validate([
+            'order_id' => 'required|exists:orders,id'
+        ]);
+
+        $order = Order::with('orderitem.product')
+            ->where('id', $request->order_id)
+            ->where('user_id', Auth::id())
+            ->first();
+
+        if (!$order) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Order not found'
+            ], 404);
+        }
+
+        if ($order->payment_status !== 'pending') {
+            return response()->json([
+                'status' => false,
+                'message' => 'Order already processed'
+            ], 400);
+        }
+
+        $order->update([
+            'payment_method' => 'cod',
+            'payment_status' => 'pending', 
+            'order_status'   => 'confirmed'
+        ]);
+
+        foreach ($order->orderitem as $item) {
+
+            $product = $item->product;
+
+            if ($product->qty < $item->qty) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $product->name . ' is out of stock'
+                ], 400);
+            }
+
+            $product->decrement('qty', $item->qty);
+
+            if ($product->qty - $item->qty <= 0) {
+                $product->update(['status' => 'inactive']);
+            }
+        }
+
+        Cart::where('user_id', Auth::id())->delete();
+
+        session()->forget([
+            'subtotal',
+            'gstvalue',
+            'discountvalue',
+            'discountprice',
+            'grandtotal',
+            'order_id'
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'COD order placed successfully'
+        ]);
+    }
+
     public function updateorder(Request $request, SMSService $sms)
     {
         $order = Order::findOrFail($request->order_id);

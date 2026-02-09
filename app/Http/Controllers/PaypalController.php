@@ -102,7 +102,8 @@ class PaypalController extends Controller
         if ($userId) {
             $order = Order::with('orderitem.product')
                 ->where('user_id', $userId)
-                ->where('payment_status', 'paid')
+                ->orwhere('payment_status', 'paid')
+                ->where('order_status', 'confirmed')
                 ->latest()
                 ->first();
         }
@@ -118,9 +119,10 @@ class PaypalController extends Controller
         $order = Order::with('orderitem.product')
             ->where('id', $id)
             ->where('user_id', $userId)
-            ->where('payment_status', 'paid')
+            ->orwhere('payment_status', 'paid')
+            ->where('order_status', 'confirmed')
             ->latest()
             ->first();
-            return view('Ecommerce.Pages.confirm', compact('order'));
+        return view('Ecommerce.Pages.confirm', compact('order'));
     }
 }

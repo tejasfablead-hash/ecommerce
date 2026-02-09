@@ -18,9 +18,10 @@ class ProfileController extends Controller
         $user = Auth::id();
         if ($user == true) {
             $orders = Order::where('user_id', $user)
-                ->where('payment_status', 'paid')
+                ->orwhere('payment_status', 'paid')
+                ->where('order_status', 'confirmed')
                 ->latest()
-                ->limit(4)
+                ->limit(5)
                 ->with(['orderitem.product'])
                 ->get();
       

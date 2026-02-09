@@ -133,6 +133,9 @@
                                         Confirm Your Order
                                     </button>
 
+                                    <button class="primary-btn w-100 d-none border-0" id="payWithCOD">
+                                        Cash on Delivery
+                                    </button>
                                     <!-- Payment Buttons -->
                                     <button type="button" class="primary-btn w-100  d-none  border-0"
                                         id="payWithPaypal">
@@ -170,6 +173,16 @@
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <script src="{{ asset('ajax.js') }}"></script>
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'warning',
+                title: 'Payment Cancelled',
+                text: "{{ session('error') }}"
+            });
+        </script>
+    @endif
     <script>
         $(document).ready(function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -210,7 +223,8 @@
                     });
 
                     $('#placeOrderBtn').hide();
-                    $('#payWithPaypal, #payWithRazorpay,#payWithStripe').removeClass('d-none');
+                    $('#payWithCOD,#payWithPaypal, #payWithRazorpay,#payWithStripe')
+                        .removeClass('d-none');
 
                     window.ORDER_ID = response.order_id;
                     $('#orderform')[0].reset();
@@ -222,6 +236,21 @@
                         300);
                 }
             });
+        });
+        $('#payWithCOD').on('click', function() {
+            let formData = new FormData();
+            formData.append('order_id', window.ORDER_ID);
+            formData.append('payment_method', 'cod');
+            var url = "{{ route('CODOrderPlace') }}";
+            reusableAjaxCall(url, 'POST', formData, function(res) {
+                if (res.status) {
+                    Swal.fire('Success', 'Order placed with COD', 'success');
+                    setTimeout(() => {
+                        window.location.href = "{{ route('UserConfirmPage') }}";
+                    }, 2000);
+                }
+            });
+
         });
 
         $('#payWithPaypal').on('click', function() {
@@ -238,14 +267,9 @@
             var formData = new FormData();
             formData.append('order_id', window.ORDER_ID);
             let url = "{{ route('stripe.create') }}";
-            reusableAjaxCall(
-                url,
-                'POST',
-                formData,
-                function(res) {
-                    window.location.href = res.url;
-                }
-            );
+            reusableAjaxCall(url, 'POST', formData, function(res) {
+                window.location.href = res.url;
+            });
         });
 
 
@@ -295,7 +319,6 @@
                 rzp.open();
             });
         });
-
 
         function renderPaypal() {
             paypal.Buttons({

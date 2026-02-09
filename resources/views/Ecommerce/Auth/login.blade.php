@@ -60,6 +60,38 @@
         .social-btn.google i {
             color: #db4437;
         }
+
+        .google-login-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+
+            width: 100%;
+            height: 48px;
+
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            background: #fff;
+
+            font-size: 15px;
+            font-weight: 500;
+            color: #444;
+
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .google-login-btn i {
+            font-size: 18px;
+            color: #db4437;
+        }
+
+        .google-login-btn:hover {
+            background: #f5f5f5;
+            border-color: #292828;
+            color: #000;
+        }
     </style>
 </head>
 
@@ -104,7 +136,7 @@
                                             Remember Me
                                         </label>
                                     </div>
-                                    <a href="{{route('ForgotPage')}}" class="text-dark mb-3">
+                                    <a href="{{ route('ForgotPage') }}" class="text-dark mb-3">
                                         Forgot password?
                                     </a>
 
@@ -117,22 +149,13 @@
 
                         </form>
                         <br>
-                        <div class="d-flex justify-content-center align-item-center gap-4">
-                            <!-- Facebook -->
-                            <a href="" class="social-btn facebook" title="Login with Facebook">
-                                <i class="fa-brands fa-facebook-f"></i>
-                            </a>
-                            &nbsp;
-                            &nbsp;
-                            &nbsp;
-                            &nbsp;
-                            &nbsp;
-                            <!-- Google -->
-                            <a href="{{ route('GoggleLoginPage') }}" class="social-btn google"
-                                title="Login with Google">
+                        <div class="col-md-12  login_form form-group">
+                            <a href="{{ route('GoggleLoginPage') }}" class="google-login-btn">
                                 <i class="fa-brands fa-google"></i>
+                                Continue with Google
                             </a>
                         </div>
+
                     </div>
                 </div>
             </div>

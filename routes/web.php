@@ -137,6 +137,9 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::post('/user/checkout', [OrderController::class, 'order'])->name('UserOrderPage');
     Route::get('/order-pdf/{id}', [OrderController::class, 'downloadOrderPdf'])
         ->name('UserOrderPdf');
+    Route::post('/order/cod', [OrderController::class, 'placeCODOrder'])
+        ->name('CODOrderPlace');
+
     Route::post('/paypal/success', [PaypalController::class, 'success'])
         ->name('PaypalSuccessPage');
     Route::get('/user/confirm', [PaypalController::class, 'confirm'])->name('UserConfirmPage');
@@ -152,7 +155,7 @@ Route::middleware(['auth', 'user'])->group(function () {
         ->name('stripe.success');
     Route::get('/stripe/cancel', function () {
         return redirect()->route('UserCheckoutPage')
-            ->with('error', 'Payment cancelled');
+            ->with('error', 'Payment cancelled. You can try again.');
     })->name('stripe.cancel');
 
 
