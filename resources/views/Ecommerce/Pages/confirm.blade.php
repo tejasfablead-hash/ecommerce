@@ -20,7 +20,7 @@
     <section class="order_details section_gap">
         <div class="container">
             {{-- <h3 class="title_confirmation">Thank you. Your order has been received.</h3> --}}
-            @if (isset($order) && $order)
+            @if (isset($order))
                 <h3 class="title_confirmation text-success d-none">
                     @if ($order->order_status === 'confirmed')
                         Thank you. Your payment was successful and order has been placed.
@@ -44,7 +44,7 @@
                         <div class="details_item ">
                             <ul class="list text-capitalize">
                                 <li><a href="javascript:void(0)"><span>Transaction Id</span> :
-                                        {{\Illuminate\Support\Str::limit( $order->transactionId,20,'..') }}</a></li>
+                                        {{\Illuminate\Support\Str::limit( $order->transactionId,20,'..') ?? '-'}}</a></li>
                                 <li><a href="javascript:void(0)"><span>Order number</span> : {{\Illuminate\Support\Str::limit( $order->order_number,20,'..') }}</a>
                                 </li>
                                 <li><a href="javascript:void(0)"><span>Date</span> :
