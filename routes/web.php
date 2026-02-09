@@ -21,7 +21,7 @@ use App\Http\Controllers\SocialLoginController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserChatController;
 use App\Http\Controllers\WishlistsController;
-
+use App\Mail\TestEmail;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/index', function () {
@@ -171,4 +171,9 @@ Route::middleware(['auth', 'user'])->group(function () {
 
     Route::post('/ai/chat', [AIChatController::class, 'ask']);
     Route::get('/weather', [ApiController::class, 'weather']);
+
+    Route::get('user/send-email', function() {
+    Mail::to('tejasfablead@gmail.com')->send(new TestEmail('Tejas Patel'));
+    return "Email sent successfully!";
+});
 });
