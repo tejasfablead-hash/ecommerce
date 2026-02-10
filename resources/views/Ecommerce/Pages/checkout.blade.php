@@ -216,14 +216,14 @@
                 if (response.status === true) {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Order Confirmed',
+                        title: 'Order Confirmed to Check Payment',
                         text: 'Choose payment method',
                         timer: 2000,
                         showConfirmButton: false
                     });
 
                     $('#placeOrderBtn').hide();
-                    $('#payWithCOD,#payWithPaypal, #payWithRazorpay,#payWithStripe')
+                    $('#payWithCOD,#payWithPaypal,#payWithRazorpay,#payWithStripe')
                         .removeClass('d-none');
 
                     window.ORDER_ID = response.order_id;
@@ -243,14 +243,18 @@
             formData.append('payment_method', 'cod');
             var url = "{{ route('CODOrderPlace') }}";
             reusableAjaxCall(url, 'POST', formData, function(res) {
-                if (res.status) {
-                    Swal.fire('Success', 'Order placed with COD', 'success');
+                if (res.status  === true) {
+                        Swal.fire({
+                        icon: 'success',
+                        title: 'Order Confirmed with COD',
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
                     setTimeout(() => {
                         window.location.href = "{{ route('UserConfirmPage') }}";
                     }, 2000);
                 }
             });
-
         });
 
         $('#payWithPaypal').on('click', function() {
@@ -271,7 +275,6 @@
                 window.location.href = res.url;
             });
         });
-
 
         $('#payWithRazorpay').on('click', function() {
 
@@ -376,6 +379,7 @@
                 }
             }).render('#paypal-button-container');
         }
+
         $('#continueShopping').on('click', function() {
             window.location.href = "{{ route('UserContinueShopping') }}";
         });

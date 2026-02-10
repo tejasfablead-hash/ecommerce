@@ -13,6 +13,18 @@ class Authenticate
      */
     public function handle(Request $request, Closure $next, ...$guards)
     {
+        
+       if ($request->is('api/*')) {
+            if (! Auth::guard('sanctum')->check()) {
+                return response()->json([
+                    'message' => 'Unauthenticated.'
+                ], 401);
+            }
+
+            Auth::shouldUse('sanctum');
+            return $next($request);
+        }
+
             if (!Auth::check()) {
             if ($request->expectsJson()) {
                 return response()->json(['message' => 'Unauthenticated.'], 401);

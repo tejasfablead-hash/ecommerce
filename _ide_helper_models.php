@@ -13,6 +13,7 @@
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperAiChatMessage
  * @property int $id
  * @property int|null $user_id
  * @property string $message
@@ -28,14 +29,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AiChatMessage whereReply($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AiChatMessage whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AiChatMessage whereUserId($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperAiChatMessage {}
+	class AiChatMessage extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperCart
  * @property int $id
  * @property int $user_id
  * @property int $product_id
@@ -53,14 +53,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Cart whereQty($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Cart whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Cart whereUserId($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperCart {}
+	class Cart extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperCategory
  * @property int $id
  * @property int|null $parent_id
  * @property string $name
@@ -77,14 +76,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Category whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Category whereParentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Category whereUpdatedAt($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperCategory {}
+	class Category extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperChatMessage
  * @property int $id
  * @property int $sender_id
  * @property int $receiver_id
@@ -104,25 +102,23 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatMessage whereReceiverId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatMessage whereSenderId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatMessage whereUpdatedAt($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperChatMessage {}
+	class ChatMessage extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperCheckout
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Checkout newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Checkout newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Checkout query()
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperCheckout {}
+	class Checkout extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperEvent
  * @property int $id
  * @property string $title
  * @property string|null $description
@@ -141,14 +137,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Event whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Event whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Event whereUserId($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperEvent {}
+	class Event extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperFeedback
  * @property int $id
  * @property int $order_id
  * @property int $user_id
@@ -170,14 +165,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Feedback whereRating($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Feedback whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Feedback whereUserId($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperFeedback {}
+	class Feedback extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperOrder
  * @property int $id
  * @property int $user_id
  * @property string $order_number
@@ -227,14 +221,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereTransactionId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereUserId($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperOrder {}
+	class Order extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperOrderItem
  * @property int $id
  * @property int $order_id
  * @property int $product_id
@@ -256,14 +249,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|OrderItem whereQty($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|OrderItem whereTotal($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|OrderItem whereUpdatedAt($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperOrderItem {}
+	class OrderItem extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperParentCategory
  * @property int $id
  * @property string $category
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -275,14 +267,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ParentCategory whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ParentCategory whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ParentCategory whereUpdatedAt($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperParentCategory {}
+	class ParentCategory extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperPasswordReset
  * @property string $email
  * @property string $token
  * @property string|null $created_at
@@ -292,14 +283,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PasswordReset whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PasswordReset whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PasswordReset whereToken($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperPasswordReset {}
+	class PasswordReset extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperProduct
  * @property int $id
  * @property int $category_id
  * @property string $name
@@ -329,14 +319,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereQty($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereUpdatedAt($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperProduct {}
+	class Product extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperUser
  * @property int $id
  * @property string $name
  * @property string $role User role: admin, vendor, customer
@@ -379,14 +368,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereRole($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUpdatedAt($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperUser {}
+	class User extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperWishlist
  * @property int $id
  * @property int $user_id
  * @property int $product_id
@@ -402,9 +390,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Wishlist whereProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Wishlist whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Wishlist whereUserId($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperWishlist {}
+	class Wishlist extends \Eloquent {}
 }
 

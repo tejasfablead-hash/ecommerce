@@ -172,8 +172,4 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::post('/ai/chat', [AIChatController::class, 'ask']);
     Route::get('/weather', [ApiController::class, 'weather']);
 
-    Route::get('user/send-email', function() {
-    Mail::to('tejasfablead@gmail.com')->send(new TestEmail('Tejas Patel'));
-    return "Email sent successfully!";
-});
 });

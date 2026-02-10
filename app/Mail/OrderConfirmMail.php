@@ -8,18 +8,22 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Mail\Mailables\Attachment;
 
-class TestEmail extends Mailable
+
+class OrderConfirmMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-     public $name;
-    public function __construct($name)
+
+    public $order;
+    public function __construct($order)
     {
-       $this->name = $name;
+       $this->order = $order;
     }
 
     /**
@@ -28,7 +32,7 @@ class TestEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Test Email from Karma Shop',
+            subject: 'Order Confirmed Successfully',
         );
     }
 
@@ -38,10 +42,7 @@ class TestEmail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'Email.testemail',
-            with: [
-                'name' => $this->name, // pass variables to Blade
-            ],
+            view: 'Email.orderemail',
         );
     }
 
@@ -52,6 +53,14 @@ class TestEmail extends Mailable
      */
     public function attachments(): array
     {
-        return [];
+        $pdf = Pdf::loadView(
+        'Ecommerce.Pages.order-pdf',
+        ['order' => $this->order]
+    );
+        return [
+            Attachment::fromData(fn() => $pdf->output(), 'order_' . $this->order->order_number . '.pdf')
+                ->withMime('application/pdf'),
+        ];
+
     }
 }

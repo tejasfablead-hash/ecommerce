@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderConfirmMail;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Services\SMSService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Razorpay\Api\Api;
 
 class RazorpayController extends Controller
@@ -58,6 +60,11 @@ class RazorpayController extends Controller
             'payment_status' => 'paid',
             'order_status' => 'confirmed'
         ]);
+        Mail::to($order->email)->send(new OrderConfirmMail($order));
+           Mail::mailer('mailtrap')
+            ->to($order->email)
+            ->send(new OrderConfirmMail($order));
+
 
          foreach ($order->orderitem as $item) {
 
