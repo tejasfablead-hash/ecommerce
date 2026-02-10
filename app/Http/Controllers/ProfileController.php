@@ -16,16 +16,15 @@ class ProfileController extends Controller
     public function profile()
     {
         $user = Auth::id();
-        if ($user == true) {
-            $orders = Order::where('user_id', $user)
-                ->orwhere('payment_status', 'paid')
-                ->where('order_status', 'confirmed')
-                ->latest()
-                ->limit(5)
-                ->with(['orderitem.product'])
-                ->get();
-      
-        }
+
+        $orders = Order::where('user_id', $user)
+            // ->orwhere('payment_status', 'paid')
+            ->whereIn('order_status', ['confirmed','shipped', 'delivered', 'cancelled','pending'])
+            ->latest()
+            ->limit(5)
+            ->with(['orderitem.product'])
+            ->get();
+
         return view('Ecommerce.Pages.profile', compact(
             'orders'
         ));
@@ -33,6 +32,7 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
+        // dd($request->all());
         $id = Auth::id();
         $updateuser = User::where('id', $id)->first();
         $newimage = $updateuser->image;
@@ -44,6 +44,7 @@ class ProfileController extends Controller
                 'email',
                 Rule::unique('users', 'email')->ignore($updateuser->id),
             ],
+            'address' => 'required|min:2',
             'phone'    => 'required|digits:10',
             'image'    => 'image|mimes:jpg,jpeg,png|max:2048',
         ]);
@@ -69,6 +70,7 @@ class ProfileController extends Controller
                 'email' => $request->email,
                 'phone' => $request->phone,
                 'image' => $newimage,
+                'address' => $request->address,
             ]);
 
             return response()->json([
@@ -85,49 +87,49 @@ class ProfileController extends Controller
         }
     }
     public function feedback(Request $request)
-{
-    $userId = Auth::id();
+    {
+        $userId = Auth::id();
 
-    $validator = Validator::make($request->all(), [
-        'order_id'   => 'required|exists:orders,id',
-        'product_id' => 'required|exists:products,id',
-        'rating'     => 'required|integer|min:1|max:5',
-        'message'    => 'required|string',
-    ]);
+        $validator = Validator::make($request->all(), [
+            'order_id'   => 'required|exists:orders,id',
+            'product_id' => 'required|exists:products,id',
+            'rating'     => 'required|integer|min:1|max:5',
+            'message'    => 'required|string',
+        ]);
 
-    if ($validator->fails()) {
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $alreadyGiven = Feedback::where([
+            'order_id'   => $request->order_id,
+            'product_id' => $request->product_id,
+            'user_id'    => $userId,
+        ])->exists();
+
+        if ($alreadyGiven) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Feedback already submitted for this product'
+            ], 409);
+        }
+
+        Feedback::create([
+            'order_id'   => $request->order_id,
+            'user_id'    => $userId,
+            'product_id' => $request->product_id,
+            'rating'     => $request->rating,
+            'message'    => $request->message,
+        ]);
+
         return response()->json([
-            'status' => false,
-            'errors' => $validator->errors()
-        ], 422);
+            'status' => true,
+            'message' => 'Feedback submitted successfully'
+        ], 201);
     }
-
-    $alreadyGiven = Feedback::where([
-        'order_id'   => $request->order_id,
-        'product_id' => $request->product_id,
-        'user_id'    => $userId,
-    ])->exists();
-
-    if ($alreadyGiven) {
-        return response()->json([
-            'status' => false,
-            'message' => 'Feedback already submitted for this product'
-        ], 409);
-    }
-
-    Feedback::create([
-        'order_id'   => $request->order_id,
-        'user_id'    => $userId,
-        'product_id' => $request->product_id,
-        'rating'     => $request->rating,
-        'message'    => $request->message,
-    ]);
-
-    return response()->json([
-        'status' => true,
-        'message' => 'Feedback submitted successfully'
-    ], 201);
-}
 
 
     public function viewfeedback()

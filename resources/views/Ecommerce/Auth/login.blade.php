@@ -131,7 +131,8 @@
                                 <div class="d-flex align-items-center justify-content-between">
 
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="rememberMe">
+                                        <input type="checkbox" class="custom-control-input" id="rememberMe"
+                                            name="remember" value="1">
                                         <label class="custom-control-label" for="rememberMe">
                                             Remember Me
                                         </label>

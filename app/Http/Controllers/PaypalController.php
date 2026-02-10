@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderConfirmMail;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Services\SMSService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class PaypalController extends Controller
 {
@@ -39,6 +41,11 @@ class PaypalController extends Controller
             'payment_status' => 'paid',
             'order_status' => 'confirmed'
         ]);
+        Mail::to($order->email)->send(new OrderConfirmMail($order));
+        Mail::mailer('mailtrap')
+            ->to($order->email)
+            ->send(new OrderConfirmMail($order));
+
         session(['latest_paid_order_id' => $order->id]);
 
         foreach ($order->orderitem as $item) {
@@ -102,8 +109,8 @@ class PaypalController extends Controller
         if ($userId) {
             $order = Order::with('orderitem.product')
                 ->where('user_id', $userId)
-                ->orwhere('payment_status', 'paid')
-                ->where('order_status', 'confirmed')
+                // ->orwhere('payment_status', 'paid')
+                ->whereIn('order_status', ['confirmed', 'delivered'])
                 ->latest()
                 ->first();
         }
@@ -119,8 +126,8 @@ class PaypalController extends Controller
         $order = Order::with('orderitem.product')
             ->where('id', $id)
             ->where('user_id', $userId)
-            ->orwhere('payment_status', 'paid')
-            ->where('order_status', 'confirmed')
+            // ->orwhere('payment_status', 'paid')
+            ->whereIn('order_status', ['confirmed', 'delivered'])
             ->latest()
             ->first();
         return view('Ecommerce.Pages.confirm', compact('order'));

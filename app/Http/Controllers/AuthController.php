@@ -49,7 +49,7 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (!Auth::attempt($credentials, $request->boolean('remember'))) {
-            RateLimiter::hit($key, 300); // 300 sec = 5 min
+            RateLimiter::hit($key, 300); 
 
             return response()->json([
                 'status' => false,
@@ -57,7 +57,6 @@ class AuthController extends Controller
             ], 401);
         }
 
-        // ✅ Correct login → reset attempts
         RateLimiter::clear($key);
 
         $request->session()->regenerate();

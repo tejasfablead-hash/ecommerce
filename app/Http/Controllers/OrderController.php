@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderConfirmMail;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -13,6 +14,7 @@ use Illuminate\Support\Str;
 use App\Services\SMSService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -46,7 +48,7 @@ class OrderController extends Controller
             ], 422);
         }
         $order = Order::create([
-            'user_id'           =>$request->userid,
+            'user_id'           => $request->userid,
             'order_number'   => 'TMP-' . time(),
             'subtotal'          => session('subtotal'),
             'discount_percent'  => session('discountvalue'),
@@ -80,7 +82,7 @@ class OrderController extends Controller
 
         $sms->send(
             $phone,
-            "✅ Order Confirmed Successfully!
+            "✅ Order Confirmed To Shopping!
             Order No: {$order->order_number}
             Amount: ₹{$order->grand_total}
             Thank you for shopping with us. "
@@ -104,9 +106,9 @@ class OrderController extends Controller
                 $q->where('order_status', $status);
             })
             ->latest()
-            ->get(); // DataTable ke saath paginate mat use karo
+            ->get();
 
-     
+
         return view('Admin.Order.view', compact('order'));
     }
     public function details($id)
@@ -139,7 +141,7 @@ class OrderController extends Controller
         ]);
     }
 
-      public function placeCODOrder(Request $request)
+    public function placeCODOrder(Request $request, SMSService $sms)
     {
         $request->validate([
             'order_id' => 'required|exists:orders,id'
@@ -166,9 +168,14 @@ class OrderController extends Controller
 
         $order->update([
             'payment_method' => 'cod',
-            'payment_status' => 'pending', 
+            'payment_status' => 'pending',
             'order_status'   => 'confirmed'
         ]);
+
+        Mail::to($order->email)->send(new OrderConfirmMail($order));
+        Mail::mailer('mailtrap')
+            ->to($order->email)
+            ->send(new OrderConfirmMail($order));
 
         foreach ($order->orderitem as $item) {
 
@@ -199,6 +206,18 @@ class OrderController extends Controller
             'order_id'
         ]);
 
+        $phone = $order->phone;
+        if (!str_starts_with($phone, '+')) {
+            $phone = '+91' . $phone;
+        }
+
+        $sms->send(
+            $phone,
+            "✅ Order Confirmed with COD!
+            Order No: {$order->order_number}
+            Amount: ₹{$order->grand_total}
+            Thank you for shopping with us. "
+        );
         return response()->json([
             'status' => true,
             'message' => 'COD order placed successfully'
@@ -209,7 +228,7 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($request->order_id);
 
-        if (in_array($order->order_status, ['delivered', 'cancelled'])) {
+        if (in_array($order->order_status, ['delivered', 'cancelled']) && $order->order_status !== $request->order_status) {
             return response()->json([
                 'status' => false,
                 'message' => 'Delivered order cannot be changed'
@@ -226,8 +245,19 @@ class OrderController extends Controller
             'order_status'   => $request->order_status,
             'payment_status' => $paymentStatus
         ]);
+        Mail::to($order->email)->send(new OrderConfirmMail($order));
+           Mail::mailer('mailtrap')
+            ->to($order->email)
+            ->send(new OrderConfirmMail($order));
 
-        $phone = str_starts_with($order->phone, '+') ? $order->phone : '+91' . $order->phone;
+
+        $phone = preg_replace('/\D/', '', $order->phone);
+        if (strlen($phone) === 10) {
+            $phone = '+91' . $phone;
+        } elseif (strlen($phone) === 12 && str_starts_with($phone, '91')) {
+            $phone = '+' . $phone;
+        }
+
         $message = null;
         if ($request->order_status === 'delivered') {
 
@@ -252,9 +282,8 @@ class OrderController extends Controller
             };
         }
 
-        if (!empty($message)) {
-            $sms->send($phone, $message);
-        }
+        $sms->send($phone, $message);
+
         return response()->json([
             'status' => true,
             'message' => 'Order status updated successfully'
@@ -262,13 +291,13 @@ class OrderController extends Controller
     }
 
     public function downloadOrderPdf($id)
-{
-    $order = Order::with(['orderitem.product', 'getcustomer'])
-        ->where('user_id', Auth::user()->id)
-        ->findOrFail($id);
+    {
+        $order = Order::with(['orderitem.product', 'getcustomer'])
+            ->where('user_id', Auth::user()->id)
+            ->findOrFail($id);
 
-    $pdf = Pdf::loadView('Ecommerce.Pages.order-pdf', compact('order'));
+        $pdf = Pdf::loadView('Ecommerce.Pages.order-pdf', compact('order'));
 
-    return $pdf->download('Order_'.$order->order_number.'.pdf');
-}
+        return $pdf->download('Order_' . $order->order_number . '.pdf');
+    }
 }

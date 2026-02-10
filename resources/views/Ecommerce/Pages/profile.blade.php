@@ -115,7 +115,6 @@
                                             <input type="text" name="phone" class="form-control"
                                                 value="{{ Auth::user()->phone }}">
                                             <small class="text-danger error" id="phone_error"></small>
-
                                         </div>
 
                                         <!-- Image Upload -->
@@ -123,9 +122,15 @@
                                             <label class="form-label fw-semibold">Profile Image</label>
                                             <input type="file" name="image" class="form-control">
                                             <small class="text-danger error" id="image_error"></small>
-
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold">Adress</label>
+                                            <input type="text" name="address" class="form-control"
+                                                placeholder="Enter address">
+                                            <small class="text-danger error" id="address_error"></small>
                                         </div>
                                     </div>
+                                    
                                 </div>
 
                                 <!-- Footer Actions -->

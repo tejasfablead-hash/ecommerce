@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderConfirmMail;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Services\SMSService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Stripe\Stripe;
 use Stripe\Checkout\Session as StripeSession;
 
@@ -60,6 +62,11 @@ class StripeController extends Controller
                 'order_number' => $session->id,
                 'order_status' => 'confirmed',
             ]);
+            Mail::to($order->email)->send(new OrderConfirmMail($order));
+            Mail::mailer('mailtrap')
+                ->to($order->email)
+                ->send(new OrderConfirmMail($order));
+
 
             foreach ($order->orderitem as $item) {
                 $product = $item->product;
@@ -86,11 +93,10 @@ class StripeController extends Controller
                 Order No: {$order->order_number}
                 Transaction No: {$order->transactionId}
                 Amount Paid: ₹{$order->grand_total}"
-                            );
+            );
             session(['latest_paid_order_id' => $order->id]);
         }
 
         return redirect()->route('UserCheckoutPage', ['stripe' => 'success']);
     }
-    
 }
