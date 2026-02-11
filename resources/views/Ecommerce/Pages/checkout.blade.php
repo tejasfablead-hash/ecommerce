@@ -196,7 +196,7 @@
                 });
 
                 setTimeout(() => {
-                    window.location.href = "{{ route('UserCheckoutPage') }}";
+                    window.location.href = "{{ route('UserConfirmPage') }}";
                 }, 2500);
             }
         });
@@ -266,15 +266,28 @@
             }
         });
 
-        $('#payWithStripe').on('click', function() {
+       $('#payWithStripe').on('click', function() {
 
-            var formData = new FormData();
-            formData.append('order_id', window.ORDER_ID);
-            let url = "{{ route('stripe.create') }}";
-            reusableAjaxCall(url, 'POST', formData, function(res) {
-                window.location.href = res.url;
-            });
+    if (!window.ORDER_ID) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Order not created',
+            text: 'Please confirm order first'
         });
+        return;
+    }
+
+    var formData = new FormData();
+    formData.append('order_id', window.ORDER_ID);
+
+    let url = "{{ route('stripe.create') }}";
+
+    reusableAjaxCall(url, 'POST', formData, function(res) {
+        console.log('Stripe Create Response:', res);
+        window.location.href = res.checkout_url;
+    });
+});
+
 
         $('#payWithRazorpay').on('click', function() {
 

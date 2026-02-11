@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\OrderConfirmMail;
-use App\Models\Cart;
 use App\Models\Order;
-use App\Services\SMSService;
+use App\Models\Cart;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
 use Stripe\Stripe;
 use Stripe\Checkout\Session as StripeSession;
+use Stripe\Webhook;
 
 class StripeController extends Controller
 {
@@ -17,12 +16,11 @@ class StripeController extends Controller
     {
         Stripe::setApiKey(config('services.stripe.secret'));
 
-        $order = Order::with('orderitem.product')->findOrFail($request->order_id);
-
-        $productNames = $order->orderitem
-            ->map(fn($item) => $item->product->name)
-            ->implode(', ');
-
+        $order = Order::with('orderitem.product')
+            ->where('id', $request->order_id)
+            ->where('payment_status', 'pending')
+            ->firstOrFail();
+        $productNames = $order->orderitem->map(fn($item) => $item->product->name)->implode(', ');
         $session = StripeSession::create([
             'payment_method_types' => ['card'],
             'line_items' => [[
@@ -39,64 +37,80 @@ class StripeController extends Controller
             'metadata' => [
                 'order_id' => $order->id,
             ],
-            'success_url' => route('stripe.success') . '?session_id={CHECKOUT_SESSION_ID}',
-            'cancel_url' => route('stripe.cancel'),
+            'success_url' => route('stripe.success'),
+            'cancel_url'  => route('stripe.cancel'),
         ]);
 
-        return response()->json(['url' => $session->url]);
+        return response()->json([
+            'status' => true,
+            'checkout_url' => $session->url
+        ]);
     }
 
 
-    public function success(Request $request, SMSService $sms)
+    public function success()
     {
-        Stripe::setApiKey(config('services.stripe.secret'));
-        $session = StripeSession::retrieve($request->session_id);
-        $orderId = $session->metadata->order_id;
-        $order = Order::with('orderitem.product')->findOrFail($orderId);
-
-        if ($order->payment_status !== 'paid') {
-            $order->update([
-                'payment_status' => 'paid',
-                'payment_method' => 'stripe',
-                'transactionId' => $session->payment_intent,
-                'order_number' => $session->id,
-                'order_status' => 'confirmed',
-            ]);
-            Mail::to($order->email)->send(new OrderConfirmMail($order));
-            Mail::mailer('mailtrap')
-                ->to($order->email)
-                ->send(new OrderConfirmMail($order));
+        return redirect()->route('UserCheckoutPage', [
+            'stripe' => 'success'
+        ]);
+    }
 
 
-            foreach ($order->orderitem as $item) {
-                $product = $item->product;
-                $product->decrement('qty', $item->qty);
-                if ($product->qty <= 0) {
-                    $product->update(['status' => 'inactive']);
-                }
-            }
+    public function cancel()
+    {
+        return redirect()->route('UserCheckoutPage', [
+            'stripe' => 'cancel'
+        ]);
+    }
 
-            Cart::where('user_id', $order->user_id)->delete();
-            session()->forget([
-                'subtotal',
-                'gstvalue',
-                'discountvalue',
-                'discountprice',
-                'grandtotal',
-                'order_id'
-            ]);
+    public function handle(Request $request)
+    {
+        $payload = $request->getContent();
+        $signature = $request->header('Stripe-Signature');
+        $secret = config('services.stripe.webhook_secret');
 
-            $phone = str_starts_with($order->phone, '+') ? $order->phone : '+91' . $order->phone;
-            $sms->send(
-                $phone,
-                "✅ Payment Successful!
-                Order No: {$order->order_number}
-                Transaction No: {$order->transactionId}
-                Amount Paid: ₹{$order->grand_total}"
-            );
-            session(['latest_paid_order_id' => $order->id]);
+        try {
+            $event = Webhook::constructEvent($payload, $signature, $secret);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Invalid signature'], 400);
         }
 
-        return redirect()->route('UserCheckoutPage', ['stripe' => 'success']);
+        if ($event->type === 'checkout.session.completed') {
+
+            $session = $event->data->object;
+            $orderId = $session->metadata->order_id ?? null;
+
+            $order = Order::with('orderitem.product')->find($orderId);
+
+            if ($order && $order->payment_status !== 'paid') {
+
+                DB::transaction(function () use ($order, $session) {
+
+                    $order->update([
+                        'order_number' => $session->id,
+                        'payment_status' => 'paid',
+                        'payment_method' => 'stripe',
+                        'transactionId'  => $session->payment_intent,
+                        'order_status'   => 'confirmed',
+                    ]);
+
+                    foreach ($order->orderitem as $item) {
+                        if ($item->product) {
+                            $item->product->decrement('qty', $item->qty);
+
+                            if ($item->product->qty <= 0) {
+                                $item->product->update(['status' => 'inactive']);
+                            }
+                        }
+                    }
+
+                    Cart::where('user_id', $order->user_id)->delete();
+                    
+                });
+
+            }
+        }
+
+        return response()->json(['status' => 'success']);
     }
 }

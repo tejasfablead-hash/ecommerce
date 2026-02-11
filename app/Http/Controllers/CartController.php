@@ -87,8 +87,6 @@ class CartController extends Controller
         return redirect()->route('UserCartPage');
     }
 
-
-
     public function update(Request $request)
     {
 
