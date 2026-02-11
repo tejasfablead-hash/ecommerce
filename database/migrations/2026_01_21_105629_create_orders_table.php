@@ -14,15 +14,12 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
           $table->id();
 
-            // User
             $table->foreignId('user_id')
                   ->constrained()
                   ->cascadeOnDelete();
 
-            // Order Info
             $table->string('order_number')->unique();
 
-            // Pricing
             $table->decimal('subtotal', 10, 2);
             $table->decimal('discount_percent', 5, 2)->default(0);
             $table->decimal('discount_amount', 10, 2)->default(0);
@@ -30,12 +27,10 @@ return new class extends Migration
             $table->decimal('gst_amount', 10, 2)->default(0);
             $table->decimal('grand_total', 10, 2);
 
-            // Payment
             $table->enum('payment_method', ['cod', 'paypal', 'razorpay','stripe'])->nullable();
-            $table->enum('payment_status', ['pending', 'paid', 'failed'])
+            $table->enum('payment_status', ['pending', 'paid', 'failed','refunded'])
                   ->default('pending');
 
-            // Order Status
             $table->enum('order_status', [
                 'pending',
                 'confirmed',
@@ -44,7 +39,6 @@ return new class extends Migration
                 'cancelled'
             ])->default('pending');
 
-            // Address snapshot
             $table->string('customer_name');
             $table->string('email');
             $table->string('phone');

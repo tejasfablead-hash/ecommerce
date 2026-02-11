@@ -200,14 +200,73 @@ class ProductController extends Controller
 
         return view(
             'Ecommerce.Pages.productdetail',
-            compact('product','canReview', 'feedbackOrder', 'feedback')
+            compact('product', 'canReview', 'feedbackOrder', 'feedback')
         );
     }
 
-    public function products()
+    public function products(Request $request)
     {
-        $product = Product::orderBy('created_at', 'desc')
-            ->get();
-        return view('Ecommerce.Pages.product', compact('product'));
+        $query = Product::query()->where('status', 'active');
+
+        if ($request->filled('category')) {
+            $query->whereHas('getcategory', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->category . '%');
+            });
+        }
+
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->min_price);
+        }
+
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->max_price);
+        }
+
+        if ($request->filled('discount')) {
+            $query->where('discount', '>=', $request->discount);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%$search%")
+                    ->orWhere('description', 'like', "%$search%");
+            });
+        }
+
+        if ($request->filled('sort_by')) {
+
+            switch ($request->sort_by) {
+
+                case 'price_low_high':
+                    $query->orderBy('discount_value', 'asc');
+                    break;
+
+                case 'price_high_low':
+                    $query->orderBy('discount_value', 'desc');
+                    break;
+
+                case 'newest':
+                    $query->orderBy('created_at', 'desc');
+                    break;
+
+                case 'oldest':
+                    $query->orderBy('created_at', 'asc');
+                    break;
+
+                case 'discount_high':
+                    $query->orderBy('discount', 'desc');
+                    break;
+
+                default:
+                    $query->orderBy('created_at', 'desc');
+                    break;
+            }
+        }
+
+        $product = $query->get();
+        $categories = Category::all();
+
+        return view('Ecommerce.Pages.product', compact('product', 'categories'));
     }
 }

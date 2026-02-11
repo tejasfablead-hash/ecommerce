@@ -153,10 +153,9 @@ Route::middleware(['auth', 'user'])->group(function () {
         ->name('stripe.create');
     Route::get('/stripe/success', [StripeController::class, 'success'])
         ->name('stripe.success');
-    Route::get('/stripe/cancel', function () {
-        return redirect()->route('UserCheckoutPage')
-            ->with('error', 'Payment cancelled. You can try again.');
-    })->name('stripe.cancel');
+        
+    Route::get('/stripe/cancel', [StripeController::class, 'cancel'])->name('stripe.cancel');
+    // Route::post('/stripe/webhook', [StripeController::class, 'handle']);
 
 
     Route::get('/user/profile', [ProfileController::class, 'profile'])->name('UserProfilePage');
@@ -171,5 +170,4 @@ Route::middleware(['auth', 'user'])->group(function () {
 
     Route::post('/ai/chat', [AIChatController::class, 'ask']);
     Route::get('/weather', [ApiController::class, 'weather']);
-
 });

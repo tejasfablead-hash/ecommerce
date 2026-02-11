@@ -54,14 +54,14 @@
                                                 <tr class="single-item ">
                                                     <td class="text-capitalize">{{ $item->getorder->order_number }}</td>
 
-                                                    <td class="text-capitalize">{{ $item->name }}</td>
-                                                    <td>{{ $item->email }}</td>
+                                                    <td class="text-capitalize">{{ $item->user->name }}</td>
+                                                    <td>{{ $item->user->email }}</td>
                                                     <td class="text-capitalize">
                                                         @for ($i = 1; $i <= 5; $i++)
-                                                            @if ($i <= $item->subject)
+                                                            @if ($i <= $item->rating)
                                                                 <span style="color:#0c0c0b;font-size:18px;">★</span>
                                                             @else
-                                                                <span style="color:#ddd;font-size:18px;">★</span>
+                                                                <span style="color:#fcf8f8;font-size:18px;">★</span>
                                                             @endif
                                                         @endfor
                                                     </td>
