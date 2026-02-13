@@ -649,7 +649,7 @@
                             <div class="notifications-item p-2 border-bottom">
                                 <div class="notifications-desc">
                                     <a href="{{ url('/admin/order-details') }}/` + order.id + `" class="text-truncate text-capitalize">
-                                        <span class="fw-semibold text-dark text-capitalize"> #${order.order_number}</span> - ${order.getcustomer.name}
+                                        <span class="fw-semibold text-dark text-capitalize"> #${order.order_number.substring(0,20)}</span> - ${order.getcustomer.name}
                                     </a>
                                     <div class="text-muted fs-12">${new Date(order.created_at).toLocaleString()}</div>
                                 </div>

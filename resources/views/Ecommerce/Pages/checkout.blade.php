@@ -243,8 +243,8 @@
             formData.append('payment_method', 'cod');
             var url = "{{ route('CODOrderPlace') }}";
             reusableAjaxCall(url, 'POST', formData, function(res) {
-                if (res.status  === true) {
-                        Swal.fire({
+                if (res.status === true) {
+                    Swal.fire({
                         icon: 'success',
                         title: 'Order Confirmed with COD',
                         timer: 3000,
@@ -266,27 +266,27 @@
             }
         });
 
-       $('#payWithStripe').on('click', function() {
+        $('#payWithStripe').on('click', function() {
 
-    if (!window.ORDER_ID) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Order not created',
-            text: 'Please confirm order first'
+            if (!window.ORDER_ID) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Order not created',
+                    text: 'Please confirm order first'
+                });
+                return;
+            }
+
+            var formData = new FormData();
+            formData.append('order_id', window.ORDER_ID);
+
+            let url = "{{ route('stripe.create') }}";
+
+            reusableAjaxCall(url, 'POST', formData, function(res) {
+                console.log('Stripe Create Response:', res);
+                window.location.href = res.checkout_url;
+            });
         });
-        return;
-    }
-
-    var formData = new FormData();
-    formData.append('order_id', window.ORDER_ID);
-
-    let url = "{{ route('stripe.create') }}";
-
-    reusableAjaxCall(url, 'POST', formData, function(res) {
-        console.log('Stripe Create Response:', res);
-        window.location.href = res.checkout_url;
-    });
-});
 
 
         $('#payWithRazorpay').on('click', function() {

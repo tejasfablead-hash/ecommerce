@@ -4,7 +4,6 @@
 <head>
     <meta charset="utf-8">
     <title>Order Confirmation</title>
-
     <style>
         body {
             font-family: DejaVu Sans, sans-serif;
@@ -81,7 +80,7 @@
         <tr>
             <td>
                 <strong>Transaction ID:</strong>
-              {{ $order->transactionId ?? '-'}}
+                {{ $order->transactionId ?? '-' }}
             </td>
             <td><strong>Date:</strong> {{ $order->updated_at->format('d M Y') }}</td>
             <td><strong>Total:</strong> ₹{{ number_format($order->grand_total, 2) }}</td>
@@ -111,7 +110,7 @@
     {{-- PAYMENT INFO --}}
     <h3>Payment Details</h3>
     <table class="no-border">
-         <tr>
+        <tr>
             <td><strong>Order Number:</strong> {{ $order->order_number }}</td>
         </tr>
         <tr>
@@ -121,9 +120,9 @@
             <td><strong>Order Status:</strong> {{ ucfirst($order->order_status) }}</td>
         </tr>
         <tr>
-        <td><strong>Payment Status:</strong> {{ ucfirst($order->payment_status) }}</td>
+            <td><strong>Payment Status:</strong> {{ ucfirst($order->payment_status) }}</td>
         </tr>
-       
+
     </table>
 
     <hr>
@@ -168,38 +167,38 @@
 
     {{-- TOTAL SUMMARY --}}
     <table>
-    <tr>
-        <td colspan="4" class="text-right"><strong>Subtotal</strong></td>
-        <td class="text-right">
-            ₹{{ number_format($order->subtotal, 0) }}
-        </td>
-    </tr>
+        <tr>
+            <td colspan="4" class="text-right"><strong>Subtotal</strong></td>
+            <td class="text-right">
+                ₹{{ number_format($order->subtotal, 0) }}
+            </td>
+        </tr>
 
-    <tr>
-        <td colspan="4" class="text-right">
-            <strong>GST ({{ (int) $order->gst_percent }}%)</strong>
-        </td>
-        <td class="text-right">
-            ₹{{ number_format($order->gst_amount, 0) }}
-        </td>
-    </tr>
+        <tr>
+            <td colspan="4" class="text-right">
+                <strong>GST ({{ (int) $order->gst_percent }}%)</strong>
+            </td>
+            <td class="text-right">
+                ₹{{ number_format($order->gst_amount, 0) }}
+            </td>
+        </tr>
 
-    <tr>
-        <td colspan="4" class="text-right">
-            <strong>Discount ({{ (int) $order->discount_percent }}%)</strong>
-        </td>
-        <td class="text-right">
-            ₹{{ number_format($order->discount_amount, 0) }}
-        </td>
-    </tr>
+        <tr>
+            <td colspan="4" class="text-right">
+                <strong>Discount ({{ (int) $order->discount_percent }}%)</strong>
+            </td>
+            <td class="text-right">
+                ₹{{ number_format($order->discount_amount, 0) }}
+            </td>
+        </tr>
 
-    <tr>
-        <td colspan="4" class="text-right"><strong>Grand Total</strong></td>
-        <td class="text-right">
-            <strong>₹{{ number_format($order->grand_total, 0) }}</strong>
-        </td>
-    </tr>
-</table>
+        <tr>
+            <td colspan="4" class="text-right"><strong>Grand Total</strong></td>
+            <td class="text-right">
+                <strong>₹{{ number_format($order->grand_total, 0) }}</strong>
+            </td>
+        </tr>
+    </table>
 
 
 </body>

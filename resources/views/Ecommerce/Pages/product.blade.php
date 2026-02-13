@@ -56,37 +56,36 @@
             margin-bottom: 10px;
         }
 
-      .filter-control {
-    width: 100%;
-    height: 45px;
-    padding: 0 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 14px;
-    background: #fff;
-    transition: 0.3s;
-}
+        .filter-control {
+            width: 100%;
+            height: 45px;
+            padding: 0 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            background: #fff;
+            transition: 0.3s;
+        }
 
-.filter-control:focus {
-    border-color: #6b6b6b;
-    box-shadow: 0 0 5px rgba(255,106,0,0.2);
-    outline: none;
-}
+        .filter-control:focus {
+            border-color: #6b6b6b;
+            box-shadow: 0 0 5px rgba(255, 106, 0, 0.2);
+            outline: none;
+        }
 
-.filter-btn {
-    height: 45px;
-    border-radius: 6px;
-    background: #ff7b00;
-    color: #fff;
-    border: none;
-    font-weight: 500;
-    transition: 0.3s;
-}
+        .filter-btn {
+            height: 45px;
+            border-radius: 6px;
+            background: #ff7b00;
+            color: #fff;
+            border: none;
+            font-weight: 500;
+            transition: 0.3s;
+        }
 
-.filter-btn:hover {
-    background: #e55b00;
-}
-
+        .filter-btn:hover {
+            background: #e55b00;
+        }
     </style>
     <!-- start banner Area -->
     <section class="banner-area organic-breadcrumb">
@@ -106,7 +105,7 @@
 
     <!-- End banner Area -->
 
-       @php
+    @php
         $saleProducts = $product->where('status', 'active')->take(2);
 
         $latestProducts = $product->where('status', 'active')->take(8);
@@ -129,88 +128,89 @@
                         </div>
                     </div>
                 </div>
-            <div class="container mb-4">
-    <div class="filter-bar shadow-sm bg-white rounded p-3">
-        <form method="GET" action="{{ route('UserProductPage') }}">
-            <div class="row g-3 align-items-center">
+                <div class="container mb-4">
+                    <div class="filter-bar shadow-sm bg-white rounded p-3">
+                        <form method="GET" action="{{ route('UserProductPage') }}">
+                            <div class="row g-3 align-items-center">
 
-                <!-- CATEGORY -->
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <select name="category" class="filter-control">
-                        <option value="">Category</option>
-                        @foreach ($categories as $cat)
-                            <option value="{{ $cat->name }}"
-                                {{ request('category') == $cat->name ? 'selected' : '' }}>
-                                {{ $cat->name }}
-                            </option>
-                        @endforeach
-                    </select>
+                                <!-- CATEGORY -->
+                                <div class="col-lg-2 col-md-4 col-sm-6">
+                                    <select name="category" class="filter-control">
+                                        <option value="">Category</option>
+                                        @if (isset($categories) && count($categories) > 0)
+                                            @foreach ($categories as $cat)
+                                                <option value="{{ $cat->name }}"
+                                                    {{ request('category') == $cat->name ? 'selected' : '' }}>
+                                                    {{ $cat->name }}
+                                                </option>
+                                            @endforeach
+                                        @else
+                                            <option value="" disabled>No categories found</option>
+                                        @endif
+                                    </select>
+                                </div>
+
+                                <!-- MIN PRICE -->
+                                <div class="col-lg-2 col-md-4 col-sm-6">
+                                    <input type="number" name="min_price" class="filter-control" placeholder="Min Price"
+                                        value="{{ request('min_price') }}">
+                                </div>
+
+                                <!-- MAX PRICE -->
+                                <div class="col-lg-2 col-md-4 col-sm-6">
+                                    <input type="number" name="max_price" class="filter-control" placeholder="Max Price"
+                                        value="{{ request('max_price') }}">
+                                </div>
+
+                                <!-- DISCOUNT -->
+                                <div class="col-lg-2 col-md-4 col-sm-6">
+                                    <select name="discount" class="filter-control">
+                                        <option value="">Discount</option>
+                                        <option value="10" {{ request('discount') == 10 ? 'selected' : '' }}>10% +
+                                        </option>
+                                        <option value="20" {{ request('discount') == 20 ? 'selected' : '' }}>20% +
+                                        </option>
+                                        <option value="30" {{ request('discount') == 30 ? 'selected' : '' }}>30% +
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <!-- SORT -->
+                                <div class="col-lg-2 col-md-4 col-sm-6">
+                                    <select name="sort_by" class="filter-control">
+                                        <option value="">Sort By</option>
+                                        <option value="price_low_high"
+                                            {{ request('sort_by') == 'price_low_high' ? 'selected' : '' }}>
+                                            Price: Low → High
+                                        </option>
+                                        <option value="price_high_low"
+                                            {{ request('sort_by') == 'price_high_low' ? 'selected' : '' }}>
+                                            Price: High → Low
+                                        </option>
+                                        <option value="newest" {{ request('sort_by') == 'newest' ? 'selected' : '' }}>
+                                            Newest
+                                        </option>
+                                        <option value="oldest" {{ request('sort_by') == 'oldest' ? 'selected' : '' }}>
+                                            Oldest
+                                        </option>
+                                        <option value="discount_high"
+                                            {{ request('sort_by') == 'discount_high' ? 'selected' : '' }}>
+                                            Highest Discount
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <!-- BUTTON -->
+                                <div class="col-lg-2 col-md-4 col-sm-6">
+                                    <button type="submit" class="filter-btn  w-100">
+                                        Apply
+                                    </button>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
                 </div>
-
-                <!-- MIN PRICE -->
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="number" name="min_price"
-                        class="filter-control"
-                        placeholder="Min Price"
-                        value="{{ request('min_price') }}">
-                </div>
-
-                <!-- MAX PRICE -->
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="number" name="max_price"
-                        class="filter-control"
-                        placeholder="Max Price"
-                        value="{{ request('max_price') }}">
-                </div>
-
-                <!-- DISCOUNT -->
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <select name="discount" class="filter-control">
-                        <option value="">Discount</option>
-                        <option value="10" {{ request('discount') == 10 ? 'selected' : '' }}>10% +</option>
-                        <option value="20" {{ request('discount') == 20 ? 'selected' : '' }}>20% +</option>
-                        <option value="30" {{ request('discount') == 30 ? 'selected' : '' }}>30% +</option>
-                    </select>
-                </div>
-
-                <!-- SORT -->
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <select name="sort_by" class="filter-control">
-                        <option value="">Sort By</option>
-                        <option value="price_low_high"
-                            {{ request('sort_by') == 'price_low_high' ? 'selected' : '' }}>
-                            Price: Low → High
-                        </option>
-                        <option value="price_high_low"
-                            {{ request('sort_by') == 'price_high_low' ? 'selected' : '' }}>
-                            Price: High → Low
-                        </option>
-                        <option value="newest"
-                            {{ request('sort_by') == 'newest' ? 'selected' : '' }}>
-                            Newest
-                        </option>
-                        <option value="oldest"
-                            {{ request('sort_by') == 'oldest' ? 'selected' : '' }}>
-                            Oldest
-                        </option>
-                        <option value="discount_high"
-                            {{ request('sort_by') == 'discount_high' ? 'selected' : '' }}>
-                            Highest Discount
-                        </option>
-                    </select>
-                </div>
-
-                <!-- BUTTON -->
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <button type="submit" class="filter-btn  w-100">
-                        Apply
-                    </button>
-                </div>
-
-            </div>
-        </form>
-    </div>
-</div>
 
 
                 <div class="row">

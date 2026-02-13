@@ -57,10 +57,10 @@
         </section>
         <!-- End Banner Area -->
 
-        @if ($product)
+       @if(isset($product))
+                          
             @php
                 $images = json_decode($product->image, true);
-
             @endphp
 
             <!--================Single Product Area =================-->
@@ -69,6 +69,7 @@
                     <div class="row s_product_inner">
                         <div class="col-lg-6">
                             <div class="s_Product_carousel">
+                              
                                 @if (is_array($images) && count($images) > 0)
                                     @foreach ($images as $img)
                                         <div class="single-prd-item">

@@ -234,7 +234,6 @@
             </div>
         </div>
     </section>
-
     <!-- End related-product Area -->
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="{{ asset('ajax.js') }}"></script>

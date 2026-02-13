@@ -117,7 +117,8 @@
             $('.error').text('');
             var url = "{{ route('ResetPasswordPostPage') }}";
             reusableAjaxCall(url, 'POST', formData, function(response) {
-                if (response.status) {
+                
+                if (response.status === true) {
                     Swal.fire({
                         icon: 'success',
                         title: response.message

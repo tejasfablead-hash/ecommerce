@@ -69,7 +69,6 @@
                 </div>
 
                 <!-- ================= Update Profile Modal ================= -->
-                <!-- ================= Update Profile Modal ================= -->
                 <div class="modal fade" id="updateProfileModal" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-md">
                         <div class="modal-content border-0 rounded-4 overflow-hidden">
@@ -130,7 +129,7 @@
                                             <small class="text-danger error" id="address_error"></small>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
 
                                 <!-- Footer Actions -->
@@ -146,8 +145,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- ================= End Modal ================= -->
-
                 <!-- ================= End Modal ================= -->
 
 
@@ -177,7 +174,7 @@
                                                     <tr>
                                                         <!-- Order ID -->
                                                         <td>
-                                                            <strong>#{{\Illuminate\Support\Str::limit( $order->order_number,15,'...') }}</strong>
+                                                            <strong>#{{ \Illuminate\Support\Str::limit($order->order_number, 15, '...') }}</strong>
                                                         </td>
 
                                                         <!-- Products -->
@@ -221,7 +218,7 @@
                                                             <a href="{{ route('UserOrderPdf', $order->id) }}"
                                                                 style="background-color:#f8a528;"
                                                                 class="btn btn-sm text-white cart-info">
-                                                               Invoice
+                                                                Invoice
                                                             </a>
                                                         </td>
                                                     </tr>
@@ -341,47 +338,6 @@
                 );
             });
 
-            // $('#feedback').submit(function(e) {
-            //     e.preventDefault();
-            //     var data = $('#feedback')[0];
-            //     var formData = new FormData(data);
-            //     $('.error').text('');
-            //     let url = "{{ route('UserFeedbackPage') }}";
-            //     reusableAjaxCall(url, 'POST', formData, function(response) {
-            //             console.log('response', response);
-            //             const Toast = Swal.mixin({
-            //                 toast: true,
-            //                 position: "top-end",
-            //                 showConfirmButton: false,
-            //                 timer: 3000,
-            //                 timerProgressBar: true,
-            //                 didOpen: (toast) => {
-            //                     toast.onmouseenter = Swal.stopTimer;
-            //                     toast.onmouseleave = Swal.resumeTimer;
-            //                 }
-            //             });
-            //             if (response.status === true) {
-            //                 Toast.fire({
-            //                     icon: "success",
-            //                     title: response.message || "Feedback Send Successfully"
-            //                 });
-            //                   $('#feedback').closest('.card').fadeOut();
-            //                 setTimeout(function() {
-            //                     window.location.href = "{{ route('UserConfirmPage') }}";
-            //                 }, 2000);
-
-            //             } else {
-            //                 Toast.fire({
-            //                     icon: "error",
-            //                     title: response.message || "Feedback not Sent"
-            //                 });
-            //             }
-            //             $('#feedback')[0].reset();
-            //         },
-            //         function(error) {
-            //             console.log('error', error);
-            //         });
-            // });
         });
     </script>
 

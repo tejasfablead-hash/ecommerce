@@ -103,33 +103,34 @@
         .ai-footer button:hover {
             background: #e07f05;
         }
+
         #ai-reply {
-    display: flex;
-    flex-direction: column;
-}
+            display: flex;
+            flex-direction: column;
+        }
 
-.ai-msg {
-    max-width: 75%;
-    padding: 8px 12px;
-    margin: 4px 0;
-    border-radius: 12px;
-    word-break: break-word;
-    font-size: 14px;
-}
+        .ai-msg {
+            max-width: 75%;
+            padding: 8px 12px;
+            margin: 4px 0;
+            border-radius: 12px;
+            word-break: break-word;
+            font-size: 14px;
+        }
 
-.ai-msg.user {
-    align-self: flex-end;
-    background: #ff6c00;
-    color: #fff;
-    border-bottom-right-radius: 4px;
-}
+        .ai-msg.user {
+            align-self: flex-end;
+            background: #ff6c00;
+            color: #fff;
+            border-bottom-right-radius: 4px;
+        }
 
-.ai-msg.ai {
-    align-self: flex-start;
-    background: #f1f1f1;
-    color: #333;
-    border-bottom-left-radius: 4px;
-}
+        .ai-msg.ai {
+            align-self: flex-start;
+            background: #f1f1f1;
+            color: #333;
+            border-bottom-left-radius: 4px;
+        }
     </style>
 
     <link rel="stylesheet" type="text/css"
@@ -154,7 +155,7 @@
     <!-- Start Header Area -->
     @include('Ecommerce.Layout.header')
     <!-- End Header Area -->
-    
+
 
     @yield('container')
     <!-- start footer Area -->
@@ -177,7 +178,6 @@
         </div>
     </div>
     <!-- ================= END AI CHAT ================= -->
-
 
     @include('Ecommerce.Layout.footer')
     <!-- End footer Area -->
@@ -229,17 +229,17 @@
         sendBtn.onclick = sendMessage;
 
         function appendMessage(sender, text) {
-    const div = document.createElement('div');
-    div.classList.add('ai-msg');
-    if (sender === 'You') {
-        div.classList.add('user');
-    } else {
-        div.classList.add('ai');
-    }
-    div.innerHTML = `<b>${sender}:</b> ${text}`;
-    replyBox.appendChild(div);
-    replyBox.scrollTop = replyBox.scrollHeight;
-}
+            const div = document.createElement('div');
+            div.classList.add('ai-msg');
+            if (sender === 'You') {
+                div.classList.add('user');
+            } else {
+                div.classList.add('ai');
+            }
+            div.innerHTML = `<b>${sender}:</b> ${text}`;
+            replyBox.appendChild(div);
+            replyBox.scrollTop = replyBox.scrollHeight;
+        }
 
         function sendMessage() {
             const msg = msgInput.value.trim();
@@ -274,7 +274,6 @@
 
         }
     </script>
-
 
 </body>
 

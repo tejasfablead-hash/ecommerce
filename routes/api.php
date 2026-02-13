@@ -18,4 +18,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/products/cart/add', [ProductController::class, 'addtocart'])->name('api.cart.add');
     Route::post('/products/cart/delete', [ProductController::class, 'delete'])->name('api.cart.delete');
 });
-Route::post('/stripe/webhook', [StripeController::class, 'handle'])->name('stripe.webhook');
+// Route::post('/stripe/webhook', [StripeController::class, 'handle'])
+//      ->name('stripe.webhook');
+
