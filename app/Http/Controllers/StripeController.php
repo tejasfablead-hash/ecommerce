@@ -37,7 +37,7 @@ class StripeController extends Controller
             'metadata' => [
                 'order_id' => $order->id,
             ],
-            'success_url' => route('stripe.success'),
+       'success_url' => route('stripe.success') . '?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url'  => route('stripe.cancel'),
         ]);
 
@@ -48,12 +48,51 @@ class StripeController extends Controller
     }
 
 
-    public function success()
-    {
-        return redirect()->route('UserCheckoutPage', [
-            'stripe' => 'success'
-        ]);
+public function success(Request $request)
+{
+    Stripe::setApiKey(config('services.stripe.secret'));
+
+    $sessionId = $request->session_id;
+
+    if (!$sessionId) {
+        return redirect()->route('UserCheckoutPage')->with('error', 'Invalid payment session');
     }
+
+    $session = \Stripe\Checkout\Session::retrieve($sessionId);
+
+    $orderId = $session->metadata->order_id ?? null;
+
+    $order = Order::with('orderitem.product')->find($orderId);
+
+    if ($order && $order->payment_status !== 'paid') {
+
+        DB::transaction(function () use ($order, $session) {
+
+            $order->update([
+                'order_number' => $session->id,
+                'payment_status' => 'paid',
+                'payment_method' => 'stripe',
+                'transactionId'  => $session->payment_intent,
+                'order_status'   => 'confirmed',
+            ]);
+
+            foreach ($order->orderitem as $item) {
+                if ($item->product) {
+                    $item->product->decrement('qty', $item->qty);
+
+                    if ($item->product->qty <= 0) {
+                        $item->product->update(['status' => 'inactive']);
+                    }
+                }
+            }
+
+            Cart::where('user_id', $order->user_id)->delete();
+        });
+    }
+
+    return redirect()->route('UserConfirmPage')
+        ->with('success', 'Payment successful!');
+}
 
 
     public function cancel()
@@ -63,54 +102,54 @@ class StripeController extends Controller
         ]);
     }
 
-    public function handle(Request $request)
-    {
-        $payload = $request->getContent();
-        $signature = $request->header('Stripe-Signature');
-        $secret = config('services.stripe.webhook_secret');
+    // public function handle(Request $request)
+    // {
+    //     $payload = $request->getContent();
+    //     $signature = $request->header('Stripe-Signature');
+    //     $secret = config('services.stripe.webhook_secret');
 
-        try {
-            $event = Webhook::constructEvent($payload, $signature, $secret);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Invalid signature'], 400);
-        }
+    //     try {
+    //         $event = Webhook::constructEvent($payload, $signature, $secret);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => 'Invalid signature'], 400);
+    //     }
 
-        if ($event->type === 'checkout.session.completed') {
+    //     if ($event->type === 'checkout.session.completed') {
 
-            $session = $event->data->object;
-            $orderId = $session->metadata->order_id ?? null;
+    //         $session = $event->data->object;
+    //         $orderId = $session->metadata->order_id ?? null;
 
-            $order = Order::with('orderitem.product')->find($orderId);
+    //         $order = Order::with('orderitem.product')->find($orderId);
 
-            if ($order && $order->payment_status !== 'paid') {
+    //         if ($order && $order->payment_status !== 'paid') {
 
-                DB::transaction(function () use ($order, $session) {
+    //             DB::transaction(function () use ($order, $session) {
 
-                    $order->update([
-                        'order_number' => $session->id,
-                        'payment_status' => 'paid',
-                        'payment_method' => 'stripe',
-                        'transactionId'  => $session->payment_intent,
-                        'order_status'   => 'confirmed',
-                    ]);
+    //                 $order->update([
+    //                     'order_number' => $session->id,
+    //                     'payment_status' => 'paid',
+    //                     'payment_method' => 'stripe',
+    //                     'transactionId'  => $session->payment_intent,
+    //                     'order_status'   => 'confirmed',
+    //                 ]);
 
-                    foreach ($order->orderitem as $item) {
-                        if ($item->product) {
-                            $item->product->decrement('qty', $item->qty);
+    //                 foreach ($order->orderitem as $item) {
+    //                     if ($item->product) {
+    //                         $item->product->decrement('qty', $item->qty);
 
-                            if ($item->product->qty <= 0) {
-                                $item->product->update(['status' => 'inactive']);
-                            }
-                        }
-                    }
+    //                         if ($item->product->qty <= 0) {
+    //                             $item->product->update(['status' => 'inactive']);
+    //                         }
+    //                     }
+    //                 }
 
-                    Cart::where('user_id', $order->user_id)->delete();
+    //                 Cart::where('user_id', $order->user_id)->delete();
                     
-                });
+    //             });
 
-            }
-        }
+    //         }
+    //     }
 
-        return response()->json(['status' => 'success']);
-    }
+    //     return response()->json(['status' => 'success']);
+    // }
 }

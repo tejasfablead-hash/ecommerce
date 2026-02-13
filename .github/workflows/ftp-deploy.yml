@@ -1,0 +1,103 @@
+# name: FTP Deploy to Production
+
+# on:
+#   push:
+#     branches:
+#       - main
+#   workflow_dispatch: # Allows manual triggering
+
+# jobs:
+#   deploy:
+#     name: Deploy to FTP Server
+#     runs-on: ubuntu-latest
+#     timeout-minutes: 60  # 1 hour timeout
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+
+#       - name: Setup PHP
+#         uses: shivammathur/setup-php@v2
+#         with:
+#           php-version: '8.2'
+#           extensions: mbstring, xml, bcmath, pdo, pdo_mysql
+
+      # REMOVED OR COMMENT OUT THE NPM STEP
+      # - name: Build Assets (if needed)
+      #   run: |
+          # npm install
+      #     npm run build
+      #   continue-on-error: true
+
+      # - name: Deploy to FTP (excluding vendor)
+      #   uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      #   with:
+      #     server: ${{ secrets.FTP_SERVER }}
+      #     username: ${{ secrets.FTP_USERNAME }}
+      #     password: ${{ secrets.FTP_PASSWORD }}
+      #     server-dir: /
+      #     exclude: |
+      #       **/.git*
+      #       **/.git*/**
+      #       **/portal.clin-sync.com/app/config/App.php
+      #       **/referral.clin-sync.com/app/config/App.php
+      #       **/portal.clin-sync.com/admin/app/config/App.php
+      #       **/portal.clin-sync.com/app/config/Database.php
+      #       **/referral.clin-sync.com/app/config/Database.php
+      #       **/portal.clin-sync.com/admin/app/config/Database.php
+      #       **/vendor/**
+      #       **/vendor_old/**
+      #       **/portal.clin-sync.com/vendor/**
+      #       **/referral.clin-sync.com/vendor/**
+      #       **/portal.clin-sync.com/admin/vendor/**
+      #       **/portal.clin-sync.com/admin/vendor_old/**
+      #       **/portal.clin-sync.com/.env
+      #       **/referral.clin-sync.com/.env
+      #       **/portal.clin-sync.com/admin/.env
+      #       **/portal.clin-sync.com/.env.*
+      #       **/referral.clin-sync.com/.env.*
+      #       **/portal.clin-sync.com/admin/.env.*
+      #       **/public/**
+      #       !**/public/css/**
+      #       !**/public/js/**
+      #       **/.env
+      #       **/.env.*
+      #       **/.ftpignore
+      #       **/.github/**
+      #       **/tests/**
+      #       **/portal.clin-sync.com/phpunit.xml.dist
+      #       **/referral.clin-sync.com/phpunit.xml.dist
+      #       **/portal.clin-sync.com/admin/phpunit.xml.dist
+      #       **/.phpunit.cache/**
+      #       **/.idea/**
+      #       **/.vscode/**
+      #       **/.fleet/**
+      #       **/Homestead.json
+      #       **/Homestead.yaml
+      #       **/auth.json
+      #       **/portal.clin-sync.com/README.md
+      #       **/referral.clin-sync.com/README.md
+      #       **/portal.clin-sync.com/admin/README.md
+      #       **/*.jpg
+      #       **/*.jpeg
+      #       **/*.png
+      #       **/*.gif
+      #       **/*.svg
+      #       **/*.webp
+      #       **/*.ico
+      #       **/*.bmp
+      #       **/*.tiff
+      #       **/*.tif
+      #       **/*.log
+      #       **/logs/**
+      #       **/log/**
+      #       **/sessions/**
+      #       **/session/**
+      #       **/*_session.*
+      #       **/storage/framework/sessions/**
+      #       **/tmp/**
+      #       **/temp/**
+      #       **/composer.json
+      #       **/composer.lock
+      #     dangerous-clean-slate: false
+      #     dry-run: false

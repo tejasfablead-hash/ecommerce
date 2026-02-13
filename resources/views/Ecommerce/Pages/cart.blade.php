@@ -51,7 +51,6 @@
         }
     </style>
 
-
     <!-- Start Banner Area -->
 
     <section class="banner-area organic-breadcrumb">

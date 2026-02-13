@@ -165,14 +165,12 @@
 
             infoWindow = new google.maps.InfoWindow();
 
-            // 🔹 Try browser location
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
                         setLocation(position.coords.latitude, position.coords.longitude);
                     },
                     () => {
-                        // Permission denied → fallback address
                         setAddressLocation("Ascon Plaza, Surat, India");
                     }
                 );
@@ -181,9 +179,6 @@
             }
         }
 
-        /* ==========================
-           SET LOCATION BY LAT/LNG
-        ========================== */
         function setLocation(lat, lng) {
 
             const location = {
@@ -200,9 +195,6 @@
             infoWindow.open(map, marker);
         }
 
-        /* ==========================
-           SET LOCATION BY ADDRESS
-        ========================== */
         function setAddressLocation(address) {
 
             geocoder.geocode({
@@ -226,10 +218,6 @@
                 }
             });
         }
-
-        /* ==========================
-           LOAD WEATHER
-        ========================== */
         function loadWeather(lat, lng) {
 
             fetch(`/weather?lat=${lat}&lng=${lng}`)

@@ -112,7 +112,7 @@
                 $('.error').text('');
                 var url = "{{ route('ForgotPasswordPage') }}";
                 reusableAjaxCall(url, 'POST', formData, function(response) {
-                    if (response.status) {
+                    if (response.status === true) {
                         Swal.fire({
                             icon: 'success',
                             title: response.message,
