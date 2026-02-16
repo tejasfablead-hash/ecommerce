@@ -166,7 +166,7 @@
         <div id="ai-chat-box">
             <div class="ai-header">
                 AI Assistant
-                <span id="ai-close" style="cursor:pointer;">×</span>
+                <span id="ai-close" style="cursor:pointer;">X</span>
             </div>
 
             <div id="ai-reply"></div>

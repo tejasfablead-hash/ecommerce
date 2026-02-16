@@ -40,9 +40,15 @@
                                     id="first" name="firstname" value="{{ Auth::user()->name }}"
                                     placeholder="First name"> <small class="text-danger error" id="firstname_error"></small>
                             </div>
-                            <div class="col-md-6 form-group p_star"> <input type="hidden" class="form-control"
-                                    id="number" name="phone" value="{{ Auth::user()->phone }}"
-                                    placeholder="Phone number"> <small class="text-danger error" id="phone_error"></small>
+                            <div class="col-md-6 form-group p_star">
+                                @if (Auth::user()->phone)
+                                    <input type="hidden" class="form-control" id="number" name="phone"
+                                        value="{{ Auth::user()->phone }}" placeholder="Phone number">
+                                @else
+                                    <input type="text" class="form-control" id="number" name="phone"
+                                        placeholder="Phone number">
+                                    <small class="text-danger error" id="phone_error"></small>
+                                @endif
                             </div>
                             <div class="col-md-6 form-group p_star"> <input type="hidden" class="form-control"
                                     placeholder="Email Address" value="{{ Auth::user()->email }}" name="email"> <small
@@ -201,200 +207,201 @@
             }
         });
     </script>
-<script>
-    $(document).ready(function() {
-        let paypalRendered = false;
-        $('#orderform').submit(function(e) {
-            e.preventDefault();
-            var data = $('#orderform')[0];
-            var formData = new FormData(data);
-            $('.error').text('');
-            $('#billingdetails').addClass('d-none').text('');
-            var url = "{{ route('UserOrderPage') }}";
-            reusableAjaxCall(url, 'POST', formData, function(response) {
-                console.log('response', response);
-                if (response.status === true) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Order Confirmed to Check Payment',
-                        text: 'Choose payment method',
-                        timer: 2000,
-                        showConfirmButton: false
-                    });
-
-                    $('#placeOrderBtn').hide();
-                    $('#payWithCOD,#payWithPaypal,#payWithRazorpay,#payWithStripe')
-                        .removeClass('d-none');
-
-                    window.ORDER_ID = response.order_id;
-                    $('#orderform')[0].reset();
-                }
-            }, function(xhr) {
-                let res = xhr.responseJSON;
-                if (res && res.message) {
-                    $('#billingdetails').removeClass('d-none').hide().html(res.message).fadeIn(
-                        300);
-                }
-            });
-        });
-        $('#payWithCOD').on('click', function() {
-            let formData = new FormData();
-            formData.append('order_id', window.ORDER_ID);
-            formData.append('payment_method', 'cod');
-            var url = "{{ route('CODOrderPlace') }}";
-            reusableAjaxCall(url, 'POST', formData, function(res) {
-                if (res.status === true) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Order Confirmed with COD',
-                        timer: 3000,
-                        showConfirmButton: false
-                    });
-                    setTimeout(() => {
-                        window.location.href = "{{ route('UserConfirmPage') }}";
-                    }, 2000);
-                }
-            });
-        });
-
-        $('#payWithPaypal').on('click', function() {
-            $('#paypal-button-container').removeClass('d-none');
-
-            if (!paypalRendered) {
-                renderPaypal();
-                paypalRendered = true;
-            }
-        });
-
-        $('#payWithStripe').on('click', function() {
-
-            if (!window.ORDER_ID) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Order not created',
-                    text: 'Please confirm order first'
-                });
-                return;
-            }
-
-            var formData = new FormData();
-            formData.append('order_id', window.ORDER_ID);
-
-            let url = "{{ route('stripe.create') }}";
-
-            reusableAjaxCall(url, 'POST', formData, function(res) {
-                console.log('Stripe Create Response:', res);
-                window.location.href = res.checkout_url;
-            });
-        });
-
-
-        $('#payWithRazorpay').on('click', function() {
-
-            var formData = new FormData();
-            formData.append('order_id', window.ORDER_ID);
-            var url = "{{ route('Razorpayorder') }}";
-            reusableAjaxCall(url, 'POST', formData, function(res) {
-                let options = {
-                    "key": "{{ config('services.razorpay.key') }}",
-                    "amount": res.amount,
-                    "currency": "INR",
-                    "name": "Ecommerce",
-                    "description": "Order Payment",
-                    "order_id": res.razorpay_order_id,
-                    "handler": function(response) {
-
-                        var formData = new FormData();
-                        formData.append('order_id', window.ORDER_ID);
-                        formData.append('razorpay_payment_id', response
-                            .razorpay_payment_id);
-                        formData.append('razorpay_order_id', response
-                            .razorpay_order_id);
-                        formData.append('payment_method', 'razorpay');
-                        var url = "{{ route('Razorpaysuccess') }}";
-                        reusableAjaxCall(url, 'POST', formData, function(res) {
-                            if (res.status) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Payment Successful',
-                                    timer: 2500,
-                                    showConfirmButton: false
-                                });
-
-                                setTimeout(() => {
-                                    window.location
-                                        .href =
-                                        "{{ route('UserConfirmPage') }}";
-                                }, 2500);
-                            }
+    <script>
+        $(document).ready(function() {
+            let paypalRendered = false;
+            $('#orderform').submit(function(e) {
+                e.preventDefault();
+                var data = $('#orderform')[0];
+                var formData = new FormData(data);
+                $('.error').text('');
+                $('#billingdetails').addClass('d-none').text('');
+                var url = "{{ route('UserOrderPage') }}";
+                reusableAjaxCall(url, 'POST', formData, function(response) {
+                    console.log('response', response);
+                    if (response.status === true) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Order Confirmed to Check Payment',
+                            text: 'Choose payment method',
+                            timer: 2000,
+                            showConfirmButton: false
                         });
+
+                        $('#placeOrderBtn').hide();
+                        $('#payWithCOD,#payWithPaypal,#payWithRazorpay,#payWithStripe')
+                            .removeClass('d-none');
+
+                        window.ORDER_ID = response.order_id;
+                        $('#orderform')[0].reset();
                     }
-                };
-
-                let rzp = new Razorpay(options);
-                rzp.open();
+                }, function(xhr) {
+                    let res = xhr.responseJSON;
+                    if (res && res.message) {
+                        $('#billingdetails').removeClass('d-none').hide().html(res.message).fadeIn(
+                            300);
+                    }
+                });
             });
-        });
-
-        function renderPaypal() {
-            paypal.Buttons({
-                createOrder: (data, actions) => {
-                    return actions.order.create({
-                        purchase_units: [{
-                            amount: {
-                                value: "{{ session('grandtotal') }}"
-                            }
-                        }]
-                    });
-                },
-                onApprove: function(data, actions) {
-                    return actions.order.capture().then(function(details) {
-                        console.log(details);
-                        let transactionId = details.purchase_units[0].payments.captures[0]
-                            .id;
-
-                        var formData = new FormData();
-                        formData.append('paypal_order_id', data.orderID);
-                        formData.append('payment_status', details.status);
-                        formData.append('transaction_id', transactionId);
-                        formData.append('payment_method', 'paypal');
-                        var url = "{{ route('PaypalSuccessPage') }}";
-                        reusableAjaxCall(url, 'POST', formData, function(res) {
-                            if (res.status === true) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Payment Successfull',
-                                    text: 'Please checked the OrderDetails...',
-                                    timer: 3000,
-                                    showConfirmButton: false
-                                });
-                                setTimeout(() => {
-                                    window.location.href =
-                                        "{{ route('UserConfirmPage') }}";
-                                }, 3000);
-                            }
+            $('#payWithCOD').on('click', function() {
+                let formData = new FormData();
+                formData.append('order_id', window.ORDER_ID);
+                formData.append('payment_method', 'cod');
+                var url = "{{ route('CODOrderPlace') }}";
+                reusableAjaxCall(url, 'POST', formData, function(res) {
+                    if (res.status === true) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Order Confirmed with COD',
+                            timer: 3000,
+                            showConfirmButton: false
                         });
-                    });
-                },
-                onCancel: () => {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Payment Cancelled',
-                        text: 'You can try again'
-                    });
-                },
-                onError: () => {
+                        setTimeout(() => {
+                            window.location.href = "{{ route('UserConfirmPage') }}";
+                        }, 2000);
+                    }
+                });
+            });
+
+            $('#payWithPaypal').on('click', function() {
+                $('#paypal-button-container').removeClass('d-none');
+
+                if (!paypalRendered) {
+                    renderPaypal();
+                    paypalRendered = true;
+                }
+            });
+
+            $('#payWithStripe').on('click', function() {
+
+                if (!window.ORDER_ID) {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Payment Failed',
-                        text: 'Please try again later'
+                        title: 'Order not created',
+                        text: 'Please confirm order first'
                     });
+                    return;
                 }
-            }).render('#paypal-button-container');
-        }
 
-        $('#continueShopping').on('click', function() {
-            window.location.href = "{{ route('UserContinueShopping') }}";
+                var formData = new FormData();
+                formData.append('order_id', window.ORDER_ID);
+
+                let url = "{{ route('stripe.create') }}";
+
+                reusableAjaxCall(url, 'POST', formData, function(res) {
+                    console.log('Stripe Create Response:', res);
+                    window.location.href = res.checkout_url;
+                });
+            });
+
+
+            $('#payWithRazorpay').on('click', function() {
+
+                var formData = new FormData();
+                formData.append('order_id', window.ORDER_ID);
+                var url = "{{ route('Razorpayorder') }}";
+                reusableAjaxCall(url, 'POST', formData, function(res) {
+                    let options = {
+                        "key": "{{ config('services.razorpay.key') }}",
+                        "amount": res.amount,
+                        "currency": "INR",
+                        "name": "Ecommerce",
+                        "description": "Order Payment",
+                        "order_id": res.razorpay_order_id,
+                        "handler": function(response) {
+
+                            var formData = new FormData();
+                            formData.append('order_id', window.ORDER_ID);
+                            formData.append('razorpay_payment_id', response
+                                .razorpay_payment_id);
+                            formData.append('razorpay_order_id', response
+                                .razorpay_order_id);
+                            formData.append('payment_method', 'razorpay');
+                            var url = "{{ route('Razorpaysuccess') }}";
+                            reusableAjaxCall(url, 'POST', formData, function(res) {
+                                if (res.status) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Payment Successful',
+                                        timer: 2500,
+                                        showConfirmButton: false
+                                    });
+
+                                    setTimeout(() => {
+                                        window.location
+                                            .href =
+                                            "{{ route('UserConfirmPage') }}";
+                                    }, 2500);
+                                }
+                            });
+                        }
+                    };
+
+                    let rzp = new Razorpay(options);
+                    rzp.open();
+                });
+            });
+
+            function renderPaypal() {
+                paypal.Buttons({
+                    createOrder: (data, actions) => {
+                        return actions.order.create({
+                            purchase_units: [{
+                                amount: {
+                                    value: "{{ session('grandtotal') }}"
+                                }
+                            }]
+                        });
+                    },
+                    onApprove: function(data, actions) {
+                        return actions.order.capture().then(function(details) {
+                            console.log(details);
+                            let transactionId = details.purchase_units[0].payments.captures[0]
+                                .id;
+
+                            var formData = new FormData();
+                            formData.append('paypal_order_id', data.orderID);
+                            formData.append('payment_status', details.status);
+                            formData.append('transaction_id', transactionId);
+                            formData.append('payment_method', 'paypal');
+                            var url = "{{ route('PaypalSuccessPage') }}";
+                            reusableAjaxCall(url, 'POST', formData, function(res) {
+                                if (res.status === true) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Payment Successfull',
+                                        text: 'Please checked the OrderDetails...',
+                                        timer: 3000,
+                                        showConfirmButton: false
+                                    });
+                                    setTimeout(() => {
+                                        window.location.href =
+                                            "{{ route('UserConfirmPage') }}";
+                                    }, 3000);
+                                }
+                            });
+                        });
+                    },
+                    onCancel: () => {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Payment Cancelled',
+                            text: 'You can try again'
+                        });
+                    },
+                    onError: () => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Payment Failed',
+                            text: 'Please try again later'
+                        });
+                    }
+                }).render('#paypal-button-container');
+            }
+
+            $('#continueShopping').on('click', function() {
+                window.location.href = "{{ route('UserContinueShopping') }}";
+            });
         });
-    });
-</script> @endsection
+    </script>
+@endsection

@@ -28,7 +28,6 @@ class AIService
             'content' => $message,
         ];
 
-        
         try {
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . config('services.openai.key'),
@@ -38,8 +37,6 @@ class AIService
                 'messages' => $messages,
             ]);
 
-            Log::info('OpenAI Status', ['status' => $response->status()]);
-            Log::info('OpenAI Response', $response->json());
 
             if ($response->failed()) {
                 $json = $response->json();

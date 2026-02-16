@@ -166,6 +166,8 @@
                                 <div class="col-lg-2 col-md-4 col-sm-6">
                                     <select name="discount" class="filter-control">
                                         <option value="">Discount</option>
+                                        <option value="5" {{ request('discount') == 5 ? 'selected' : '' }}>5% +
+                                        </option>
                                         <option value="10" {{ request('discount') == 10 ? 'selected' : '' }}>10% +
                                         </option>
                                         <option value="20" {{ request('discount') == 20 ? 'selected' : '' }}>20% +
@@ -200,7 +202,6 @@
                                     </select>
                                 </div>
 
-                                <!-- BUTTON -->
                                 <div class="col-lg-2 col-md-4 col-sm-6">
                                     <button type="submit" class="filter-btn  w-100">
                                         Apply

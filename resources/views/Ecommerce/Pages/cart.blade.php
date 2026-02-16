@@ -455,7 +455,6 @@
                 let discountvalue = $('#discountInput').val();
                 let subtotal = $('#subtotalInput').val();
 
-
                 var formData = new FormData();
                 formData.append('grandTotal', grandTotal);
                 formData.append('discountprice', discountprice);
@@ -467,10 +466,7 @@
                 reusableAjaxCall(url, 'POST', formData, function(response) {
                     window.location.href = "{{ route('UserCheckoutPage') }}";
                 });
-
             });
-
-
         });
     </script>
 @endsection
