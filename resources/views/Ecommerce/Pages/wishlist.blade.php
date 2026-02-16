@@ -1,7 +1,6 @@
 @extends('Ecommerce.Layout.index')
 @section('container')
     <style>
-        /* Wishlist Card */
         .single-product.card {
             border: 0.5px solid #eee;
             border: none;
@@ -13,28 +12,24 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
         }
 
-        /* Fixed Image Box */
         .product-img {
             width: 100%;
             height: 220px;
             background: #f8f8f8;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
+            align-items: center;       
+            justify-content: center;       
+            overflow: hidden;       
         }
 
-        /* Image Fit */
         .product-img img {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            /* 👈 keeps full image */
             padding: 10px;
 
         }
 
-        /* Card Footer */
         .card-footer {
             padding: 12px;
             display: flex;

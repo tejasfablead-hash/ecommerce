@@ -7,8 +7,9 @@ use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -109,5 +110,62 @@ class UserController extends Controller
             'user' => $user,
         ]);
     }
-  
+    
+    public function update(Request $request)
+    {
+        
+        $id = Auth::id();
+        $updateuser = User::where('id', $id)->first();
+        $newimage = $updateuser->image;
+
+        $validate = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->ignore($updateuser->id),
+            ],
+            'address' => 'required|min:2',
+            'phone'    => 'required|digits:10',
+            'image'    => 'image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        if ($validate->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validate->errors(),
+                'message' => 'All fields are Required'
+            ], 422);
+        }
+        try {
+            if ($request->hasFile('image')) {
+                Storage::disk('public')->delete('user/' . $updateuser->image);
+                $file = $request->file('image');
+                $filename = time() . '.' . $file->getClientOriginalExtension();
+                $file->storeAs('user', $filename, 'public');
+                $newimage = $filename;
+            }
+
+            $updateuser->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'image' => $newimage,
+                'address' => $request->address,
+            ]);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Profile Updated Successfully',
+                'user' => $updateuser
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Profile Updated Failed',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
+    }
+    
 }

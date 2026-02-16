@@ -39,7 +39,6 @@
                 color: #f8ce10;
             }
         </style>
-
         <!-- Start Banner Area -->
         <section class="banner-area organic-breadcrumb">
             <div class="container">

@@ -44,7 +44,7 @@ class OrderController extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validate->errors(),
-                'message' => '*Please fill Billing Details'
+                'message' => '* Please fill Billing Details'
             ], 422);
         }
         $order = Order::create([
@@ -82,11 +82,13 @@ class OrderController extends Controller
 
         $sms->send(
             $phone,
-            "✅ Order Confirmed To Shopping!
+            "✅ Order Confirmed with COD!
             Order No: {$order->order_number}
             Amount: ₹{$order->grand_total}
             Thank you for shopping with us. "
         );
+
+        Cart::where('user_id', $order->user_id)->delete();
 
         session(['order_id' => $order->id]);
 
@@ -246,7 +248,7 @@ class OrderController extends Controller
             'payment_status' => $paymentStatus
         ]);
         Mail::to($order->email)->send(new OrderConfirmMail($order));
-           Mail::mailer('mailtrap')
+        Mail::mailer('mailtrap')
             ->to($order->email)
             ->send(new OrderConfirmMail($order));
 

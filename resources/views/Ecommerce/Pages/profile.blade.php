@@ -44,13 +44,17 @@
     <section class="profile_area section_gap py-5 bg-light">
         <div class="container">
             <div class="row">
-
                 <!-- ================= Profile Sidebar ================= -->
                 <div class="col-lg-4 mb-4">
                     <div class="card shadow-sm border-0 rounded-4 p-4">
                         <div class="text-center">
-                            <img src="{{ asset('storage/user/' . Auth::user()->image) }}" class="rounded-circle mb-3"
-                                width="120" height="120" alt="Profile">
+                            @if (Auth::user()->image)
+                                <img src="{{ asset('storage/user/' . Auth::user()->image) }}" class="rounded-circle mb-3"
+                                    width="120" height="120" alt="Profile">
+                            @else
+                                <img src="{{ asset('user/profile.png') }}" class="rounded-circle mb-3" width="120"
+                                    height="120" alt="Profile">
+                            @endif
 
                             <h4 class="fw-bold text-capitalize">{{ Auth::user()->name }}</h4>
                             <p class="text-muted mb-1">{{ Auth::user()->email }}</p>
@@ -80,10 +84,15 @@
                                 </div>
                                 <!-- Top Header / Avatar -->
                                 <div class="bg-light text-center py-4">
-                                    <img src="{{ asset('storage/user/' . Auth::user()->image) }}"
-                                        class="rounded-circle shadow-sm mb-2" width="110" height="110" alt="Profile">
+                                    @if (Auth::user()->image)
+                                        <img src="{{ asset('storage/user/' . Auth::user()->image) }}"
+                                            class="rounded-circle shadow-sm mb-2" width="110" height="110"
+                                            alt="Profile">
+                                    @else
+                                        <img src="{{ asset('user/profile.png') }}" class="rounded-circle mb-3"
+                                            width="120" height="120" alt="Profile">
+                                    @endif
                                 </div>
-
                                 <!-- Close Button -->
                                 <!-- Form -->
 
@@ -134,7 +143,8 @@
 
                                 <!-- Footer Actions -->
                                 <div class="modal-footer border-0 px-4 pb-4">
-                                    <button type="button" class="btn btn-dark rounded-pill px-4" data-bs-dismiss="modal">
+                                    <button type="button" class="btn btn-dark rounded-pill px-4"
+                                        data-bs-dismiss="modal">
                                         Cancel
                                     </button>
                                     <input type="submit" style="background-color:#f58122;" name="submit"

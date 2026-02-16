@@ -113,7 +113,7 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::get('/user/category', [CategoryController::class, 'category'])->name('UserCategoryPage');
 
     Route::get('/user/product/{id}', [ProductController::class, 'product'])->name('UserCategoryProductPage');
-    Route::get('/user/peoduct-details/{id}', [ProductController::class, 'productdetail'])->name('UserProductdetailsPage');
+    Route::get('/user/product-details/{id}', [ProductController::class, 'productdetail'])->name('UserProductdetailsPage');
     Route::get('/user/product', [ProductController::class, 'products'])->name('UserProductPage');
 
     Route::get('/user/wishlist', [WishlistsController::class, 'index'])->name('WishlistPage');

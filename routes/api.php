@@ -11,6 +11,7 @@ Route::post('/login', [UserController::class, 'login'])->name('api.login');
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [UserController::class, 'logout'])->name('api.logout');
     Route::get('/user',  [UserController::class, 'user'])->name('api.user');
+    Route::post('/user/update',  [UserController::class, 'update'])->name('api.user.update');
 
     Route::post('/products/filter', [ProductController::class, 'filter'])->name('api.products.filter');
     Route::get('/products', [ProductController::class, 'show'])->name('api.products.show');

@@ -127,7 +127,7 @@ class PaypalController extends Controller
             ->where('id', $id)
             ->where('user_id', $userId)
             // ->orwhere('payment_status', 'paid')
-            ->whereIn('order_status', ['confirmed', 'delivered','shipped','cancelled'])
+            ->whereIn('order_status', ['confirmed', 'delivered','shipped','cancelled','pending'])
             ->latest()
             ->first();
         return view('Ecommerce.Pages.confirm', compact('order'));

@@ -57,7 +57,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-4">
+                    <div class="col-lg-5">
                         <div class="details_item">
                             <ul class="list ">
                                 <li class="text-capitalize"><a href="javascript:void(0)"><span>Name</span> :
@@ -69,7 +69,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-3">
                         <div class="details_item">
                             <ul class="list text-capitalize">
                                 <li><a href="javascript:void(0)"><span>Payment method</span> :
