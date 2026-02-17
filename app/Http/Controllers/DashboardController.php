@@ -63,11 +63,9 @@ class DashboardController extends Controller
             ];
         });
 
-
         $latestOrders = Order::with('getcustomer')
-           ->latest()
+            ->latest()
             ->paginate(5);
-
 
         return view('Admin.Dashboard.dashboard', compact(
             'category',

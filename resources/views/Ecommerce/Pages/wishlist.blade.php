@@ -8,19 +8,26 @@
             transition: all 0.3s ease;
         }
 
-        .single-product.card:hover {
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-        }
-
         .product-img {
+            border: 0.5px solid #eee;
             width: 100%;
             height: 220px;
+            overflow: hidden;
             background: #f8f8f8;
-            display: flex;
-            align-items: center;       
-            justify-content: center;       
-            overflow: hidden;       
+            position: relative;
         }
+
+        .product-img img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            padding: 0 !important;
+        }
+
+
 
         .product-img img {
             width: 100%;
@@ -79,7 +86,7 @@
                                     @endif
                                 </div>
 
-                                <div class=" text-center">
+                                <div class="mt-1 text-center">
                                     <h6 class="card-title">{{ $item->product->name }}</h6>
                                     <div class="price">
                                         <h6>₹{{ $item->product->discount_value }}</h6>

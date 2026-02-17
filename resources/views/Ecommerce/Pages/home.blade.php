@@ -1,21 +1,20 @@
 @extends('Ecommerce.Layout.index')
 @section('container')
+
     <style>
-        /* Fix product image size */
         .single-product .product-img-wrapper {
             width: 100%;
-            height: 240px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            height: 260px;
             background: #f7f7f7;
             overflow: hidden;
+            position: relative;
         }
 
         .single-product .product-img-wrapper img {
-            width: 100%;
-            height: 90%;
-            object-fit: cover;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            display: block;
         }
 
         .exclusive-img-box {
@@ -45,7 +44,52 @@
             text-transform: uppercase;
             font-weight: 600;
         }
+
+        .filter-sidebar {
+            background: #fff;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .filter-sidebar h5 {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .filter-control {
+            width: 100%;
+            height: 45px;
+            padding: 0 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            background: #fff;
+            transition: 0.3s;
+        }
+
+        .filter-control:focus {
+            border-color: #ff7b00;
+            box-shadow: 0 0 5px rgba(255, 106, 0, 0.2);
+            outline: none;
+        }
+
+
+        .filter-btn {
+            width: 100%;
+            height: 45px;
+            border-radius: 6px;
+            background: #ff7b00;
+            color: #fff;
+            border: none;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .filter-btn:hover {
+            background: #e55b00;
+        }
     </style>
+
     <!-- start banner Area -->
     <section class="banner-area">
         <div class="container">
@@ -260,10 +304,10 @@
                                     <div class="product-details mt-2">
 
                                         <h6 class="mb-1">
-                                            {{ $item->name }}
+                                            {{ Str::limit($item->name, 15, '...') }}
                                             @if ($item->discount > 0)
                                                 <span class="text-success fw-bold ms-1">
-                                                    {{ number_format($item->discount, 0) }}% OFF
+                                                  &nbsp;{{ number_format($item->discount, 0) }}% OFF
                                                 </span>
                                             @endif
                                         </h6>
@@ -275,7 +319,7 @@
 
                                             @if ($item->discount > 0)
                                                 <h6 class="mb-0 text-muted l-through">
-                                                   $ {{ number_format($item->price, 2) }}
+                                                    $ {{ number_format($item->price, 2) }}
                                                 </h6>
                                             @endif
                                         </div>
@@ -375,10 +419,10 @@
                                     <div class="product-details mt-2">
 
                                         <h6 class="mb-1">
-                                            {{ $item->name }}
+                                            {{ Str::limit($item->name, 15, '...') }}
                                             @if ($item->discount > 0)
                                                 <span class="text-success fw-bold ms-1">
-                                                    {{ number_format($item->discount, 0) }}% OFF
+                                                    &nbsp;{{ number_format($item->discount, 0) }}% OFF
                                                 </span>
                                             @endif
                                         </h6>
@@ -390,7 +434,7 @@
 
                                             @if ($item->discount > 0)
                                                 <h6 class="mb-0 text-muted l-through">
-                                                   $ {{ number_format($item->price, 2) }}
+                                                    $ {{ number_format($item->price, 2) }}
                                                 </h6>
                                             @endif
                                         </div>
@@ -639,8 +683,10 @@
                                             class="title">{{ Str::limit($item->name, 10) }}</a>
                                         <div class="price">
 
-                                            <h6>${{ $item->discount_value }}</h6> @if ($item->discount>0)
-                                                 <br><h6 class="l-through">${{ $item->price }}</h6>
+                                            <h6>${{ $item->discount_value }}</h6>
+                                            @if ($item->discount > 0)
+                                                <br>
+                                                <h6 class="l-through">${{ $item->price }}</h6>
                                             @endif
                                         </div>
                                     </div>

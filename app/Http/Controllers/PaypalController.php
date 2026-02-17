@@ -86,7 +86,7 @@ class PaypalController extends Controller
 
         $sms->send(
             $phone,
-            "✅ Payment Successful!
+            "✅ Payment Successful With Paypal!
             Order No: {$order->order_number}
             Transaction No: {$order->transactionId}
             Amount Paid: ₹{$order->grand_total}

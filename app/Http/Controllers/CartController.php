@@ -103,7 +103,7 @@ class CartController extends Controller
                 'message' => 'Cart item not found'
             ]);
         }
-        $stock = $cart->getproduct->qty; // product stock
+        $stock = $cart->getproduct->qty; 
         $requestedQty = $request->qty;
 
         if ($requestedQty > $stock) {
@@ -133,7 +133,6 @@ class CartController extends Controller
                 'message' => 'Item not found'
             ]);
         }
-
         $cart->delete();
         return response()->json([
             'status' => true,

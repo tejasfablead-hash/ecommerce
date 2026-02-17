@@ -30,7 +30,7 @@ class ProductRequest extends FormRequest
             'discount_value' => 'nullable|numeric|min:0',
             'description' => 'required|string',
             'image'       => 'nullable|array',
-            'image.*'     => 'image|mimes:jpeg,png,jpg,gif'
+            'image.*'     => 'image|mimes:jpeg,png,jpg,gif,avif,webp,avif'
         ];
     }
 }
