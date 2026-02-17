@@ -89,14 +89,14 @@
                    
                  </li>
 
-                 <li class="nxl-item nxl-hasmenu">
+                 {{-- <li class="nxl-item nxl-hasmenu">
                      <a href="{{route('WishlistViewPage')}}" class="nxl-link">
                          <span class="nxl-micon"><i class="feather-heart"></i></span>
                          <span class="nxl-mtext">Wishlist</span><span class="nxl-arrow"><i
                                  class="feather-chevron-right"></i></span>
                      </a>
                    
-                 </li>
+                 </li> --}}
 
                    <li class="nxl-item nxl-hasmenu">
                      <a href="{{ route('FeedbackviewPage') }}" class="nxl-link">

@@ -101,7 +101,7 @@ class RazorpayController extends Controller
 
     $sms->send(
         $phone,
-        "✅ Payment Successful!
+        "✅ Payment Successful With Razorpay!
 Order No: {$order->order_number}
 Transaction No: {$order->transactionId}
 Amount Paid: ₹{$order->grand_total}

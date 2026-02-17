@@ -49,12 +49,12 @@
                 <div class="card mb-3">
                     <div class="card-body">
                         <h6>Order Info</h6>
-                        <p><strong>Order ID:</strong> {{ $order->order_number }}</p>
-                        <p><strong>Transaction ID:</strong> {{ $order->transactionId ?? '-' }}</p>
-                        <p><strong>Payment:</strong> {{ ucfirst($order->payment_method) }}</p>
-                        <p><strong>Payment Status:</strong> {{ ucfirst($order->payment_status) }}</p>
-                        <p><strong>Order Status:</strong> {{ ucfirst($order->order_status) }}</p>
-                        <p><strong>Order Date:</strong> {{ $order->created_at->format('d M Y') }}</p>
+                        <p><strong>Order ID :</strong> {{ $order->order_number }}</p>
+                        <p><strong>Transaction ID :</strong> {{ $order->transactionId ?? '-' }}</p>
+                        <p><strong>Payment :</strong> {{ ucfirst($order->payment_method) }}</p>
+                        <p><strong>Payment Status :</strong> {{ ucfirst($order->payment_status) }}</p>
+                        <p><strong>Order Status :</strong> {{ ucfirst($order->order_status) }}</p>
+                        <p><strong>Order Date :</strong> {{ $order->created_at->format('d M Y') }}</p>
                     </div>
                 </div>
 
@@ -93,7 +93,7 @@
                                     <td class="text-success">₹{{ number_format($order->subtotal, 2) }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="fw-medium pe-3">GST ({{ (int) $order->gst_percent }}%):</td>
+                                    <td class="fw-medium pe-3">GST ({{ (int) $order->gst_percent }}%) :</td>
                                     <td class="text-primary">₹{{ number_format($order->gst_amount, 2) }}</td>
                                 </tr>
                                 <tr>
@@ -103,7 +103,7 @@
                                     </td>
                                 </tr>
                                 <tr class="border-top">
-                                    <td class="fw-bold pe-3">Grand Total:</td>
+                                    <td class="fw-bold pe-3">Grand Total :</td>
                                     <td class="fw-bold ">
                                         ₹{{ number_format($order->grand_total, 2) }}
                                     </td>

@@ -92,7 +92,7 @@
                         {{-- <li class="nav-item active"><a class="nav-link" href="{{route('HomePage')}}">Home</a></li> --}}
                         <li class="nav-item submenu dropdown">
 
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+                            <a href="javascript:void(0)" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
                                 aria-haspopup="true" aria-expanded="false">Shop</a>
                             <ul class="dropdown-menu">
                                 
@@ -111,7 +111,7 @@
 
 
                         <li class="nav-item submenu dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+                            <a href="javascript:void(0)" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
                                 aria-haspopup="true" aria-expanded="false">Profile</a>
                             <ul class="dropdown-menu">
                                 <li class="nav-item"><a class="nav-link"
@@ -130,8 +130,7 @@
                         <li class="nav-item "><a href="{{ route('ChatPage') }}" class="chat mt-1"><span
                                     class="ti-comment"></span></a></li>
                         <li class="nav-item dropdown">
-                            <a href="" class="notification-bell" id="chatBell">
-
+                            <a href="javascript:void(0)" class="notification-bell" id="chatBell">
                                 <i class="ti-bell"></i>
 
                                 <!-- Badge -->

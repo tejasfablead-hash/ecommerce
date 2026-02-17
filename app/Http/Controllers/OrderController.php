@@ -80,13 +80,13 @@ class OrderController extends Controller
             $phone = '+91' . $phone;
         }
 
-        $sms->send(
-            $phone,
-            "✅ Order Confirmed with COD!
-            Order No: {$order->order_number}
-            Amount: ₹{$order->grand_total}
-            Thank you for shopping with us. "
-        );
+        // $sms->send(
+        //     $phone,
+        //     "✅ Order Confirmed with COD!
+        //     Order No: {$order->order_number}
+        //     Amount: ₹{$order->grand_total}
+        //     Thank you for shopping with us. "
+        // );
 
         Cart::where('user_id', $order->user_id)->delete();
 
@@ -215,7 +215,7 @@ class OrderController extends Controller
 
         $sms->send(
             $phone,
-            "✅ Order Confirmed with COD!
+            "✅ Order Confirmed with {$order->payment_status}!
             Order No: {$order->order_number}
             Amount: ₹{$order->grand_total}
             Thank you for shopping with us. "
@@ -247,21 +247,22 @@ class OrderController extends Controller
             'order_status'   => $request->order_status,
             'payment_status' => $paymentStatus
         ]);
+
         Mail::to($order->email)->send(new OrderConfirmMail($order));
-        Mail::mailer('mailtrap')
-            ->to($order->email)
-            ->send(new OrderConfirmMail($order));
+        Mail::mailer('mailtrap')->to($order->email)->send(new OrderConfirmMail($order));
 
 
         $phone = preg_replace('/\D/', '', $order->phone);
-        if (strlen($phone) === 10) {
+
+        if (strlen($phone) == 10) {
             $phone = '+91' . $phone;
-        } elseif (strlen($phone) === 12 && str_starts_with($phone, '91')) {
+        } elseif (strlen($phone) == 12 && str_starts_with($phone, '91')) {
             $phone = '+' . $phone;
         }
 
-        $message = null;
-        if ($request->order_status === 'delivered') {
+        $message = "";
+
+        if ($request->order_status == 'delivered') {
 
             if (!$order->feedback_token) {
                 $order->update([
@@ -273,24 +274,32 @@ class OrderController extends Controller
             $link = url('/feedback/' . $order->feedback_token);
 
             $message = "📦 Order Delivered!
-                        Order: {$order->order_number}
-                        Please give feedback:
-                        {$link}";
-        } else {
-            $message = match ($request->order_status) {
-                'confirmed' => "✅ Order {$order->order_number} CONFIRMED",
-                'shipped'   => "🚚 Order {$order->order_number} SHIPPED",
-                'cancelled' => "❌ Order {$order->order_number} CANCELLED",
-            };
+Order: {$order->order_number}
+Amount: ₹{$order->grand_total}
+
+Please give feedback:
+{$link}";
+        } elseif ($request->order_status == 'confirmed') {
+            $message = "✅ Order Confirmed!
+Order: {$order->order_number}";
+        } elseif ($request->order_status == 'shipped') {
+            $message = "🚚 Order Shipped!
+Order: {$order->order_number}";
+        } elseif ($request->order_status == 'cancelled') {
+            $message = "❌ Order Cancelled!
+Order: {$order->order_number}";
         }
 
-        $sms->send($phone, $message);
+        if (!empty($message)) {
+            $sms->send($phone, $message);
+        }
 
         return response()->json([
             'status' => true,
             'message' => 'Order status updated successfully'
         ]);
     }
+
 
     public function downloadOrderPdf($id)
     {

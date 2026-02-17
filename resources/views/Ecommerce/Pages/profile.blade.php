@@ -100,8 +100,8 @@
                                     <input type="hidden" name="id" value="{{ Auth::user()->id }}">
                                     <div class="row g-3">
                                         <!-- Name -->
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-semibold">Name</label>
+                                        <div class="col-md-6 mt-3">
+                                            {{-- <label class="form-label fw-semibold">Name</label> --}}
                                             <input type="text" name="name" class="form-control"
                                                 value="{{ Auth::user()->name }}">
                                             <small class="text-danger error" id="name_error"></small>
@@ -109,8 +109,8 @@
                                         </div>
 
                                         <!-- Email -->
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-semibold">Email</label>
+                                        <div class="col-md-6 mt-3">
+                                            {{-- <label class="form-label fw-semibold">Email</label> --}}
                                             <input type="email" name="email" class="form-control"
                                                 value="{{ Auth::user()->email }}">
                                             <small class="text-danger error" id="email_error"></small>
@@ -118,21 +118,22 @@
                                         </div>
 
                                         <!-- Phone -->
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-semibold">Phone</label>
+                                        <div class="col-md-6 mt-3">
+                                            {{-- <label class="form-label fw-semibold">Phone</label> --}}
                                             <input type="text" name="phone" class="form-control"
                                                 value="{{ Auth::user()->phone }}">
                                             <small class="text-danger error" id="phone_error"></small>
                                         </div>
 
                                         <!-- Image Upload -->
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-semibold">Profile Image</label>
+                                        <div class="col-md-6 mt-3">
+                                            {{-- <label class="form-label fw-semibold">Profile Image</label> --}}
                                             <input type="file" name="image" class="form-control">
                                             <small class="text-danger error" id="image_error"></small>
                                         </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-semibold">Adress</label>
+
+                                        <div class="col-md-6 mt-3">
+                                            {{-- <label class="form-label fw-semibold">Adress</label> --}}
                                             <input type="text" name="address" class="form-control"
                                                 placeholder="Enter address">
                                             <small class="text-danger error" id="address_error"></small>

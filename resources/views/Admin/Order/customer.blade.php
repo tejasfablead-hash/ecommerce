@@ -55,9 +55,13 @@
                                                 @if ($item->role === 'customer')
                                                     <tr class="single-item ">
                                                         <td class="text-capitalize  ">
-                                                            <img src="{{ asset('storage/user/' . $item->image) }}"
+                                                            @if(empty($item->image))
+                                                                <img src="{{ asset('/user/profile.png') }}"
                                                                 alt="" class="img-fluid" height="25px" width="25px"/>
-
+                                                            @else
+                                                                <img src="{{ asset('storage/user/' . $item->image) }}"
+                                                                alt="" class="img-fluid" height="25px" width="25px"/>
+                                                                @endif
                                                             {{ $item->name }}
                                                         </td>
                                                         <td>{{ $item->email }}</td>

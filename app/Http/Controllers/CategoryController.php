@@ -21,7 +21,7 @@ class CategoryController extends Controller
       $validate = Validator::make($request->all(), [
          'category' => 'required',
          'subcategory' => 'required',
-         'image'    => 'required|image|mimes:jpg,jpeg,png'
+         'image'    => 'required|image|mimes:jpg,jpeg,png,avif,webp,avif'
       ]);
       if ($validate->fails()) {
          return response()->json([
@@ -76,7 +76,7 @@ class CategoryController extends Controller
       $validate = Validator::make($request->all(), [
          'category' => 'required',
          'subcategory' => 'required',
-         'image'    => 'image|mimes:jpg,jpeg,png'
+         'image'    => 'image|mimes:jpg,jpeg,png,avif,webp,avif'
       ]);
       if ($validate->fails()) {
          return response()->json([

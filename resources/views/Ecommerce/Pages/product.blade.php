@@ -1,21 +1,19 @@
 @extends('Ecommerce.Layout.index')
 @section('container')
-    <style>
-        /* Fix product image size */
+  <style>
         .single-product .product-img-wrapper {
             width: 100%;
-            height: 240px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            height: 260px;
             background: #f7f7f7;
             overflow: hidden;
+            position: relative;
         }
 
         .single-product .product-img-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            display: block;
         }
 
         .exclusive-img-box {
@@ -49,6 +47,7 @@
         .filter-sidebar {
             background: #fff;
             border-radius: 10px;
+            padding: 15px;
         }
 
         .filter-sidebar h5 {
@@ -68,12 +67,14 @@
         }
 
         .filter-control:focus {
-            border-color: #6b6b6b;
+            border-color: #ff7b00;
             box-shadow: 0 0 5px rgba(255, 106, 0, 0.2);
             outline: none;
         }
 
+
         .filter-btn {
+            width: 100%;
             height: 45px;
             border-radius: 6px;
             background: #ff7b00;
@@ -239,10 +240,10 @@
                                     <div class="product-details mt-2">
 
                                         <h6 class="mb-1">
-                                            {{ $item->name }}
+                                            {{ Str::limit($item->name, 15, '...') }}
                                             @if ($item->discount > 0)
                                                 <span class="text-success fw-bold ms-1">
-                                                    {{ number_format($item->discount, 0) }}% OFF
+                                                    &nbsp;{{ number_format($item->discount, 0) }}% OFF
                                                 </span>
                                             @endif
                                         </h6>
@@ -352,7 +353,7 @@
                                     <div class="product-details mt-2">
 
                                         <h6 class="mb-1">
-                                            {{ $item->name }}
+                                            {{ Str::limit($item->name, 15, '...') }}
                                             @if ($item->discount > 0)
                                                 <span class="text-success fw-bold ms-1">
                                                     {{ number_format($item->discount, 0) }}% OFF

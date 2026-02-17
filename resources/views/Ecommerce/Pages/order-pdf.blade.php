@@ -60,8 +60,6 @@
 </head>
 
 <body>
-
-    {{-- HEADER --}}
     <table class="no-border">
         <tr>
             <td> <img src="{{ public_path('Karma Shop-doc/img/logo.png') }}" width="120"> </td>
@@ -71,10 +69,8 @@
             </td>
         </tr>
     </table>
-
     <hr>
 
-    {{-- ORDER INFO --}}
     <h3>Order Info</h3>
     <table class="no-border">
         <tr>
@@ -83,13 +79,11 @@
                 {{ $order->transactionId ?? '-' }}
             </td>
             <td><strong>Date:</strong> {{ $order->updated_at->format('d M Y') }}</td>
-            <td><strong>Total:</strong> ₹{{ number_format($order->grand_total, 2) }}</td>
+            <td><strong>Total:</strong> ₹{{ number_format($order->grand_total, 0) }}</td>
         </tr>
     </table>
-
     <hr>
 
-    {{-- CUSTOMER INFO --}}
     <h3>Customer Details</h3>
     <table class="no-border">
         <tr>
@@ -104,10 +98,8 @@
             <td colspan="2"><strong>Address:</strong> {{ $order->address }}</td>
         </tr>
     </table>
-
     <hr>
 
-    {{-- PAYMENT INFO --}}
     <h3>Payment Details</h3>
     <table class="no-border">
         <tr>
@@ -122,12 +114,9 @@
         <tr>
             <td><strong>Payment Status:</strong> {{ ucfirst($order->payment_status) }}</td>
         </tr>
-
     </table>
-
     <hr>
 
-    {{-- ORDER ITEMS WITH IMAGE --}}
     <h3>Order Details</h3>
     <table>
         <thead>
@@ -165,7 +154,6 @@
         </tbody>
     </table>
 
-    {{-- TOTAL SUMMARY --}}
     <table>
         <tr>
             <td colspan="4" class="text-right"><strong>Subtotal</strong></td>
@@ -173,7 +161,6 @@
                 ₹{{ number_format($order->subtotal, 0) }}
             </td>
         </tr>
-
         <tr>
             <td colspan="4" class="text-right">
                 <strong>GST ({{ (int) $order->gst_percent }}%)</strong>
@@ -182,7 +169,6 @@
                 ₹{{ number_format($order->gst_amount, 0) }}
             </td>
         </tr>
-
         <tr>
             <td colspan="4" class="text-right">
                 <strong>Discount ({{ (int) $order->discount_percent }}%)</strong>
@@ -191,7 +177,6 @@
                 ₹{{ number_format($order->discount_amount, 0) }}
             </td>
         </tr>
-
         <tr>
             <td colspan="4" class="text-right"><strong>Grand Total</strong></td>
             <td class="text-right">
@@ -199,7 +184,6 @@
             </td>
         </tr>
     </table>
-
 
 </body>
 

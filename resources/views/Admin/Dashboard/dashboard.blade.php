@@ -123,105 +123,116 @@
             <div class="main-content">
                 <div class="row">
                     <div class="col-xl-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5>Latest Orders</h5>
-                            </div>
+                     <div class="card mt-4">
+    <div class="card-header">
+        <h5>Latest Orders</h5>
+    </div>
 
-                            <div class="card-body table-responsive">
-                                <table id="leadList" class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Customer</th>
-                                            <th scope="col">Order Id</th>
-                                            <th scope="col">Payment</th>
-                                            <th scope="col">Date</th>
-                                            <th scope="col">Payment Status</th>
-                                            <th scope="col">Order Status</th>
-                                            <th scope="col">Total</th>
-                                            <th scope="col" class="text-end">Action</th>
-                                        </tr>
-                                    </thead>
+    <div class="card-body table-responsive">
 
-                                    <tbody>
-                                        @foreach ($latestOrders as $order)
-                                        @if ($order->payment_status=='pending')
-                                            <tr>
-                                                <td>
-                                                    <div class="d-flex align-items-center gap-2">
-                                                        <img src="{{ asset('storage/user/' . ($order->getcustomer->image ?? 'default.png')) }}"
-                                                            alt="{{ $order->getcustomer->name ?? 'Guest' }}"
-                                                            class="rounded-circle" width="40">
-                                                        <div>
-                                                            <div class="text-capitalize">
-                                                                {{ $order->getcustomer->name ?? 'Guest' }}</div>
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Customer</th>
+                    <th>Order ID</th>
+                    <th>Payment</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Order</th>
+                    <th>Total</th>
+                    <th class="text-end">Action</th>
+                </tr>
+            </thead>
 
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <span>
-                                                        {{ ucfirst($order->order_number) }}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <span>
-                                                        {{ ucfirst($order->payment_method) }}
-                                                    </span>
-                                                </td>
+            <tbody>
+                @forelse($latestOrders as $order)
+                {{-- @if ($order->order_status == "confirmed") --}}
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            <img src="{{ asset('storage/user/'.($order->getcustomer->image ?? 'default.png')) }}"
+                                 width="40" class="rounded-circle">
 
-                                                <td>{{ $order->created_at->format('d M Y') }}</td>
-
-                                                <td>
-                                                    @if ($order->payment_status == 'paid')
-                                                        <span class="badge bg-success">Completed</span>
-                                                    @elseif($order->payment_status == 'pending')
-                                                        <span class="badge bg-warning">Pending</span>
-                                                    @else
-                                                        <span class="badge bg-danger">Cancelled</span>
-                                                    @endif
-                                                </td>
-
-                                                <td>
-                                                    <span class="badge bg-primary text-white">
-                                                        {{ ucfirst($order->order_status) }}
-                                                    </span>
-                                                </td>
-
-                                                <td>₹{{ number_format($order->grand_total, 2) }}</td>
-
-                                                <td class="text-end">
-                                                    <a href="{{ route('OrderDetailViewPage', $order->id) }}">
-                                                        <i class="feather-eye"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        @endif
-                                            
-                                        @endforeach
-
-                                        @if ($latestOrders->isEmpty())
-                                            <tr>
-                                                <td colspan="7" class="text-center">No orders found</td>
-                                            </tr>
-                                        @endif
-                                    </tbody>
-
-                                </table>
-
-                            </div>
+                            <span class="text-capitalize">
+                                {{ $order->getcustomer->name ?? 'Guest' }}
+                            </span>
                         </div>
+                    </td>
+
+                    <td>{{ Str::limit($order->order_number, 10) }}</td>
+
+                    <td>{{ ucfirst($order->payment_method) }}</td>
+
+                    <td>{{ $order->created_at->format('d M Y') }}</td>
+
+                    <td>
+                        @if($order->payment_status=='paid')
+                            <span class="badge bg-success">Paid</span>
+                        @elseif($order->payment_status=='pending')
+                            <span class="badge bg-warning">Pending</span>
+                        @else
+                            <span class="badge bg-danger">Cancelled</span>
+                        @endif
+                    </td>
+
+                    <td>
+                        <span class="badge bg-primary">
+                            {{ ucfirst($order->order_status) }}
+                        </span>
+                    </td>
+
+                    <td>₹{{ number_format($order->grand_total,2) }}</td>
+
+                    <td class="text-end">
+                        <a href="{{ route('OrderDetailViewPage',$order->id) }}">
+                            <i class="feather-eye"></i>
+                        </a>
+                    </td>
+
+                </tr>
+                {{-- @endif --}}
+                @empty
+                    <tr>
+                        <td colspan="8" class="text-center text-muted">
+                            No orders found
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+
+
+        <!-- PAGINATION -->
+        <div class="d-flex justify-content-between align-items-center mt-3">
+
+            <div class="text-muted">
+                Showing
+                {{ $latestOrders->firstItem() ?? 0 }}
+                to
+                {{ $latestOrders->lastItem() ?? 0 }}
+                of
+                {{ $latestOrders->total() }} entries
+            </div>
+
+            <div>
+                {{ $latestOrders->links('pagination::bootstrap-5') }}
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 @endsection
 @push('scripts')
     <script src="{{ asset('ajax.js') }}"></script>
     <script src="{{ asset('assets/vendors/js/apexcharts.min.js') }}"></script>
-    <script>
+    {{-- <script>
         $(document).ready(function() {
             if ($.fn.DataTable) {
                 $('#leadList').DataTable({
@@ -234,7 +245,7 @@
                 console.error('DataTable not loaded');
             }
         });
-    </script>
+    </script> --}}
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             var options = {

@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderConfirmMail;
 use App\Models\Order;
 use App\Models\Cart;
+use App\Services\SMSService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Stripe\Stripe;
 use Stripe\Checkout\Session as StripeSession;
 use Stripe\Webhook;
@@ -37,7 +40,7 @@ class StripeController extends Controller
             'metadata' => [
                 'order_id' => $order->id,
             ],
-       'success_url' => route('stripe.success') . '?session_id={CHECKOUT_SESSION_ID}',
+            'success_url' => route('stripe.success') . '?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url'  => route('stripe.cancel'),
         ]);
 
@@ -48,51 +51,69 @@ class StripeController extends Controller
     }
 
 
-public function success(Request $request)
-{
-    Stripe::setApiKey(config('services.stripe.secret'));
+    public function success(Request $request, SMSService $sms)
+    {
+        Stripe::setApiKey(config('services.stripe.secret'));
 
-    $sessionId = $request->session_id;
+        $sessionId = $request->session_id;
 
-    if (!$sessionId) {
-        return redirect()->route('UserCheckoutPage')->with('error', 'Invalid payment session');
-    }
+        if (!$sessionId) {
+            return redirect()->route('UserCheckoutPage')->with('error', 'Invalid payment session');
+        }
 
-    $session = \Stripe\Checkout\Session::retrieve($sessionId);
+        $session = \Stripe\Checkout\Session::retrieve($sessionId);
 
-    $orderId = $session->metadata->order_id ?? null;
+        $orderId = $session->metadata->order_id ?? null;
 
-    $order = Order::with('orderitem.product')->find($orderId);
+        $order = Order::with('orderitem.product')->find($orderId);
 
-    if ($order && $order->payment_status !== 'paid') {
+        if ($order && $order->payment_status !== 'paid') {
 
-        DB::transaction(function () use ($order, $session) {
+            DB::transaction(function () use ($order, $session, $sms) {
 
-            $order->update([
-                'order_number' => $session->id,
-                'payment_status' => 'paid',
-                'payment_method' => 'stripe',
-                'transactionId'  => $session->payment_intent,
-                'order_status'   => 'confirmed',
-            ]);
+                $order->update([
+                    'order_number' => $session->id,
+                    'payment_status' => 'paid',
+                    'payment_method' => 'stripe',
+                    'transactionId'  => $session->payment_intent,
+                    'order_status'   => 'confirmed',
+                ]);
+                Mail::to($order->email)->send(new OrderConfirmMail($order));
+                Mail::mailer('mailtrap')
+                    ->to($order->email)
+                    ->send(new OrderConfirmMail($order));
 
-            foreach ($order->orderitem as $item) {
-                if ($item->product) {
-                    $item->product->decrement('qty', $item->qty);
+                foreach ($order->orderitem as $item) {
+                    if ($item->product) {
+                        $item->product->decrement('qty', $item->qty);
 
-                    if ($item->product->qty <= 0) {
-                        $item->product->update(['status' => 'inactive']);
+                        if ($item->product->qty <= 0) {
+                            $item->product->update(['status' => 'inactive']);
+                        }
                     }
                 }
-            }
 
-            Cart::where('user_id', $order->user_id)->delete();
-        });
+                Cart::where('user_id', $order->user_id)->delete();
+
+                $phone = $order->phone;
+                if (!str_starts_with($phone, '+')) {
+                    $phone = '+91' . $phone;
+                }
+
+                $sms->send(
+                    $phone,
+                    "✅ Payment Successful With Stripe!
+Order No: {$order->order_number}
+Transaction No: {$order->transactionId}
+Amount Paid: ₹{$order->grand_total}
+Thank you for shopping with us."
+                );
+            });
+        }
+
+        return redirect()->route('UserCheckoutPage')
+            ->with('success', 'Payment successful!');
     }
-
-    return redirect()->route('UserConfirmPage')
-        ->with('success', 'Payment successful!');
-}
 
 
     public function cancel()
@@ -144,7 +165,7 @@ public function success(Request $request)
     //                 }
 
     //                 Cart::where('user_id', $order->user_id)->delete();
-                    
+
     //             });
 
     //         }

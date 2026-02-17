@@ -116,37 +116,33 @@
 
             function initMap() {
 
-                const defaultLocation = {
-                    lat: 21.1909,
-                    lng: 72.7953
-                }; // Surat
+    const suratLocation = {
+        lat: 21.1950,
+        lng: 72.7933
+    };
 
-                geocoder = new google.maps.Geocoder();
+    geocoder = new google.maps.Geocoder();
 
-                map = new google.maps.Map(document.getElementById("map"), {
-                    zoom: 14,
-                    center: defaultLocation,
-                });
+    map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 16,
+        center: suratLocation,
+    });
 
-                marker = new google.maps.Marker({
-                    map: map,
-                });
+    marker = new google.maps.Marker({
+        map: map,
+        position: suratLocation
+    });
 
-                infoWindow = new google.maps.InfoWindow();
+    infoWindow = new google.maps.InfoWindow({
+        content: "📍 Ascon Plaza, Surat"
+    });
 
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(
-                        (position) => {
-                            setLocation(position.coords.latitude, position.coords.longitude);
-                        },
-                        () => {
-                            setAddressLocation("Ascon Plaza, Surat, India");
-                        }
-                    );
-                } else {
-                    setAddressLocation("Ascon Plaza, Surat, India");
-                }
-            }
+    infoWindow.open(map, marker);
+
+    // Load weather for Surat
+    loadWeather(suratLocation.lat, suratLocation.lng);
+}
+
 
             function setLocation(lat, lng) {
 

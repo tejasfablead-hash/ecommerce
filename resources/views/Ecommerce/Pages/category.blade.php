@@ -1,44 +1,49 @@
 @extends('Ecommerce.Layout.index')
 @section('container')
     <style>
-        /* Category Card */
-        .category-card {
-            background: #fff;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-            height: 100%;
-        }
+  /* Category Card */
+.category-card {
+    background: #fff;
+    /* border-radius: 10px; */
+    transition: all 0.3s ease;
+    height: 100%;
+    overflow: hidden;
+    /* box-shadow: 0 3px 10px rgba(0,0,0,0.05); */
+}
 
 
-        /* Image Box */
-        .product-img-box {
-            width: 100%;
-            height: 180px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 6px 6px 0 0;
-        }
 
-        .product-img-box img {
-            max-width: 85%;
-            max-height: 85%;
-            object-fit: contain;
-        }
+/* IMAGE BOX */
+.product-img-box {
+    width: 100%;
+    height: 150px;
+    overflow: hidden;
+    position: relative;
+}
 
-        /* Category Name */
-        .category-title {
-            font-size: 15px;
-            /* margin: 12px 0; */
-            color: #222;
-        }
+/* IMPORTANT PART */
+.product-img-box img {
+    width: 100%;
+    height: 80%;
+    object-fit: cover;   /* THIS MAKES FULL COVER */
+    display: block;
+}
 
-        /* Mobile Fix */
-        @media (max-width: 768px) {
-            .product-img-box {
-                height: 160px;
-            }
-        }
+/* Title */
+.category-title {
+    font-size: 16px;
+    padding: 12px;
+    /* font-weight: 600; */
+    color: #222;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .product-img-box {
+        height: 170px;
+    }
+}
+
     </style>
     <!-- Start Banner Area -->
     <section class="banner-area organic-breadcrumb">
@@ -112,7 +117,7 @@
                     <div class="row">
                         @if ($category->count() && isset($category))
                             @foreach ($category as $item)
-                                <div class="col-lg-4 col-md-6 col-sm-6 ">
+                                <div class="col-lg-4 col-md-6 col-sm-6 mt-4 ">
                                     <div class="single-product category-card" style="margin-bottom: 0px;">
                                         <!-- Category Image -->
                                         <a href="{{ route('UserCategoryProductPage', $item->id) }}"
@@ -126,7 +131,9 @@
                                         </div>
                                     </div>
                                 </div>
+                                
                             @endforeach
+                          
                         @else
                             <div class="col-12 text-center py-5">
                                 <img src="{{ asset('img/logo.png') }}" style="max-width:220px" class="mb-3">

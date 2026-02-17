@@ -21,7 +21,7 @@ class ProfileController extends Controller
             // ->orwhere('payment_status', 'paid')
             ->whereIn('order_status', ['confirmed','shipped', 'delivered', 'cancelled','pending'])
             ->latest()
-            ->limit(5)
+            ->limit(4)
             ->with(['orderitem.product'])
             ->get();
 
@@ -113,7 +113,7 @@ class ProfileController extends Controller
         if ($alreadyGiven) {
             return response()->json([
                 'status' => false,
-                'message' => 'Feedback already submitted for this product'
+                'message' => 'Feedback already submitted for this product.'
             ], 409);
         }
 
