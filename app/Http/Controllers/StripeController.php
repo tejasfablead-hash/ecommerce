@@ -79,9 +79,9 @@ class StripeController extends Controller
                     'order_status'   => 'confirmed',
                 ]);
                 Mail::to($order->email)->send(new OrderConfirmMail($order));
-                Mail::mailer('mailtrap')
-                    ->to($order->email)
-                    ->send(new OrderConfirmMail($order));
+                // Mail::mailer('mailtrap')
+                //     ->to($order->email)
+                //     ->send(new OrderConfirmMail($order));
 
                 foreach ($order->orderitem as $item) {
                     if ($item->product) {

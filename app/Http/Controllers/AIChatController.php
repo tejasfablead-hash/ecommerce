@@ -10,42 +10,42 @@ use Illuminate\Support\Facades\Auth;
 
 class AIChatController extends Controller
 {
-    public function ask(Request $request)
-    {
-        $message = strtolower(trim($request->input('message')));
-        $userId = Auth::id();
+        public function ask(Request $request)
+        {
+            $message = strtolower(trim($request->input('message')));
+            $userId = Auth::id();
 
-        if ($this->containsKeywords($message, ['order'])) {
-            return $this->handleOrderQuery($userId);
+            if ($this->containsKeywords($message, ['order'])) {
+                return $this->handleOrderQuery($userId);
+            }
+
+            if ($this->containsKeywords($message, ['active', 'popular'])) {
+                return $this->handleTrendingProducts();
+            }
+
+            if ($this->containsKeywords($message, ['available', 'products', 'stock'])) {
+                return $this->handleAvailableProducts();
+            }
+
+            if ($this->containsKeywords($message, ['price'])) {
+                return $this->handleProductPriceQuery($message);
+            }
+
+            if ($this->containsKeywords($message, ['project', 'flow'])) {
+                return $this->handleProjectFlow();
+            }
+
+            return response()->json([
+                'reply' => "
+                🤖 <b>I can help you with:</b><br>
+                • Order status<br>
+                • Product price<br>
+                • Available products<br>
+                • Trending products<br>
+                • Project flow
+                "
+            ]);
         }
-
-        if ($this->containsKeywords($message, ['active', 'popular'])) {
-            return $this->handleTrendingProducts();
-        }
-
-        if ($this->containsKeywords($message, ['available', 'products', 'stock'])) {
-            return $this->handleAvailableProducts();
-        }
-
-        if ($this->containsKeywords($message, ['price'])) {
-            return $this->handleProductPriceQuery($message);
-        }
-
-        if ($this->containsKeywords($message, ['project', 'flow'])) {
-            return $this->handleProjectFlow();
-        }
-
-        return response()->json([
-            'reply' => "
-            🤖 <b>I can help you with:</b><br>
-            • Order status<br>
-            • Product price<br>
-            • Available products<br>
-            • Trending products<br>
-            • Project flow
-            "
-        ]);
-    }
 
     private function containsKeywords(string $message, array $keywords): bool
     {
@@ -80,7 +80,7 @@ class AIChatController extends Controller
 
         $reply = "🔥 <b>Trending Products:</b><br>";
         foreach ($products as $product) {
-            $reply .= "• {$product->name} – ₹{$product->price}<br>";
+            $reply .= "• {$product->name} – ₹{$product->price}<br>" ;
         }
 
         return response()->json(['reply' => $reply]);
@@ -114,7 +114,7 @@ class AIChatController extends Controller
 
         if ($product) {
             return response()->json([
-                'reply' => "💰 <b>{$product->name}</b> costs <b>₹{$product->price}</b>."
+                'reply' => "💰 <b>{$product->name}</b> costs <b>₹{$product->price}</b> final price may vary <b>{$product->discount_value}</b>."
             ]);
         }
 

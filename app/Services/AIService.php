@@ -1,58 +1,22 @@
 <?php
-
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class AIService
 {
-    public function ask(string $message, array $context = []): string
+    public function askAI($message)
     {
-        $messages = [];
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('OPENAI_API_KEY'),
+        ])->post('https://api.openai.com/v1/chat/completions', [
+            'model' => 'gpt-4o-mini',
+            'messages' => [
+                ['role' => 'system', 'content' => 'You are an ecommerce assistant.'],
+                ['role' => 'user', 'content' => $message],
+            ],
+        ]);
 
-        $messages[] = [
-            'role' => 'system',
-            'content' => 'You are a helpful ecommerce assistant.'
-        ];
-
-        foreach ($context as $item) {
-            $messages[] = [
-                'role' => $item['role'],
-                'content' => $item['content'],
-            ];
-        }
-
-        $messages[] = [
-            'role' => 'user',
-            'content' => $message,
-        ];
-
-        try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . config('services.openai.key'),
-                'Content-Type' => 'application/json',
-            ])->post('https://api.openai.com/v1/chat/completions', [
-                   'model' => 'o3-mini',
-                'messages' => $messages,
-            ]);
-
-
-            if ($response->failed()) {
-                $json = $response->json();
-                if(isset($json['error']['code']) && $json['error']['code'] === 'insufficient_quota'){
-                    return 'AI service unavailable: quota exceeded. Please check your OpenAI plan.';
-                }
-                if(isset($json['error']['type']) && $json['error']['type'] === 'rate_limit'){
-                    return 'AI service temporarily unavailable due to rate limiting. Try again later.';
-                }
-                return 'AI service failed.';
-            }
-
-            return $response->json('choices.0.message.content') ?? 'No response from AI.';
-        } catch (\Throwable $e) {
-            Log::error('OpenAI Exception', ['message' => $e->getMessage()]);
-            return 'AI service failed due to server error.';
-        }
+        return $response['choices'][0]['message']['content'] ?? 'No response';
     }
 }

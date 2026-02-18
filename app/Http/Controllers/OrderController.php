@@ -175,9 +175,9 @@ class OrderController extends Controller
         ]);
 
         Mail::to($order->email)->send(new OrderConfirmMail($order));
-        Mail::mailer('mailtrap')
-            ->to($order->email)
-            ->send(new OrderConfirmMail($order));
+        // Mail::mailer('mailtrap')
+        //     ->to($order->email)
+        //     ->send(new OrderConfirmMail($order));
 
         foreach ($order->orderitem as $item) {
 
@@ -215,7 +215,7 @@ class OrderController extends Controller
 
         $sms->send(
             $phone,
-            "✅ Order Confirmed with {$order->payment_status}!
+            "✅ Order Confirmed with  {$order->order_status}!
             Order No: {$order->order_number}
             Amount: ₹{$order->grand_total}
             Thank you for shopping with us. "
@@ -249,7 +249,7 @@ class OrderController extends Controller
         ]);
 
         Mail::to($order->email)->send(new OrderConfirmMail($order));
-        Mail::mailer('mailtrap')->to($order->email)->send(new OrderConfirmMail($order));
+        // Mail::mailer('mailtrap')->to($order->email)->send(new OrderConfirmMail($order));
 
 
         $phone = preg_replace('/\D/', '', $order->phone);

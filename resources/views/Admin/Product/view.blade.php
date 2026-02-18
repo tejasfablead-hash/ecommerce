@@ -71,7 +71,7 @@
                                                     </td>
                                                     <td>{{ $item->getcategory->name }}</td>
                                                     <td>{{ $item->price }}</td>
-                                                    <td>{{ $item->qty }}</td>
+                                                    <td>{{ $item->qty ?? 0}}</td>
                                                     @if ($item->discount > 0)
                                                         <td>{{ (int) $item->discount ?? '-' }}%</td>
                                                     @else

@@ -134,7 +134,7 @@
 
                                         <div class="col-md-6 mt-3">
                                             {{-- <label class="form-label fw-semibold">Adress</label> --}}
-                                            <input type="text" name="address" class="form-control"
+                                            <input type="text" name="address" value="{{ Auth::user()->address }}" class="form-control"
                                                 placeholder="Enter address">
                                             <small class="text-danger error" id="address_error"></small>
                                         </div>

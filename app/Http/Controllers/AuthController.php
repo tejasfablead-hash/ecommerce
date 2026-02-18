@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\SMSService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -18,7 +19,7 @@ class AuthController extends Controller
     }
 
 
-    public function loginmatch(Request $request)
+    public function loginmatch(Request $request, SMSService $sms)
     {
         $validate = Validator::make($request->all(), [
             'email'    => 'required|email',
@@ -49,7 +50,7 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (!Auth::attempt($credentials, $request->boolean('remember'))) {
-            RateLimiter::hit($key, 300); 
+            RateLimiter::hit($key, 300);
 
             return response()->json([
                 'status' => false,
@@ -60,6 +61,7 @@ class AuthController extends Controller
         RateLimiter::clear($key);
 
         $request->session()->regenerate();
+        $user = Auth::user();
         $role = Auth::user()->role;
         if ($role === 'admin') {
             $redirect = route('DashboardPage');
@@ -75,6 +77,20 @@ class AuthController extends Controller
                 'message' => 'Unauthorized access',
             ], 403);
         }
+        $phone = $user->phone;
+        if (!str_starts_with($phone, '+')) {
+            $phone = '+91' . $phone;
+        }
+
+        try {
+            $sms->send(
+                $phone,
+                "✅ Login Successfully in Ecommerce Karma. Welcome {$user->name}!"
+            );
+        } catch (\Exception $e) {
+            \Log::error('SMS Failed: ' . $e->getMessage());
+        }
+
 
         return response()->json([
             'status' => true,
