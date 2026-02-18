@@ -170,4 +170,5 @@ Route::middleware(['auth', 'user'])->group(function () {
 
     Route::post('/ai/chat', [AIChatController::class, 'ask']);
     Route::get('/weather', [ApiController::class, 'weather']);
+    
 });

@@ -30,7 +30,7 @@
                 </h3>
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="mb-0">
-                        <i class="fa fa-receipt me-2 text-primary"></i>Order Info
+                        Order Info
                     </h4>
                     <a href="{{ route('UserOrderPdf', $order->id) }}" style="background-color:#f8a528;"
                         class="btn btn-sm text-white cart-info">

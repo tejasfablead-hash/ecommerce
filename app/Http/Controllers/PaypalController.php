@@ -16,7 +16,7 @@ class PaypalController extends Controller
     public function success(Request $request, SMSService $sms)
     {
         // dd($request->all());
-        $orderId = session('order_id');
+        $orderId = $request->order_id;
 
         $order = Order::with('orderitem.product')->find($orderId);
         // dd($order);
@@ -42,9 +42,9 @@ class PaypalController extends Controller
             'order_status' => 'confirmed'
         ]);
         Mail::to($order->email)->send(new OrderConfirmMail($order));
-        Mail::mailer('mailtrap')
-            ->to($order->email)
-            ->send(new OrderConfirmMail($order));
+        // Mail::mailer('mailtrap')
+        //     ->to($order->email)
+        //     ->send(new OrderConfirmMail($order));
 
         session(['latest_paid_order_id' => $order->id]);
 

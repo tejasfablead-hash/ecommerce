@@ -1,11 +1,12 @@
 function reusableAjaxCall(url, method, data, successCallback, errorCallback) {
+    
       $.ajax({
         url: url,
         method: method,
         data: data,
         contentType: false,
         processData: false,
-        dataTye:'json',
+        dataType:'json',
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },

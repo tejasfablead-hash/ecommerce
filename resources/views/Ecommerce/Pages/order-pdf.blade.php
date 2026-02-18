@@ -137,10 +137,10 @@
                     @endphp
                     <td>
                         @if ($images)
-                            @foreach ($images as $img)
-                                <img src="{{ public_path('storage/' . $img) }}" class=" product-img"
+                            {{-- @foreach ($images as $img) --}}
+                                <img src="{{ public_path('storage/' . $images[0]) }}" class=" product-img"
                                     style="margin-top:20px;gap:10px">
-                            @endforeach
+                            {{-- @endforeach --}}
                         @else
                             <span>N/A</span>
                         @endif

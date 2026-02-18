@@ -7,6 +7,45 @@
             gap: 12px;
             /* 👈 yahin se spacing control */
         }
+
+        #paymentLoader {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #paymentLoader .spinner {
+            width: 4rem;
+            height: 4rem;
+            border: 0.5rem solid #f3f3f3;
+            border-top: 0.5rem solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .order_box {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .order_box table {
+            margin-bottom: 15px;
+        }
     </style> <!-- Start Banner Area -->
     <section class="banner-area organic-breadcrumb">
         <div class="container">
@@ -33,9 +72,11 @@
                                 </a> </div>
                         </div>
                         <hr>
-                        <form class="row contact_form" id="orderform"> @csrf <input type="hidden" class="form-control"
-                                id="id" name="userid" value="{{ Auth::user()->id }}"> <small
-                                class="text-danger error" id="id_error"></small>
+
+                        <form class="row contact_form" id="orderform">
+                            @csrf
+                            <input type="hidden" class="form-control" id="id" name="userid"
+                                value="{{ Auth::user()->id }}"> <small class="text-danger error" id="id_error"></small>
                             <div class="col-md-6 form-group p_star"> <input type="hidden" class="form-control"
                                     id="first" name="firstname" value="{{ Auth::user()->name }}"
                                     placeholder="First name"> <small class="text-danger error" id="firstname_error"></small>
@@ -50,13 +91,22 @@
                                     <small class="text-danger error" id="phone_error"></small>
                                 @endif
                             </div>
-                            <div class="col-md-6 form-group p_star"> <input type="hidden" class="form-control"
-                                    placeholder="Email Address" value="{{ Auth::user()->email }}" name="email"> <small
-                                    class="text-danger error" id="email_error"></small> </div>
-                            <div class="col-md-12 form-group p_star"> Address : <input type="text" class="form-control"
-                                    id="city" name="address" placeholder="Address/Town/City"> <small
-                                    class="text-danger error" id="address_error"></small> </div>
+                            <div class="col-md-6 form-group p_star">
 
+                                <input type="hidden" class="form-control" placeholder="Email Address"
+                                    value="{{ Auth::user()->email }}" name="email"> <small class="text-danger error"
+                                    id="email_error"></small>
+                            </div>
+                            <div class="col-md-12 form-group p_star"> Address :
+                                @if (Auth::user()->address)
+                                    <input type="text" class="form-control" id="city" name="address"
+                                        value="{{ Auth::user()->address }}" placeholder="Address/Town/City">
+                                @else
+                                    <input type="text" class="form-control" id="city" name="address"
+                                        placeholder="Address/Town/City">
+                                    <small class="text-danger error" id="address_error"></small>
+                                @endif
+                            </div>
                             <div class="col-md-12 form-group"> Pincode : <input type="text" class="form-control"
                                     id="zip" name="postcode" placeholder="Postcode/ZIP"> <small
                                     class="text-danger error" id="postcode_error"></small> </div>
@@ -173,7 +223,16 @@
                     </div>
                 </div>
             </div>
+        </div>
     </section>
+    <!-- Loader Overlay -->
+
+    <!-- Loader Overlay -->
+    <div id="paymentLoader">
+        <div class="spinner"></div>
+    </div>
+
+
     <script src="https://code.jquery.com/jquery-3.7.1.js" crossorigin="anonymous"></script>
     <script src="https://www.paypal.com/sdk/js?client-id={{ config('services.paypal.client_id') }}&currency=USD"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -193,6 +252,7 @@
         $(document).ready(function() {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('stripe') === 'success') {
+                hideLoader();
                 Swal.fire({
                     icon: 'success',
                     title: 'Payment Successful',
@@ -208,7 +268,15 @@
         });
     </script>
     <script>
+         function showLoader() {
+                $('#paymentLoader').show();
+            }
+
+            function hideLoader() {
+                $('#paymentLoader').hide();
+            }
         $(document).ready(function() {
+   hideLoader();
             let paypalRendered = false;
             $('#orderform').submit(function(e) {
                 e.preventDefault();
@@ -218,6 +286,7 @@
                 $('#billingdetails').addClass('d-none').text('');
                 var url = "{{ route('UserOrderPage') }}";
                 reusableAjaxCall(url, 'POST', formData, function(response) {
+                    hideLoader();
                     console.log('response', response);
                     if (response.status === true) {
                         Swal.fire({
@@ -244,11 +313,13 @@
                 });
             });
             $('#payWithCOD').on('click', function() {
+                showLoader();
                 let formData = new FormData();
                 formData.append('order_id', window.ORDER_ID);
                 formData.append('payment_method', 'cod');
                 var url = "{{ route('CODOrderPlace') }}";
                 reusableAjaxCall(url, 'POST', formData, function(res) {
+                    hideLoader();
                     if (res.status === true) {
                         Swal.fire({
                             icon: 'success',
@@ -273,7 +344,7 @@
             });
 
             $('#payWithStripe').on('click', function() {
-
+                showLoader();
                 if (!window.ORDER_ID) {
                     Swal.fire({
                         icon: 'error',
@@ -289,6 +360,7 @@
                 let url = "{{ route('stripe.create') }}";
 
                 reusableAjaxCall(url, 'POST', formData, function(res) {
+                    hideLoader();
                     console.log('Stripe Create Response:', res);
                     window.location.href = res.checkout_url;
                 });
@@ -296,11 +368,12 @@
 
 
             $('#payWithRazorpay').on('click', function() {
-
+                showLoader();
                 var formData = new FormData();
                 formData.append('order_id', window.ORDER_ID);
                 var url = "{{ route('Razorpayorder') }}";
                 reusableAjaxCall(url, 'POST', formData, function(res) {
+                    hideLoader();
                     let options = {
                         "key": "{{ config('services.razorpay.key') }}",
                         "amount": res.amount,
@@ -309,7 +382,6 @@
                         "description": "Order Payment",
                         "order_id": res.razorpay_order_id,
                         "handler": function(response) {
-
                             var formData = new FormData();
                             formData.append('order_id', window.ORDER_ID);
                             formData.append('razorpay_payment_id', response
@@ -319,6 +391,7 @@
                             formData.append('payment_method', 'razorpay');
                             var url = "{{ route('Razorpaysuccess') }}";
                             reusableAjaxCall(url, 'POST', formData, function(res) {
+                                hideLoader();
                                 if (res.status) {
                                     Swal.fire({
                                         icon: 'success',
@@ -326,7 +399,6 @@
                                         timer: 2500,
                                         showConfirmButton: false
                                     });
-
                                     setTimeout(() => {
                                         window.location
                                             .href =
@@ -336,7 +408,6 @@
                             });
                         }
                     };
-
                     let rzp = new Razorpay(options);
                     rzp.open();
                 });
@@ -345,6 +416,7 @@
             function renderPaypal() {
                 paypal.Buttons({
                     createOrder: (data, actions) => {
+                        showLoader();
                         return actions.order.create({
                             purchase_units: [{
                                 amount: {
@@ -358,14 +430,15 @@
                             console.log(details);
                             let transactionId = details.purchase_units[0].payments.captures[0]
                                 .id;
-
                             var formData = new FormData();
+                            formData.append('order_id', window.ORDER_ID);
                             formData.append('paypal_order_id', data.orderID);
                             formData.append('payment_status', details.status);
                             formData.append('transaction_id', transactionId);
                             formData.append('payment_method', 'paypal');
                             var url = "{{ route('PaypalSuccessPage') }}";
                             reusableAjaxCall(url, 'POST', formData, function(res) {
+                                hideLoader();
                                 if (res.status === true) {
                                     Swal.fire({
                                         icon: 'success',
