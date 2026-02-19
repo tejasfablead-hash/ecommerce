@@ -6,7 +6,7 @@
               <div class="page-header">
                   <div class="page-header-left d-flex align-items-center">
                       <div class="page-header-title">
-                          <h5 class="m-b-10">Category</h5>
+                          <h5 class="m-b-10">Profile</h5>
                       </div>
                       <ul class="breadcrumb">
                           <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
@@ -105,10 +105,6 @@
                                           <p>Admin is a frontend developer with over 5 years of experience creating
                                               high-quality, user-friendly websites and web applications. He has a strong
                                               understanding of web development technologies and a keen eye for design.</p>
-                                          <p>Admin is proficient in languages such as HTML, CSS, and JavaScript, and is
-                                              experienced in using popular frontend frameworks such as React and Angular. He
-                                              is also well-versed in user experience design and uses his knowledge to create
-                                              engaging and intuitive user interfaces.</p>
                                           <p>Throughout his career, John has worked on a wide range of projects for clients
                                               in various industries, including e-commerce, healthcare, and education. He
                                               takes a collaborative approach to development and enjoys working closely with

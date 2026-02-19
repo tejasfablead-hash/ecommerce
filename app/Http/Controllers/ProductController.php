@@ -136,7 +136,6 @@ class ProductController extends Controller
                     }
                 }
             }
-
             $delete->delete();
 
             return response()->json([

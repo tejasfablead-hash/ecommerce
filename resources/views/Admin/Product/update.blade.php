@@ -45,7 +45,7 @@
                             <div class="card-body general-info">
                                 <div class="mb-5 d-flex align-items-center justify-content-between">
                                     <h5 class="fw-bold mb-0 me-4">
-                                        <span class="d-block mb-2">Create Product :</span>
+                                        <span class="d-block mb-2">Update Product :</span>
                                         <span class="fs-12 fw-normal text-muted text-truncate-1-line">General
                                             information
                                             for product</span>
@@ -242,11 +242,11 @@
                     }
                     $('#productform')[0].reset();
                 }, function(error) {
-                    // Swal.fire({
-                    //     icon: "error",
-                    //     title: "Error",
-                    //     text: "Server error, please try again!"
-                    // });
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: "Server error, please try again!"
+                    });
                     console.log(error);
                 });
             });

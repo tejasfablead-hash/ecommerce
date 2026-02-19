@@ -45,7 +45,6 @@
                 </div>
             </div>
 
-            <!-- [ Main Content ] end -->
         </div>
         <!-- [ Footer ] start -->
         @include('Admin.Pages.footer')
@@ -60,40 +59,36 @@
         $(document).ready(function() {
             $('#scrapeBtn').click(function() {
                 $(this).prop('disabled', true).text('Scraping...');
-                $.ajax({
-                    url: "{{ route('ScrapeproductPage') }}",
-                    method: "POST",
-                    data: {
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(res) {
-                        if (res.success) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: res.message
-                            });
-                            let html = "<ul>";
-                            res.products.forEach(function(p) {
-                                html += `<li>${p.name} - ${p.price} - ${p.qty} - ${p.status}</li>`;
-                            });
-                            html += "</ul>";
-                            $('#result').html(html);
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: res.message
-                            });
-                        }
-                        $('#scrapeBtn').prop('disabled', false).text('Scrape & Add Products');
-                    },
-                    error: function(err) {
+
+                var url = "{{ route('ScrapeproductPage') }}";
+                reusableAjaxCall(url, 'POST', formData, function(res) {
+                    if (res.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: res.message
+                        });
+                        let html = "<ul>";
+                        res.products.forEach(function(p) {
+                            html +=
+                                `<li>${p.name} - ${p.price} - ${p.qty} - ${p.status}</li>`;
+                        });
+                        html += "</ul>";
+                        $('#result').html(html);
+                    } else {
                         Swal.fire({
                             icon: 'error',
-                            title: 'Something went wrong!'
+                            title: res.message
                         });
-                        $('#scrapeBtn').prop('disabled', false).text('Scrape & Add Products');
                     }
+                    $('#scrapeBtn').prop('disabled', false).text('Scrape & Add Products');
+                }, function(err) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Something went wrong!'
+                    });
+                    $('#scrapeBtn').prop('disabled', false).text('Scrape & Add Products');
                 });
+
             });
         });
     </script>

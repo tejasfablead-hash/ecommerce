@@ -7,6 +7,7 @@ use App\Services\SMSService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -91,6 +92,14 @@ class AuthController extends Controller
             \Log::error('SMS Failed: ' . $e->getMessage());
         }
 
+        try {
+            Mail::raw("✅ Login Successfully in Ecommerce Karma. Welcome {$user->name}!", function ($message) use ($user) {
+                $message->to($user->email)
+                    ->subject('Karma Ecommerce Login');
+            });
+        } catch (\Exception $e) {
+            \Log::error('Email Failed: ' . $e->getMessage());
+        } 
 
         return response()->json([
             'status' => true,
@@ -100,7 +109,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function logout(Request $request)
+    public function logout(Request $request, SMSService $sms)
     {
         if (!Auth::check()) {
             return response()->json([
@@ -108,11 +117,34 @@ class AuthController extends Controller
                 'message' => 'Already logged out'
             ], 401);
         }
-
+        $user = Auth::user();
         $role = Auth::user()->role;
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+     $phone = $user->phone;
+        if (!str_starts_with($phone, '+')) {
+            $phone = '+91' . $phone;
+        }
+
+        try {
+            $sms->send(
+                $phone,
+                "✅ Logout Successfully in Ecommerce Karma. {$user->name}!"
+            );
+        } catch (\Exception $e) {
+            \Log::error('SMS Failed: ' . $e->getMessage());
+        }
+
+        try {
+            Mail::raw("✅ Logout Successfully in Ecommerce Karma. {$user->name}!", function ($message) use ($user) {
+                $message->to($user->email)
+                    ->subject('Karma Ecommerce Logout');
+            });
+        } catch (\Exception $e) {
+            \Log::error('Email Failed: ' . $e->getMessage());
+        } 
 
         if ($role === 'admin') {
             return response()->json([

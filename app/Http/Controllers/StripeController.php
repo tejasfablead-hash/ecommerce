@@ -40,7 +40,7 @@ class StripeController extends Controller
             'metadata' => [
                 'order_id' => $order->id,
             ],
-            'success_url' => route('stripe.success') . '?session_id={CHECKOUT_SESSION_ID}',
+            'success_url' => route('stripe.success') . '?stripe=success&session_id={CHECKOUT_SESSION_ID}',
             'cancel_url'  => route('stripe.cancel'),
         ]);
 
@@ -111,8 +111,10 @@ Thank you for shopping with us."
             });
         }
 
-        return redirect()->route('UserCheckoutPage')
-            ->with('success', 'Payment successful!');
+      return redirect()->route('UserCheckoutPage', [
+    'stripe' => 'success'
+]);
+
     }
 
 

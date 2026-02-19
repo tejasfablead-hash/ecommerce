@@ -26,7 +26,7 @@
             width: 4rem;
             height: 4rem;
             border: 0.5rem solid #f3f3f3;
-            border-top: 0.5rem solid #3498db;
+            border-top: 0.5rem solid #fd6c17;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -251,6 +251,7 @@
     <script>
         $(document).ready(function() {
             const urlParams = new URLSearchParams(window.location.search);
+            showLoader();   
             if (urlParams.get('stripe') === 'success') {
                 hideLoader();
                 Swal.fire({
@@ -260,7 +261,6 @@
                     timer: 2500,
                     showConfirmButton: false
                 });
-
                 setTimeout(() => {
                     window.location.href = "{{ route('UserConfirmPage') }}";
                 }, 2500);
@@ -268,15 +268,15 @@
         });
     </script>
     <script>
-         function showLoader() {
-                $('#paymentLoader').show();
-            }
+        function showLoader() {
+            $('#paymentLoader').show();
+        }
 
-            function hideLoader() {
-                $('#paymentLoader').hide();
-            }
+        function hideLoader() {
+            $('#paymentLoader').hide();
+        }
         $(document).ready(function() {
-   hideLoader();
+            hideLoader();
             let paypalRendered = false;
             $('#orderform').submit(function(e) {
                 e.preventDefault();
@@ -300,7 +300,6 @@
                         $('#placeOrderBtn').hide();
                         $('#payWithCOD,#payWithPaypal,#payWithRazorpay,#payWithStripe')
                             .removeClass('d-none');
-
                         window.ORDER_ID = response.order_id;
                         $('#orderform')[0].reset();
                     }
@@ -336,7 +335,7 @@
 
             $('#payWithPaypal').on('click', function() {
                 $('#paypal-button-container').removeClass('d-none');
-
+                    hideLoader();
                 if (!paypalRendered) {
                     renderPaypal();
                     paypalRendered = true;
@@ -363,6 +362,8 @@
                     hideLoader();
                     console.log('Stripe Create Response:', res);
                     window.location.href = res.checkout_url;
+                }, function() {
+                    hideLoader(); 
                 });
             });
 
@@ -373,7 +374,7 @@
                 formData.append('order_id', window.ORDER_ID);
                 var url = "{{ route('Razorpayorder') }}";
                 reusableAjaxCall(url, 'POST', formData, function(res) {
-                    hideLoader();
+                    showLoader();
                     let options = {
                         "key": "{{ config('services.razorpay.key') }}",
                         "amount": res.amount,
@@ -406,7 +407,18 @@
                                     }, 2500);
                                 }
                             });
+                        },
+                        "modal": {
+                            "ondismiss": function() {
+                                hideLoader(); 
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Payment Cancelled',
+                                    text: 'User closed payment window'
+                                });
+                            }
                         }
+
                     };
                     let rzp = new Razorpay(options);
                     rzp.open();
@@ -414,6 +426,7 @@
             });
 
             function renderPaypal() {
+                hideLoader();
                 paypal.Buttons({
                     createOrder: (data, actions) => {
                         showLoader();
@@ -456,6 +469,7 @@
                         });
                     },
                     onCancel: () => {
+                        hideLoader();
                         Swal.fire({
                             icon: 'warning',
                             title: 'Payment Cancelled',
@@ -463,6 +477,7 @@
                         });
                     },
                     onError: () => {
+                        hideLoader(); 
                         Swal.fire({
                             icon: 'error',
                             title: 'Payment Failed',

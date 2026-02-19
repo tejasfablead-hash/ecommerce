@@ -19,7 +19,7 @@ class CategoryController extends Controller
    public function store(Request $request)
    {
       $validate = Validator::make($request->all(), [
-         'category' => 'required',
+         'category' => 'nullable|exists:parent_categories,id',
          'subcategory' => 'required',
          'image'    => 'required|image|mimes:jpg,jpeg,png,avif,webp,avif'
       ]);
@@ -74,7 +74,7 @@ class CategoryController extends Controller
       $new = $update->image;
 
       $validate = Validator::make($request->all(), [
-         'category' => 'required',
+         'category' => 'nullable|exists:parent_categories,id',
          'subcategory' => 'required',
          'image'    => 'image|mimes:jpg,jpeg,png,avif,webp,avif'
       ]);
@@ -115,7 +115,7 @@ class CategoryController extends Controller
 
    public function delete($id)
    {
-   
+      // dd($id);
       $delete = Category::find($id);
       
       if (!$delete) {
