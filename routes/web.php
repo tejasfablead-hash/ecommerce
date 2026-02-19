@@ -28,10 +28,10 @@ Route::get('/index', function () {
     return view('Admin.Pages.index');
 });
 
-Route::get('/', [AuthController::class, 'login'])->name('LoginPage');
+Route::get('/admin-login', [AuthController::class, 'login'])->name('LoginPage');
 Route::post('/login', [AuthController::class, 'loginmatch'])->name('LoginMatchPage');
 
-Route::get('/user/login', [AuthController::class, 'user_login'])->name('UserLoginPage');
+Route::get('/', [AuthController::class, 'user_login'])->name('UserLoginPage');
 Route::get('/user/register', [AuthController::class, 'user_register'])->name('UserRegisterPage');
 Route::post('/user/registration', [AuthController::class, 'registration'])->name('RegistrationPage');
 
@@ -41,13 +41,11 @@ Route::get('/user/index', [HomeController::class, 'index'])->name('IndexPage');
 Route::get('/auth/google', [SocialLoginController::class, 'redirect'])->name('GoggleLoginPage');
 Route::get('/auth/google/callback', [SocialLoginController::class, 'callback']);
 
-
 Route::get('admin/forgot-password', [AdminPasswordController::class, 'index'])->name('AdminForgotPage');
 Route::post('admin/forgot-password', [AdminPasswordController::class, 'forgotPassword'])->name('AdminForgotPasswordPage');
 
 Route::get('admin/reset-password/{token}', [AdminPasswordController::class, 'showResetForm'])->name('AdminResetPasswordPage');
 Route::post('admin/reset-password', [AdminPasswordController::class, 'resetPassword'])->name('AdminResetPasswordPostPage');
-
 
 Route::get('forgot-password', [PasswordController::class, 'showForgotForm'])->name('ForgotPage');
 Route::post('forgot-password', [PasswordController::class, 'sendResetLink'])->name('ForgotPasswordPage');
@@ -66,7 +64,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/category-view', [CategoryController::class, 'view'])->name('CategoryViewPage');
     Route::get('/category-edit/{id}', [CategoryController::class, 'edit'])->name('CategoryEditPage');
     Route::post('/category-update', [CategoryController::class, 'Update'])->name('CategoryUpdatePage');
-    Route::delete('/category-delete/{id}', [CategoryController::class, 'delete'])
+    Route::get('/category-delete/{id}', [CategoryController::class, 'delete'])
         ->name('CategoryDeletePage');
 
 
@@ -76,7 +74,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/product-edit/{id}', [ProductController::class, 'edit'])->name('ProductEditPage');
     Route::get('/product-details/{id}', [ProductController::class, 'detail'])->name('ProductDetailsPage');
     Route::post('/product-update', [ProductController::class, 'Update'])->name('ProductUpdatePage');
-    Route::delete('/product-delete/{id}', [ProductController::class, 'delete'])->name('ProductDeletePage');
+    Route::get('/product-delete/{id}', [ProductController::class, 'delete'])->name('ProductDeletePage');
     Route::get('/wishlist', [WishlistsController::class, 'view'])->name('WishlistViewPage');
 
     Route::get('/customer', [OrderController::class, 'customer'])->name('CustomerPage');
@@ -96,7 +94,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/search', [DashboardController::class, 'Search'])->name('AdminSearch');
     Route::get('/view-feedback', [ProfileController::class, 'viewfeedback'])->name('FeedbackviewPage');
 
-
     Route::get('/event', [EventController::class, 'index'])->name('EventPage');
     Route::post('/calendar', [EventController::class, 'store'])->name('EventStorePage');
     Route::get('/events/fetch', [EventController::class, 'fetchEvents'])->name('EventFetchPage');
@@ -105,36 +102,36 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/scrape-products', [ScraperController::class, 'scrapeProducts'])->name('ScrapeproductPage');
 });
 
-Route::middleware(['auth', 'user'])->group(function () {
+Route::middleware(['auth', 'user'])->prefix('user')->group(function () {
 
-    Route::get('/user/home', [HomeController::class, 'home'])->name('HomePage');
-    Route::get('/user/contact', [HomeController::class, 'contact'])->name('UserContactPage');
+    Route::get('/home', [HomeController::class, 'home'])->name('HomePage');
+    Route::get('/contact', [HomeController::class, 'contact'])->name('UserContactPage');
 
-    Route::get('/user/category', [CategoryController::class, 'category'])->name('UserCategoryPage');
+    Route::get('/category', [CategoryController::class, 'category'])->name('UserCategoryPage');
 
-    Route::get('/user/product/{id}', [ProductController::class, 'product'])->name('UserCategoryProductPage');
-    Route::get('/user/product-details/{id}', [ProductController::class, 'productdetail'])->name('UserProductdetailsPage');
-    Route::get('/user/product', [ProductController::class, 'products'])->name('UserProductPage');
+    Route::get('/product/{id}', [ProductController::class, 'product'])->name('UserCategoryProductPage');
+    Route::get('/product-details/{id}', [ProductController::class, 'productdetail'])->name('UserProductdetailsPage');
+    Route::get('/product', [ProductController::class, 'products'])->name('UserProductPage');
 
-    Route::get('/user/wishlist', [WishlistsController::class, 'index'])->name('WishlistPage');
-    Route::post('/user/wishlist-toggle', [WishlistsController::class, 'toggle'])->name('WishlistStorePage');
-    Route::get('/user/wishlist-count', [WishlistsController::class, 'count'])
+    Route::get('/wishlist', [WishlistsController::class, 'index'])->name('WishlistPage');
+    Route::post('/wishlist-toggle', [WishlistsController::class, 'toggle'])->name('WishlistStorePage');
+    Route::get('/wishlist-count', [WishlistsController::class, 'count'])
         ->name('UserWishlistCount');
 
-    Route::get('/user/cart', [CartController::class, 'cart'])->name('UserCartPage');
-    Route::post('/user/add-to-cart', [CartController::class, 'addtoCart'])->name('UserAddCartPage');
-    Route::get('/user/cart-count', [CartController::class, 'cartCount'])
+    Route::get('/cart', [CartController::class, 'cart'])->name('UserCartPage');
+    Route::post('/add-to-cart', [CartController::class, 'addtoCart'])->name('UserAddCartPage');
+    Route::get('/cart-count', [CartController::class, 'cartCount'])
         ->name('UserCartCount');
-    Route::get('/user/cart-delete/{id}', [CartController::class, 'delete'])->name('UserCartDeletePage');
-    Route::post('/user/cart/update-qty', [CartController::class, 'update'])
+    Route::get('/cart-delete/{id}', [CartController::class, 'delete'])->name('UserCartDeletePage');
+    Route::post('/cart/update-qty', [CartController::class, 'update'])
         ->name('UserCartUpdatePage');
     Route::get('/continue-shopping', [CartController::class, 'continueShopping'])
         ->name('UserContinueShopping');
 
-    Route::get('/user/checkout', [CheckOutController::class, 'checkout'])->name('UserCheckoutPage');
+    Route::get('/checkout', [CheckOutController::class, 'checkout'])->name('UserCheckoutPage');
     Route::post('/cart/store-grand-total', [CheckoutController::class, 'storeGrandTotal'])
         ->name('UserCheckoutTotalPage');
-    Route::post('/user/checkout', [OrderController::class, 'order'])->name('UserOrderPage');
+    Route::post('/checkout', [OrderController::class, 'order'])->name('UserOrderPage');
     Route::get('/order-pdf/{id}', [OrderController::class, 'downloadOrderPdf'])
         ->name('UserOrderPdf');
     Route::post('/order/cod', [OrderController::class, 'placeCODOrder'])
@@ -142,8 +139,8 @@ Route::middleware(['auth', 'user'])->group(function () {
 
     Route::post('/paypal/success', [PaypalController::class, 'success'])
         ->name('PaypalSuccessPage');
-    Route::get('/user/confirm', [PaypalController::class, 'confirm'])->name('UserConfirmPage');
-    Route::get('/user/order-view/{id}', [PaypalController::class, 'confirmview'])->name('UserConfirmViewPage');
+    Route::get('/confirm', [PaypalController::class, 'confirm'])->name('UserConfirmPage');
+    Route::get('/order-view/{id}', [PaypalController::class, 'confirmview'])->name('UserConfirmViewPage');
 
     Route::post('/razorpay/order', [RazorpayController::class, 'createRazorpayOrder'])
         ->name('Razorpayorder');
@@ -158,15 +155,15 @@ Route::middleware(['auth', 'user'])->group(function () {
     // Route::post('/stripe/webhook', [StripeController::class, 'handle']);
 
 
-    Route::get('/user/profile', [ProfileController::class, 'profile'])->name('UserProfilePage');
-    Route::post('/user/update-profile', [ProfileController::class, 'update'])->name('UserEditProfilePage');
-    Route::post('/user/update-feedback', [ProfileController::class, 'feedback'])->name('UserFeedbackPage');
+    Route::get('/profile', [ProfileController::class, 'profile'])->name('UserProfilePage');
+    Route::post('/update-profile', [ProfileController::class, 'update'])->name('UserEditProfilePage');
+    Route::post('/update-feedback', [ProfileController::class, 'feedback'])->name('UserFeedbackPage');
 
-    Route::get('/user/chat', [UserChatController::class, 'index'])->name('ChatPage');;
-    Route::get('/user/chat/messages', [UserChatController::class, 'fetchMessages'])->name('ChaFatchMessagePage');
-    Route::post('/user/chat/send', [UserChatController::class, 'sendMessage'])->name('ChaSendMessagePage');
-    Route::get('/user/chat/unread-count', [UserChatController::class, 'unreadCount'])->name('ChatUnreadPage');
-    Route::get('/user/chat/unread-messages', [UserChatController::class, 'unreadMessages'])->name('ChatUnreadMessages');
+    Route::get('/chat', [UserChatController::class, 'index'])->name('ChatPage');;
+    Route::get('/chat/messages', [UserChatController::class, 'fetchMessages'])->name('ChaFatchMessagePage');
+    Route::post('/chat/send', [UserChatController::class, 'sendMessage'])->name('ChaSendMessagePage');
+    Route::get('/chat/unread-count', [UserChatController::class, 'unreadCount'])->name('ChatUnreadPage');
+    Route::get('/chat/unread-messages', [UserChatController::class, 'unreadMessages'])->name('ChatUnreadMessages');
 
     Route::post('/ai/chat', [AIChatController::class, 'ask']);
     Route::get('/weather', [ApiController::class, 'weather']);

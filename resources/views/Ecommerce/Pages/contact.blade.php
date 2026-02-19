@@ -8,7 +8,7 @@
 
             .weather-card {
                 max-width: 420px;
-                background: linear-gradient(135deg, #4facfe, #00f2fe);
+                background: linear-gradient(135deg, #fc7d06, #f79e2a);
                 color: #fff;
                 padding: 20px;
                 border-radius: 12px;
@@ -78,9 +78,11 @@
         <section class="contact_area section_gap_bottom">
             <div class="container">
                 <div id="map" style="height:400px" class="mt-5 mb-5"></div>
+
+     
                 {{-- <div id="weather"></div> --}}
                 <div class="row">
-                     <div class="col-lg-7">
+                    <div class="col-lg-7">
                         <div class="contact_info">
                             <div class="info_item">
                                 <i class="lnr lnr-home"></i>
@@ -103,46 +105,55 @@
                     <div class="col-lg-5">
                         <div id="weather"></div>
                     </div>
-                   
+
                 </div>
             </div>
         </section>
         <!--================Contact Area =================-->
         <script async defer
-            src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_key') }}&libraries=places&callback=initMap">
+            src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_key') }}&callback=initMap">
         </script>
+
         <script>
             let map, marker, infoWindow, geocoder;
 
             function initMap() {
 
-    const suratLocation = {
-        lat: 21.1950,
-        lng: 72.7933
-    };
+                const suratLocation = {
+                    lat: 21.1950,
+                    lng: 72.7933
+                };
 
-    geocoder = new google.maps.Geocoder();
+                geocoder = new google.maps.Geocoder();
 
-    map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 16,
-        center: suratLocation,
-    });
+                map = new google.maps.Map(document.getElementById("map"), {
+                    zoom: 14,
+                    center: suratLocation,
+                });
 
-    marker = new google.maps.Marker({
-        map: map,
-        position: suratLocation
-    });
+                infoWindow = new google.maps.InfoWindow();
 
-    infoWindow = new google.maps.InfoWindow({
-        content: "📍 Ascon Plaza, Surat"
-    });
+                // ✅ Custom Marker Icon
+                marker = new google.maps.Marker({
+                    map: map,
+                    position: suratLocation,
+                    draggable: true,
 
-    infoWindow.open(map, marker);
+                });
 
-    // Load weather for Surat
-    loadWeather(suratLocation.lat, suratLocation.lng);
-}
+                // Load default weather
+                loadWeather(suratLocation.lat, suratLocation.lng);
 
+                // ✅ Click map to change location
+                map.addListener("click", function(event) {
+                    setLocation(event.latLng.lat(), event.latLng.lng());
+                });
+
+                // ✅ Drag marker to change location
+                marker.addListener("dragend", function(event) {
+                    setLocation(event.latLng.lat(), event.latLng.lng());
+                });
+            }
 
             function setLocation(lat, lng) {
 
@@ -156,37 +167,13 @@
 
                 loadWeather(lat, lng);
 
-                infoWindow.setContent("📍 Your current location");
+                infoWindow.setContent("📍 Selected Location");
                 infoWindow.open(map, marker);
-            }
-
-            function setAddressLocation(address) {
-
-                geocoder.geocode({
-                    address: address
-                }, function(results, status) {
-
-                    if (status === "OK") {
-
-                        const location = results[0].geometry.location;
-
-                        map.setCenter(location);
-                        marker.setPosition(location);
-
-                        loadWeather(location.lat(), location.lng());
-
-                        infoWindow.setContent("📍 " + address);
-                        infoWindow.open(map, marker);
-
-                    } else {
-                        console.error("Geocode failed: " + status);
-                    }
-                });
             }
 
             function loadWeather(lat, lng) {
 
-                fetch(`/weather?lat=${lat}&lng=${lng}`)
+                fetch(`/user/weather?lat=${lat}&lng=${lng}`)
                     .then(res => res.json())
                     .then(data => {
 
@@ -196,22 +183,17 @@
                 <div class="weather-card">
                     <h3>${data.city}</h3>
 
-                    <div class="weather-main">
-                        <div>
-                            <div class="temp">${data.temperature}°C</div><br>
-                            <div class="desc">${data.description}</div>
-                        </div>
-                    </div>
+                    <div class="temp">${data.temperature}°C</div>
+                    <div>${data.description}</div>
 
-                    <div class="weather-details">
-                        <div>Humidity <span>${data.humidity}%</span></div>
-                        <div>Wind <span>${data.wind_speed} m/s</span></div>
-                    </div>
+                    <hr>
+
+                    <div>Humidity: ${data.humidity}%</div>
+                    <div>Wind: ${data.wind_speed} m/s</div>
                 </div>
                 `;
 
                             document.getElementById("weather").innerHTML = html;
-
                             infoWindow.setContent(html);
                             infoWindow.open(map, marker);
                         }

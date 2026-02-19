@@ -71,7 +71,7 @@
                                                     </td>
                                                     <td>{{ $item->getcategory->name }}</td>
                                                     <td>{{ $item->price }}</td>
-                                                    <td>{{ $item->qty ?? 0}}</td>
+                                                    <td>{{ $item->qty ?? 0 }}</td>
                                                     @if ($item->discount > 0)
                                                         <td>{{ (int) $item->discount ?? '-' }}%</td>
                                                     @else
@@ -137,7 +137,7 @@
 
                 let id = $(this).data('id');
                 let row = $(this).closest('tr');
-                let url = '/product-delete/' + id;
+                let url = "{{ url('admin/product-delete') }}/" + id;
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "Once deleted, you will not be able to recover this record!",
@@ -148,20 +148,11 @@
                 }).then((result) => {
                     console.log('result', result);
                     if (result.value == true) {
-                        $.ajax({
-                            url: url,
-                            type: 'DELETE',
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            success: function(response) {
-                                row.remove();
-                                Swal.fire('Deleted!', response.message, 'success');
-                            },
-                            error: function(err) {
-                                Swal.fire('Error!', 'Something went wrong.', 'error');
-                                console.log(err);
-                            }
+                        reusableAjaxCall(url, 'GET', {}, function(response) {
+                            row.remove();
+                            Swal.fire('Deleted!', response.message, 'success');
+                        }, function(err) {
+                            Swal.fire('Error!', 'Something went wrong.', 'error');
                         });
                     } else if (result.dismiss === Swal.DismissReason.cancel) {
                         Swal.fire('Cancelled', 'Your record is safe :)', 'info');

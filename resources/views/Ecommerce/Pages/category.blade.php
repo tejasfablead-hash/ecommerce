@@ -1,43 +1,42 @@
 @extends('Ecommerce.Layout.index')
 @section('container')
     <style>
-  /* Category Card */
 .category-card {
     background: #fff;
-    /* border-radius: 10px; */
     transition: all 0.3s ease;
     height: 100%;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
-    /* box-shadow: 0 3px 10px rgba(0,0,0,0.05); */
 }
 
-
-
-/* IMAGE BOX */
 .product-img-box {
     width: 100%;
-    height: 150px;
+    height: 200px;
     overflow: hidden;
-    position: relative;
+    flex-shrink: 0;
 }
 
-/* IMPORTANT PART */
 .product-img-box img {
     width: 100%;
-    height: 80%;
-    object-fit: cover;   /* THIS MAKES FULL COVER */
+    height: 100%;
+    object-fit: cover;  
     display: block;
 }
 
-/* Title */
+.product-details {
+    flex-grow: 1; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .category-title {
     font-size: 16px;
     padding: 12px;
-    /* font-weight: 600; */
     color: #222;
+    text-align: center;
 }
-
-/* Mobile */
 @media (max-width: 768px) {
     .product-img-box {
         height: 170px;
@@ -60,7 +59,6 @@
             </div>
         </div>
     </section>
-    <!-- End Banner Area -->
     <br>
     <br>
     <br>
@@ -104,21 +102,18 @@
 
             </div>
             <div class="col-xl-9 col-lg-8 col-md-7">
-                <!-- Start Filter Bar -->
-
-                <div class="category-header text-center mb-4">
+                <div class="category-header text-center mb-2">
                     <h2 class="category-heading">Categories</h2>
                 </div>
 
-
                 <!-- End Filter Bar -->
                 <!-- Start Best Seller -->
-                <section class="latest-product-area pb-40 category-list">
+                <section class="latest-product-area pb-20 category-list">
                     <div class="row">
                         @if ($category->count() && isset($category))
                             @foreach ($category as $item)
-                                <div class="col-lg-4 col-md-6 col-sm-6 mt-4 ">
-                                    <div class="single-product category-card" style="margin-bottom: 0px;">
+                                <div class="col-lg-4 col-md-6 col-sm-6 mt-1 ">
+                                    <div class="single-product category-card">
                                         <!-- Category Image -->
                                         <a href="{{ route('UserCategoryProductPage', $item->id) }}"
                                             class="product-img-box ">

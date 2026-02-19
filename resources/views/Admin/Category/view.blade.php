@@ -57,7 +57,7 @@
                                                                 alt="" class="img-fluid">
                                                         </div>
                                                     </td>
-                                                    <td>{{ $item->parentcategory->category }}</td>
+                                                    <td>{{ $item->parentcategory->category ?? 'N/A' }}</td>
                                                     <td>{{ $item->name }}</td>
                                                     <td>
                                                         <div class="hstack gap-2">
@@ -88,32 +88,31 @@
         @include('Admin.Pages.footer')
         <!-- [ Footer ] end -->
     </main>
-
-  @endsection
+@endsection
 @push('scripts')
     <script src="{{ asset('ajax.js') }}"></script>
-<script>
-    $(document).ready(function () {
-        if ($.fn.DataTable) {
-            $('#leadList').DataTable({
-                pageLength: 10,
-                order: [[0, 'desc']]
-            });
-        } else {
-            console.error('DataTable not loaded');
-        }
-    });
-</script>
+    <script>
+        $(document).ready(function() {
+            if ($.fn.DataTable) {
+                $('#leadList').DataTable({
+                    pageLength: 10,
+                    order: [
+                        [0, 'desc']
+                    ]
+                });
+            } else {
+                console.error('DataTable not loaded');
+            }
+        });
+    </script>
     <script>
         $(document).ready(function() {
 
             $('#leadList').on('click', '.btn-del', function(e) {
                 e.preventDefault();
-
                 let id = $(this).data('id');
                 let row = $(this).closest('tr');
-                let url = '/category-delete/' + id;
-
+                let url = "{{ url('admin/category-delete') }}/" + id;
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "Once deleted, you will not be able to recover this record!",
@@ -122,23 +121,15 @@
                     confirmButtonText: 'Yes, delete it!',
                     cancelButtonText: 'No, cancel!'
                 }).then((result) => {
-                    console.log('result',result);
+                    console.log('result', result);
                     if (result.value == true) {
-                        $.ajax({
-                            url: url,
-                            type: 'DELETE',
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            success: function(response) {
+                        reusableAjaxCall(url, 'GET', {}, function(response) {
                                 row.remove();
                                 Swal.fire('Deleted!', response.message, 'success');
                             },
-                            error: function(err) {
+                            function(err) {
                                 Swal.fire('Error!', 'Something went wrong.', 'error');
-                                console.log(err);
-                            }
-                        });
+                            });
                     } else if (result.dismiss === Swal.DismissReason.cancel) {
                         Swal.fire('Cancelled', 'Your record is safe :)', 'info');
                     }
